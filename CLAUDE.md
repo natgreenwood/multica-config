@@ -12,12 +12,14 @@ Source of truth for the configuration of a Multica (multica.ai) workspace: agent
 ## Repo layout
 
 ```
-Agents/<Agent Name>/System Prompt.md   -> the agent's "Instructions" field
-Squads/Dev Squad 1/Instructions_old.md -> LIVE squad instructions (what the server runs today)
-Squads/Dev Squad 1/Instructions.md     -> DRAFT proposal for the new squad instructions (not deployed)
+Agents/<Agent Name>/System Prompt_old.md -> LIVE agent instructions (what the server runs today)
+Agents/<Agent Name>/System Prompt.md     -> NEW agent instructions being written (blank as of 2026-10-17)
+Squads/Dev Squad 1/Instructions_old.md   -> LIVE squad instructions
+Squads/Dev Squad 1/Instructions.md       -> DRAFT proposal for the new squad instructions (not deployed)
 ```
+Convention: `*_old.md` = live and deployed. The un-suffixed file = the new version being drafted, which the user deploys once it is approved.
 
-**Current state (2026-10-17):** `Instructions_old.md` is live. `Instructions.md` is the user's new draft, written to introduce a status-driven flow (Research → Refinement → Implementation → Testing → Documentation, plus custom statuses). The agent System Prompts were written against the *live* version, so they will **not** match the draft yet. Treat draft-vs-prompt mismatches as expected, not bugs. When the draft is finalised, the agent prompts will need aligning.
+**Current state (2026-10-17):** `Instructions_old.md` is live. `Instructions.md` is the user's new draft, written to introduce a status-driven flow (Research → Refinement → Implementation → Testing → Documentation, plus custom statuses). The live agent prompts (`System Prompt_old.md`) were written against the live squad instructions. The new `System Prompt.md` files start blank and will be rewritten to match the new squad flow.
 
 Agents: Architect, Backend Engineer, Doc Owner, Frontend Designer, Frontend Engineer, Product Owner, QA, Researcher, Security Analyst, Tech Lead, Tester.
 Squads: Dev Squad 1 (leader is presumably Tech Lead; to be confirmed).
