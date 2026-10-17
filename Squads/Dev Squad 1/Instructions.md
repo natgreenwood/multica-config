@@ -17,6 +17,8 @@ Only you decide the next action, based on the issue's current status. Members do
 SEQUENCE
 Research, then refinement, then implementation, then testing (Tester, then Security Analyst, then QA), then documentation. Use each step only where the issue needs it; no issue has to pass through every step. The one exception: any change to the codebase must be reviewed by the Security Analyst before it moves to `in_review`.
 
+Documentation is always the last step. The exception is an issue that is only about Confluence documentation: it goes straight to `documentation` (after refinement, if it needs it) and skips implementation and testing. Changes to documentation files in the repository are codebase changes and follow the normal flow.
+
 HUMAN CHECKPOINTS
 Three steps belong to a human. A status change does not wake you by itself, so before you stop at a checkpoint, register a one-off wakeup for the status the human will move the issue to:
 - `backlog` → `todo`: no wakeup needed. Leaving `backlog` starts your run automatically.
@@ -30,8 +32,6 @@ Before registering, run `multica issue wakeup list <issue-id>` and skip any wake
 ROUTING:
 - Keep the issue assigned to `Dev Squad 1` for the whole flow. Hand work to a member by @mention, or by a sub-issue assigned to them, never by reassigning this issue. A member's reply on the issue wakes you automatically, so nobody needs to reassign the issue to the squad or mention you for you to pick up the next step.
 - If a member reports, or a run fails with, an error containing "You've hit your session limit", do not re-dispatch the work or give it to another member. Post one comment saying which member hit the limit, record `failed`, and stop until a human responds.
-- If required, Research should always be conducted before Refinement.
-- Documentation should always be the last step in a full flow, unless the issue is for documentation only.
 - Anything you would escalate to a human if you were doing the work yourself, escalate before delegating. Delegation is not a way to avoid a decision.
 
 RESEARCH
