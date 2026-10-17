@@ -157,7 +157,11 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
 
 **Every member agent's new `System Prompt.md` (all except Tech Lead):**
 - Post your result as a comment on the issue. That comment is what wakes the Tech Lead.
-- Do not reassign the issue. It stays assigned to `Dev Squad 1`, as the ROUTING section of the squad `Instructions.md` says.
+- Do not reassign the issue. It stays assigned to `Dev Squad 1`, as the ROUTING section of the squad `Instructions.md` says. **Exception: the Product Owner**, see below.
+
+**Product Owner new `System Prompt.md`:**
+- During refinement the issue is assigned to the Product Owner, not the squad. When refinement is done or blocked, it assigns the issue back to `Dev Squad 1` with a comment that says *ready* or names the blocking question. It does not change the status. It may involve the Architect and the person as needed.
+- Because the Tech Lead no longer watches refinement, the Product Owner owns chasing stalled questions. Once a question blocks progress, it hands the issue back rather than waiting indefinitely.
 - Do not change the issue status (observation 7), or state explicitly which statuses this agent may write.
 
 **Workspace Context (`Workspace/Context.md`):**
@@ -182,6 +186,7 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
 **Server / workspace settings (user action, not Markdown):**
 - Set the PR merge status (workspace setting `pr_merge_status`) to `documentation`. Otherwise a merge moves the issue to `done`, which disables the `--until-status documentation` wakeup and skips the Doc Owner.
 - If a custom `to_do` status exists on the server, move its issues to the built-in `todo` and archive it.
+- Test one refinement on a throwaway issue: confirm the Tech Lead is NOT woken while the issue is assigned to the Product Owner, and IS woken when it is assigned back to `Dev Squad 1`.
 - Test on a throwaway issue that a wakeup-started Tech Lead run still behaves as squad leader (gets the squad briefing and instructions).
 
 ## Change log
@@ -224,5 +229,10 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - Cut "marks done" from line 1.
   - Removed the third copy of the Security Analyst rule from TESTING.
 
-  The file is about 1,720 words, down from about 1,980. The refinement-routing decision is still pending.
+  The file is about 1,720 words, down from about 1,980.
+- 2026-10-18: Refinement is now routed via the Product Owner (user decision, to avoid a no-op Tech Lead run per refinement comment).
+  - The Tech Lead moves the issue to `needs_refinement` and assigns it to the Product Owner, without an @mention.
+  - The Product Owner assigns it back to `Dev Squad 1` when it is ready or blocked.
+  - The ROUTING "keep assigned to squad" rule now has a refinement exception.
+  - The trigger "a question that blocks and nobody has answered for a while" moved to the Product Owner.
 - 2026-10-18: Added a DOCUMENTATION section to `Workspace/Context.md`: Confluence is the only store, research goes in the Research folder, and old Notion links are treated as historical.
