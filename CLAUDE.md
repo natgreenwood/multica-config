@@ -106,8 +106,17 @@ Files to re-check: `server/internal/daemon/execenv/runtime_config_sections.go` (
   - Conditions: `--until-status KEY` (custom keys work), `--until-pr checks|merged`, `--until-children-done [--stage N]`, `--until-issue X --until-issue-state done|ended|in_review`, `--until-assignee`, `--until-label`, `--until-property`.
   - Timers: `--kind at|every|cron`.
   - Options: `--instruction`/`--instruction-file`, `--expires-in`, `--on-timeout wake`, `--max-fires`.
-  - Event rules pause after looping 3×. Closing the issue disables its wakeups.
+  - A "wake on any status change" rule is `--kind event --event issue.status_changed --mode continuous`, optionally with `--filter-actor-type member|agent --filter-actor-id <id>`.
+  - Rules live **on the issue** and outlive the run that created them. Limits:
+    - Continuous rules default to `--max-fires 20` (max 1000).
+    - A rule pauses when its trigger chain passes through it a 3rd time without a person in between (`paused_reason=loop`), or after 12 runs in an hour (`rate`). A paused rule stays off until someone re-enables it.
+    - `done`/`cancelled` disables a rule permanently; reopening the issue doesn't restore it.
+    - The registering agent's own status changes and comments never wake it.
+  - Unverified: whether a wakeup run for the squad leader carries the squad briefing. User rules target an *agent*, whereas the built-in child-done rule targets the squad's leader. Test this on a real issue.
 - **Project workflows** (in source, not yet in the public docs). A project can define ordered status columns where entering a column **reassigns the issue to that column's handler** (an agent, squad, member, project lead or creator) and starts their run. A column may also name a "needs changes" status. A named workflow rejects statuses outside it, and only the assignee gets the step's instructions. **This could replace much of the status-routing logic currently written into the Dev Squad 1 instructions.** Availability on our server version is unconfirmed.
+
+- **Status changes don't wake anyone** (`handler/issue.go` `shouldEnqueueAgentTask`). The exception is leaving the fixed `backlog` key, which enqueues the assigned agent. A human moving `refinement_complete → implementation` wakes nobody on its own. Something has to catch it: a comment or @mention, an `issue wakeup --until-status`, or a project-workflow handoff.
+- **PR merge status is configurable** (workspace setting `pr_merge_status`, `handler/pr_auto_complete.go`). It decides what status an issue moves to when all its linked PRs merge. The default is `done`, and `none` leaves the status alone. It can be set to a custom key, such as `documentation`. With the default, a merge sends the issue straight to `done` and skips any post-merge steps.
 
 ### Docs index
 Key pages: `/docs/concepts`, `/docs/how-multica-works`, `/docs/agents`, `/docs/agents-create`, `/docs/skills`, `/docs/squads`, `/docs/triggering-agents`, `/docs/mentioning-agents`, `/docs/tasks`, `/docs/issues`, `/docs/autopilots`, `/docs/project-resources`, `/docs/cli`.
@@ -134,6 +143,18 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
 9. **Project workflows** may be a better fit than prose routing for the Research → Refinement → Implementation → Testing → Documentation flow. Need to check whether our server version has them.
 10. Leader wakes: a squad member's reply already wakes the leader. The rule "assign back to Dev Squad 1" re-triggers it again, so it is likely redundant or the cause of double runs.
 
+## Pending follow-ups (carry into later stages)
+
+**Tech Lead `System Prompt.md` (new). When we write it, it must include:**
+- Permission to register issue wakeups (`multica issue wakeup create/list`), matching the HUMAN CHECKPOINTS section of the squad `Instructions.md`.
+- Permission to set the custom statuses the squad flow needs, especially `refinement_complete` and `in_review`. Agent Identity outranks the built-in workflow and the squad protocol's status rules, so the prompt must state which statuses it may write.
+- The live prompt (`System Prompt_old.md`) has an ad-hoc "register a wakeup… when status becomes documentation" line. Replace it with a pointer to the squad instructions rather than duplicating it.
+
+**Server / workspace settings (user action, not Markdown):**
+- Set the PR merge status (workspace setting `pr_merge_status`) to `documentation`. Otherwise a merge moves the issue to `done`, which disables the `--until-status documentation` wakeup and skips the Doc Owner.
+- Test on a throwaway issue that a wakeup-started Tech Lead run still behaves as squad leader (gets the squad briefing and instructions).
+
 ## Change log
 - 2026-10-17: Created CLAUDE.md with condensed Multica knowledge and an initial list of observations.
 - 2026-10-17: Added findings verified against the multica-ai/multica source (`18fa9f7`): instruction placement and precedence, the built-in status workflow, workspace context, mention types, wakeups and project workflows. Observations 6–10 added or updated.
+- 2026-10-17: Draft squad `Instructions.md`: replaced "Human ONLY steps" with HUMAN CHECKPOINTS (one-off `--until-status` wakeups; fixed "ready" → `implementation`). Added the Pending follow-ups section.

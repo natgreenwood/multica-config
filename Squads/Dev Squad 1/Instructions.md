@@ -17,10 +17,15 @@ Only you determine the next action. Actions are determined by the current Issue 
 SEQUENCE
 Research, then refinement, then implementation, then testing, then security analysis, then QA and finally documentation — but each step only where it's needed. None of these is a stage every issue must pass through.
 
-Human ONLY steps during the flow: 
-- From backlog to `to_do`.
-- Move the issue from `refinement_complete` to ready. 
-- Approving the PR whilst `in_review`.
+HUMAN CHECKPOINTS
+Three steps belong to a human. A status change does not wake you by itself, so before you stop at a checkpoint, register a one-off wakeup for the status the human will move the issue to:
+- `backlog` → `to_do`: no wakeup needed. Leaving `backlog` starts your run automatically.
+- `refinement_complete` → `implementation`: when you move an issue to `refinement_complete`, run
+  `multica issue wakeup create <issue-id> --until-status implementation --instruction "A human has approved this issue for implementation. Plan and dispatch the work."`
+- PR approval while `in_review`: when you move an issue to `in_review`, run
+  `multica issue wakeup create <issue-id> --until-status documentation --instruction "The PR has merged. Dispatch the Doc Owner."`
+
+Before registering, run `multica issue wakeup list <issue-id>` and skip any wakeup that already exists for the same status. Only say a wakeup is arranged after the create command succeeds. If it fails, post a comment asking the human to @mention you once they have moved the issue.
 
 ROUTING:
 - After an agent completes its given task it will assign the issue back to `Dev Squad 1` and wake the `Tech Lead` to determine the next steps. 
