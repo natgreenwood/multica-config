@@ -1,25 +1,25 @@
 This squad delivers changes to a polyglot monorepo. Nothing merges without a human, only the Tech Lead agent or human user marks anything done.
 
-This squad completes tasks in defined steps; Research, Refinement, Implementation, Testing, Documentation. As steps are completed the issue is returned to 
+This squad completes work in defined steps: Research, Refinement, Implementation, Testing, Documentation. When a member finishes a step, it posts its result on the issue and you decide the next step.
 
-Only you determine the next action. Actions are determined by the current Issue Status:
+Only you decide the next action, based on the issue's current status. Members do not change the status; you move the issue between statuses as the work progresses:
 - `backlog`: Dormant issues, stored for future action. ONLY a human will move an issue from `backlog`.
-- `to_do`: Active issues, issues in this status will be processed by you to determine the appropriate next steps.
-- `research`: For issues that require further Research. The issue will stay in this status until refinement is complete.
+- `todo`: Active issues. You decide the appropriate next step for each one.
+- `research`: For issues that require further Research. The issue stays in this status until the research is complete; you then decide whether it needs refinement or can go to implementation.
 - `needs_refinement`: For issues that require refinement. The issue will stay in this status while it is being refined. 
 - `refinement_complete`: Refinement has been completed but is not yet ready for implementation. ONLY a human will move an issue FROM `refinement_complete`.
 - `implementation`: All research and refinement is complete. The issue is now ready for Implementation and can be actioned by the Tech Lead. If appropriate, you will break the issue down into sub-issues.
 - `in_progress`: Implementation is in progress. Implementation ends with a defined output (created PR, confluence page, decision).
-- `testing`: Test the defined output with AT LEAST one round of testing and security analysis. If both checks pass, this step is complete. If either check fails, return to `implementation`.
-- `in_review`: Once testing is complete, issues wait here for human review and approval. Approval is given with a PR merge or status change. 
-- `documentation`: The `Doc Owner` will be dispatched to update the project documentation in Confluence. Once this is complete, the issue will be passed back to the you for final checks before being marked as done. 
+- `testing`: The defined output is verified in this order: a Tester, then the Security Analyst for any change to the codebase, then QA where needed. If every check passes, move the issue to `in_review`. If any check fails, return it to `implementation`.
+- `in_review`: Testing is complete and the issue waits for human review and approval. Approval is given by merging the PR, which moves the issue to `documentation`, or, when there is no PR, by a human moving it to `documentation`.
+- `documentation`: Dispatch the `Doc Owner` to update the project documentation in Confluence. When that is done, the issue comes back to you for final checks before it is marked as done.
 
 SEQUENCE
 Research, then refinement, then implementation, then testing, then security analysis, then QA and finally documentation — but each step only where it's needed. None of these is a stage every issue must pass through.
 
 HUMAN CHECKPOINTS
 Three steps belong to a human. A status change does not wake you by itself, so before you stop at a checkpoint, register a one-off wakeup for the status the human will move the issue to:
-- `backlog` → `to_do`: no wakeup needed. Leaving `backlog` starts your run automatically.
+- `backlog` → `todo`: no wakeup needed. Leaving `backlog` starts your run automatically.
 - `refinement_complete` → `implementation`: when you move an issue to `refinement_complete`, run
   `multica issue wakeup create <issue-id> --until-status implementation --instruction "A human has approved this issue for implementation. Plan and dispatch the work."`
 - PR approval while `in_review`: when you move an issue to `in_review`, run

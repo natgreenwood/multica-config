@@ -129,7 +129,7 @@ Context7 IDs: `/multica-ai/multica` (source, includes the runtime brief and squa
 Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 also apply to the **live** `Instructions_old.md` (it has the same tester, "assign to Dev Squad 1" and admin/secrets sections). Also, the live version says Research findings arrive as a *Notion* page, while the draft says *Confluence*. The Researcher and Doc Owner prompts should be checked against whichever is intended.
 
 1. ~~Architect filename typo ("Sytem Prompt.md")~~ **Done 2026-10-17.** Renamed to `System Prompt.md` with `git mv`.
-2. `Squads/Dev Squad 1/Instructions.md` uses many custom statuses (`to_do`, `research`, `needs_refinement`, `refinement_complete`, `implementation`, `testing`, `documentation`). These need to exist on the server.
+2. **Partly resolved 2026-10-18:** use the built-in `todo` (`to_do` was a mistake), and a single `testing` status covers Tester → Security Analyst → QA. Original note: `Squads/Dev Squad 1/Instructions.md` uses many custom statuses (`to_do`, `research`, `needs_refinement`, `refinement_complete`, `implementation`, `testing`, `documentation`). These need to exist on the server.
    - `to_do` vs the built-in `todo`: the assign trigger keys off "not backlog", but this should be confirmed.
    - Custom statuses don't inherit built-in behaviours. For example, a failed run reverts to `todo`.
 3. Squad Instructions line 3 is an unfinished sentence: "the issue is returned to".
@@ -160,6 +160,7 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
 
 **Server / workspace settings (user action, not Markdown):**
 - Set the PR merge status (workspace setting `pr_merge_status`) to `documentation`. Otherwise a merge moves the issue to `done`, which disables the `--until-status documentation` wakeup and skips the Doc Owner.
+- If a custom `to_do` status exists on the server, move its issues to the built-in `todo` and archive it.
 - Test on a throwaway issue that a wakeup-started Tech Lead run still behaves as squad leader (gets the squad briefing and instructions).
 
 ## Change log
@@ -167,3 +168,10 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
 - 2026-10-17: Added findings verified against the multica-ai/multica source (`18fa9f7`): instruction placement and precedence, the built-in status workflow, workspace context, mention types, wakeups and project workflows. Observations 6–10 added or updated.
 - 2026-10-17: Draft squad `Instructions.md`: replaced "Human ONLY steps" with HUMAN CHECKPOINTS (one-off `--until-status` wakeups; fixed "ready" → `implementation`). Added the Pending follow-ups section.
 - 2026-10-17: Draft squad `Instructions.md` ROUTING: the issue stays assigned to the squad and members don't reassign it. The session-limit rule was rewritten from the leader's side. Member-prompt and Workspace Context follow-ups added.
+- 2026-10-18: Draft squad `Instructions.md` status list:
+  - Completed the line 3 sentence.
+  - Switched to the built-in `todo`.
+  - Fixed the `research` wording.
+  - `testing` now covers Tester → Security Analyst → QA.
+  - `in_review` is aligned with the merge → `documentation` checkpoint.
+  - Added a statement that members don't change the status.
