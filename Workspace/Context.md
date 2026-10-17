@@ -17,6 +17,10 @@ BRANCH NAMES
 SECRETS
 - Bitwarden Secrets Manager (`bws`) is installed on the runtime. Use it to retrieve secrets as needed.
 
+DOCUMENTATION
+- Confluence is the only store for documentation and research. Use the project's Confluence space; research goes in its Research folder.
+- Do not create or update anything in Notion. It is no longer used. If you find an old Notion link, treat it as historical and say so rather than following it as current.
+
 FAILURE NOTICES
 These rules apply to every agent. They exist to stop failure loops, so they never depend on another agent, including a squad leader, being available.
 - A failure notice is either a system comment saying a run failed, or a message that a task you delegated "ended in a final failure".

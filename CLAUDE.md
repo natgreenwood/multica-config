@@ -160,8 +160,9 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
 - Do not reassign the issue. It stays assigned to `Dev Squad 1`, as the ROUTING section of the squad `Instructions.md` says.
 - Do not change the issue status (observation 7), or state explicitly which statuses this agent may write.
 
-**Workspace Context (`Workspace/Context.md`), still to add:**
-- "Confluence is the only documentation and research store."
+**Workspace Context (`Workspace/Context.md`):**
+- Done 2026-10-18: DOCUMENTATION section (Confluence only, Research folder, no Notion).
+- Possible trim later: once Context is live, remove the duplicate "Research output is stored…" line from RESEARCH in the squad `Instructions.md`.
 - Note: branch names and `bws` were moved here from the squad instructions on 2026-10-18.
 
 - Done 2026-10-18: FAILURE NOTICES, including the member-side session-limit rule.
@@ -217,3 +218,4 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - It merges the session-limit rule.
 
   The squad ROUTING session-limit comment now uses @all. The loop incident is recorded above.
+- 2026-10-18: Added a DOCUMENTATION section to `Workspace/Context.md`: Confluence is the only store, research goes in the Research folder, and old Notion links are treated as historical.
