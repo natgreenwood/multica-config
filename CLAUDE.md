@@ -164,8 +164,19 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
 - "Confluence is the only documentation and research store."
 - Note: branch names and `bws` were moved here from the squad instructions on 2026-10-18.
 
-**Workspace Context (or each member prompt):**
-- The member-side "session limit" rule: if a run hits "You've hit your session limit", stop all actions and await instructions. It used to sit in the squad instructions, which only the leader reads.
+- Done 2026-10-18: FAILURE NOTICES, including the member-side session-limit rule.
+
+**All new agent `System Prompt.md` files:**
+- Do NOT include a FAILURE NOTICES section. It lives in Workspace Context now; the 8 live `_old` prompts each carry an identical copy.
+- An agent with a named fallback (only the testers: Tester Claude ↔ Tester Codex) may use it **once** per failure. Decided 2026-10-18.
+
+### Failure-loop incident (why FAILURE NOTICES exists — do not weaken)
+When Claude ran out of usage allowance, an agent on Codex kept re-triggering the failing Claude agents, which caused **200+ failure loops**. Design constraints that follow from it:
+- Failure handling must **not depend on the Tech Lead**, which may be on the same exhausted provider. It must live in Workspace Context, which reaches every agent including Codex ones (via `AGENTS.md`).
+- Two loop routes were found in the source (`service/task.go`):
+  1. The system failure comment is credited to the failed agent, in the triggering thread, so a reply in that thread routes back to it.
+  2. The "delegated failure" signal wakes the agent that @mentioned the failed one with "Resume coordination… reassign it, skip it, or end the workflow". This invites re-delegation, and the per-signal cap doesn't stop a chain of new delegations.
+- A rule in a prompt is not a guarantee. The operational backstop is to pause or archive the looping agent, or take its runtime offline.
 
 **Server / workspace settings (user action, not Markdown):**
 - Set the PR merge status (workspace setting `pr_merge_status`) to `documentation`. Otherwise a merge moves the issue to `done`, which disables the `--until-status documentation` wakeup and skips the Doc Owner.
@@ -199,3 +210,10 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
 - 2026-10-18: Live `Instructions_old.md`: Notion → Confluence for Researcher drafts (plus the user's two blank lines). **User to paste into Multica.** Confluence is now a standing rule.
 - 2026-10-18: Draft squad `Instructions.md` tidy-up: fixed the "Reasarch" typo, TESTING now uses `in_review`, and the redundant DOCUMENTATION section was removed (covered by the status list and SEQUENCE). Open: are "Tester Claude"/"Tester Codex" two server agents sharing `Agents/Tester`?
 - 2026-10-18: Efficiency trim 1: moved ADMINISTRATION (branch names, `bws` secrets) from the draft squad `Instructions.md` to the new `Workspace/Context.md`. `&lt;`/`&gt;` escapes were fixed and the list flattened; the rules are unchanged. Remaining trims 2–5 (protocol duplicates, status-list overlap, line 1, the double Security Analyst rule) and the refinement-routing decision are still pending.
+- 2026-10-18: Added FAILURE NOTICES to `Workspace/Context.md`, rewritten from the live prompts' copy:
+  - It covers both failure routes.
+  - Recovery doesn't depend on the leader.
+  - One named fallback is allowed.
+  - It merges the session-limit rule.
+
+  The squad ROUTING session-limit comment now uses @all. The loop incident is recorded above.

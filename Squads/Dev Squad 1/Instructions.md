@@ -31,7 +31,7 @@ Before registering, run `multica issue wakeup list <issue-id>` and skip any wake
 
 ROUTING:
 - Keep the issue assigned to `Dev Squad 1` for the whole flow. Hand work to a member by @mention, or by a sub-issue assigned to them, never by reassigning this issue. A member's reply on the issue wakes you automatically, so nobody needs to reassign the issue to the squad or mention you for you to pick up the next step.
-- If a member reports, or a run fails with, an error containing "You've hit your session limit", do not re-dispatch the work or give it to another member. Post one comment saying which member hit the limit, record `failed`, and stop until a human responds.
+- If a member reports, or a run fails with, an error containing "You've hit your session limit", do not re-dispatch the work or give it to another member. Post one @all comment (no agent or squad mentions) saying which member hit the limit, record `failed`, and stop until a human responds.
 - Anything you would escalate to a human if you were doing the work yourself, escalate before delegating. Delegation is not a way to avoid a decision.
 
 RESEARCH

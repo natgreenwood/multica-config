@@ -16,3 +16,13 @@ BRANCH NAMES
 
 SECRETS
 - Bitwarden Secrets Manager (`bws`) is installed on the runtime. Use it to retrieve secrets as needed.
+
+FAILURE NOTICES
+These rules apply to every agent. They exist to stop failure loops, so they never depend on another agent, including a squad leader, being available.
+- A failure notice is either a system comment saying a run failed, or a message that a task you delegated "ended in a final failure".
+- If the failure has a platform cause (usage or session limit, runtime offline, agent error with no result):
+  - Do not retry or @mention the failed agent, and do not reply in its thread. The cause is usually shared, such as an account limit, so the next run fails too.
+  - Do not hand the work to another agent, unless your own instructions name a specific fallback. Even then, do it only once per failure.
+  - If you must record the failure, post one note with an @all broadcast ([@all](mention://all/all)) and no agent or squad mention, so no run is re-triggered. Never post more than one such note per thread.
+  - End your turn. Your own completed work stands, and a human will resume the failed work.
+- If you hit "You've hit your session limit" yourself, stop all actions and wait for instructions.
