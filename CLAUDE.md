@@ -191,3 +191,4 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
   - The parent goes to `documentation` when all sub-issues are closed.
   - The `backlog` rule and the IMPLEMENTATION line were updated to match.
 - 2026-10-18: Live `Instructions_old.md`: Notion → Confluence for Researcher drafts (plus the user's two blank lines). **User to paste into Multica.** Confluence is now a standing rule.
+- 2026-10-18: Draft squad `Instructions.md` tidy-up: fixed the "Reasarch" typo, TESTING now uses `in_review`, and the redundant DOCUMENTATION section was removed (covered by the status list and SEQUENCE). Open: are "Tester Claude"/"Tester Codex" two server agents sharing `Agents/Tester`?

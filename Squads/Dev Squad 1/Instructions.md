@@ -37,7 +37,7 @@ ROUTING:
 RESEARCH
 - Conducted by the `Researcher`.
 - Research comes back to you, not directly to an engineer. You decide what, if anything, to build from it.
-- Reasarch Output is stored in the project Confluence space, in the Research Folder.
+- Research output is stored in the project Confluence space, in the Research folder.
 
 REFINEMENT
 
@@ -69,10 +69,7 @@ TESTING
 - Send the second tester only when the first passed the change clean AND the change is high-risk — auth, permissions, data migration, money, or a public API — or when the first tester's findings look thinner than the change deserves.
 - Alternate which tester gets first look across issues, so their relative strengths become visible over time instead of one of them always seeing pre-chewed work.
 - If one tester's runtime is offline, use the other rather than queueing behind it. They are interchangeable for a first pass.
-- All tasks that change the codebase MUST be reviewed by the Security Analyst before it is moved to “In Review”.
-
-DOCUMENTATION
-- When being assigned to “Documentation”, dispatch the “Doc Owner” to update documentation in Confluence.
+- All tasks that change the codebase MUST be reviewed by the Security Analyst before they are moved to `in_review`.
 
 WHEN WORK COMES BACK
 - A defect report from a tester: decide whether it blocks. If it does, the fix is a new scoped task for whichever engineer owns that side, referencing the defect issue. If it doesn't, leave the defect in backlog and say so.
