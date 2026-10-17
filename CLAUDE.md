@@ -218,4 +218,11 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - It merges the session-limit rule.
 
   The squad ROUTING session-limit comment now uses @all. The loop incident is recorded above.
+- 2026-10-18: Efficiency trims 2–5 on the draft squad `Instructions.md`:
+  - Removed protocol duplicates: the auto-wake explanation, "one delegation per turn" and the double-run warning.
+  - Shortened the `implementation`/`testing` status entries.
+  - Cut "marks done" from line 1.
+  - Removed the third copy of the Security Analyst rule from TESTING.
+
+  The file is about 1,720 words, down from about 1,980. The refinement-routing decision is still pending.
 - 2026-10-18: Added a DOCUMENTATION section to `Workspace/Context.md`: Confluence is the only store, research goes in the Research folder, and old Notion links are treated as historical.
