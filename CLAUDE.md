@@ -175,3 +175,4 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
   - `testing` now covers Tester → Security Analyst → QA.
   - `in_review` is aligned with the merge → `documentation` checkpoint.
   - Added a statement that members don't change the status.
+- 2026-10-18: Draft squad `Instructions.md` SEQUENCE now matches the five work statuses. Testing covers Tester → Security Analyst → QA, and Security Analyst review of code changes is stated as the one mandatory step.
