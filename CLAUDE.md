@@ -7,6 +7,7 @@ Source of truth for the configuration of a Multica (multica.ai) workspace: agent
 - **Do not edit any config Markdown (`Agents/**`, `Squads/**`) without the user reviewing the change first.** Propose the change as a diff or snippet, wait for approval, then apply.
 - **Present changes in small pieces**: one file, or one section, at a time.
 - This file (CLAUDE.md) is project tracking and may be updated as needed.
+- **Confluence is the only documentation and research store** (decided 2026-10-18). Notion was the old solution: never reference it in new or revised files. Research output goes in the project Confluence space, Research folder.
 - Commit or push only when the user asks. Branch off `main` first (the repo uses PRs, e.g. `CHORE--...`).
 
 ## Repo layout
@@ -126,7 +127,7 @@ Context7 IDs: `/multica-ai/multica` (source, includes the runtime brief and squa
 
 ## Observations to review with the user (not yet actioned)
 
-Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 also apply to the **live** `Instructions_old.md` (it has the same tester, "assign to Dev Squad 1" and admin/secrets sections). Also, the live version says Research findings arrive as a *Notion* page, while the draft says *Confluence*. The Researcher and Doc Owner prompts should be checked against whichever is intended.
+Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 also apply to the **live** `Instructions_old.md` (it has the same tester, "assign to Dev Squad 1" and admin/secrets sections). Notion vs Confluence (item 4 in the review): resolved 2026-10-18, Confluence only. The live Researcher and Doc Owner prompts already use Confluence.
 
 1. ~~Architect filename typo ("Sytem Prompt.md")~~ **Done 2026-10-17.** Renamed to `System Prompt.md` with `git mv`.
 2. **Partly resolved 2026-10-18:** use the built-in `todo` (`to_do` was a mistake), and a single `testing` status covers Tester → Security Analyst → QA. Original note: `Squads/Dev Squad 1/Instructions.md` uses many custom statuses (`to_do`, `research`, `needs_refinement`, `refinement_complete`, `implementation`, `testing`, `documentation`). These need to exist on the server.
@@ -189,3 +190,4 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
   - A sub-issue runs implementation → testing → in_review, and the merge → `documentation` checkpoint marks it done.
   - The parent goes to `documentation` when all sub-issues are closed.
   - The `backlog` rule and the IMPLEMENTATION line were updated to match.
+- 2026-10-18: Live `Instructions_old.md`: Notion → Confluence for Researcher drafts (plus the user's two blank lines). **User to paste into Multica.** Confluence is now a standing rule.
