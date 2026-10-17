@@ -28,8 +28,8 @@ Three steps belong to a human. A status change does not wake you by itself, so b
 Before registering, run `multica issue wakeup list <issue-id>` and skip any wakeup that already exists for the same status. Only say a wakeup is arranged after the create command succeeds. If it fails, post a comment asking the human to @mention you once they have moved the issue.
 
 ROUTING:
-- After an agent completes its given task it will assign the issue back to `Dev Squad 1` and wake the `Tech Lead` to determine the next steps. 
-- If an error containing "You've hit your session limit" is encountered STOP all actions and await instructions.
+- Keep the issue assigned to `Dev Squad 1` for the whole flow. Hand work to a member by @mention, or by a sub-issue assigned to them, never by reassigning this issue. A member's reply on the issue wakes you automatically, so nobody needs to reassign the issue to the squad or mention you for you to pick up the next step.
+- If a member reports, or a run fails with, an error containing "You've hit your session limit", do not re-dispatch the work or give it to another member. Post one comment saying which member hit the limit, record `failed`, and stop until a human responds.
 - If required, Research should always be conducted before Refinement.
 - Documentation should always be the last step in a full flow, unless the issue is for documentation only.
 - Anything you would escalate to a human if you were doing the work yourself, escalate before delegating. Delegation is not a way to avoid a decision.

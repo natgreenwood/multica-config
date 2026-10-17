@@ -141,7 +141,7 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
 7. **Status-write conflict.** The built-in workflow tells every agent to set `in_progress`/`in_review` itself. None of the member agents' instructions restrict this, so after (say) Researcher finishes, it will likely move the issue to `in_review` and skip the squad's custom flow. Each member agent probably needs a line stating which statuses it may write, or that it must not write status.
 8. **Shared rules.** Branch naming and the `bws` secrets note live only in the squad instructions, which only the leader sees, so engineers never see them. Candidates for Workspace Context.
 9. **Project workflows** may be a better fit than prose routing for the Research → Refinement → Implementation → Testing → Documentation flow. Need to check whether our server version has them.
-10. Leader wakes: a squad member's reply already wakes the leader. The rule "assign back to Dev Squad 1" re-triggers it again, so it is likely redundant or the cause of double runs.
+10. **Addressed in the draft 2026-10-17** (ROUTING rewritten; member side tracked under Pending follow-ups). Leader wakes: a squad member's reply already wakes the leader. The rule "assign back to Dev Squad 1" re-triggers it again, so it is likely redundant or the cause of double runs.
 
 ## Pending follow-ups (carry into later stages)
 
@@ -149,6 +149,14 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
 - Permission to register issue wakeups (`multica issue wakeup create/list`), matching the HUMAN CHECKPOINTS section of the squad `Instructions.md`.
 - Permission to set the custom statuses the squad flow needs, especially `refinement_complete` and `in_review`. Agent Identity outranks the built-in workflow and the squad protocol's status rules, so the prompt must state which statuses it may write.
 - The live prompt (`System Prompt_old.md`) has an ad-hoc "register a wakeup… when status becomes documentation" line. Replace it with a pointer to the squad instructions rather than duplicating it.
+
+**Every member agent's new `System Prompt.md` (all except Tech Lead):**
+- Post your result as a comment on the issue. That comment is what wakes the Tech Lead.
+- Do not reassign the issue. It stays assigned to `Dev Squad 1`, as the ROUTING section of the squad `Instructions.md` says.
+- Do not change the issue status (observation 7), or state explicitly which statuses this agent may write.
+
+**Workspace Context (or each member prompt):**
+- The member-side "session limit" rule: if a run hits "You've hit your session limit", stop all actions and await instructions. It used to sit in the squad instructions, which only the leader reads.
 
 **Server / workspace settings (user action, not Markdown):**
 - Set the PR merge status (workspace setting `pr_merge_status`) to `documentation`. Otherwise a merge moves the issue to `done`, which disables the `--until-status documentation` wakeup and skips the Doc Owner.
@@ -158,3 +166,4 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
 - 2026-10-17: Created CLAUDE.md with condensed Multica knowledge and an initial list of observations.
 - 2026-10-17: Added findings verified against the multica-ai/multica source (`18fa9f7`): instruction placement and precedence, the built-in status workflow, workspace context, mention types, wakeups and project workflows. Observations 6–10 added or updated.
 - 2026-10-17: Draft squad `Instructions.md`: replaced "Human ONLY steps" with HUMAN CHECKPOINTS (one-off `--until-status` wakeups; fixed "ready" → `implementation`). Added the Pending follow-ups section.
+- 2026-10-17: Draft squad `Instructions.md` ROUTING: the issue stays assigned to the squad and members don't reassign it. The session-limit rule was rewritten from the leader's side. Member-prompt and Workspace Context follow-ups added.
