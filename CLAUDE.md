@@ -17,7 +17,9 @@ Agents/<Agent Name>/System Prompt_old.md -> LIVE agent instructions (what the se
 Agents/<Agent Name>/System Prompt.md     -> NEW agent instructions being written (blank as of 2026-10-17)
 Squads/Dev Squad 1/Instructions_old.md   -> LIVE squad instructions
 Squads/Dev Squad 1/Instructions.md       -> DRAFT proposal for the new squad instructions (not deployed)
+Workspace/Context.md                     -> DRAFT for Workspace Settings → Context (seen by EVERY agent on every run)
 ```
+`Workspace/Context.md` holds rules every agent needs. Keep it short, because its tokens go to every agent on every run. Not yet deployed. If the server field already has content, merge it rather than pasting over it.
 Convention: `*_old.md` = live and deployed. The un-suffixed file = the new version being drafted, which the user deploys once it is approved.
 
 **Current state (2026-10-17):** `Instructions_old.md` is live. `Instructions.md` is the user's new draft, written to introduce a status-driven flow (Research → Refinement → Implementation → Testing → Documentation, plus custom statuses). The live agent prompts (`System Prompt_old.md`) were written against the live squad instructions. The new `System Prompt.md` files start blank and will be rewritten to match the new squad flow.
@@ -158,6 +160,10 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
 - Do not reassign the issue. It stays assigned to `Dev Squad 1`, as the ROUTING section of the squad `Instructions.md` says.
 - Do not change the issue status (observation 7), or state explicitly which statuses this agent may write.
 
+**Workspace Context (`Workspace/Context.md`), still to add:**
+- "Confluence is the only documentation and research store."
+- Note: branch names and `bws` were moved here from the squad instructions on 2026-10-18.
+
 **Workspace Context (or each member prompt):**
 - The member-side "session limit" rule: if a run hits "You've hit your session limit", stop all actions and await instructions. It used to sit in the squad instructions, which only the leader reads.
 
@@ -192,3 +198,4 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
   - The `backlog` rule and the IMPLEMENTATION line were updated to match.
 - 2026-10-18: Live `Instructions_old.md`: Notion → Confluence for Researcher drafts (plus the user's two blank lines). **User to paste into Multica.** Confluence is now a standing rule.
 - 2026-10-18: Draft squad `Instructions.md` tidy-up: fixed the "Reasarch" typo, TESTING now uses `in_review`, and the redundant DOCUMENTATION section was removed (covered by the status list and SEQUENCE). Open: are "Tester Claude"/"Tester Codex" two server agents sharing `Agents/Tester`?
+- 2026-10-18: Efficiency trim 1: moved ADMINISTRATION (branch names, `bws` secrets) from the draft squad `Instructions.md` to the new `Workspace/Context.md`. `&lt;`/`&gt;` escapes were fixed and the list flattened; the rules are unchanged. Remaining trims 2–5 (protocol duplicates, status-list overlap, line 1, the double Security Analyst rule) and the refinement-routing decision are still pending.

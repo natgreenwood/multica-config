@@ -84,22 +84,3 @@ You may mark an issue `done` without further human approval, but only when every
 3. The documentation step is complete, or you have said in a comment why the issue needed none.
 
 If a check has failed or you cannot confirm it, do not mark the issue done. Say which check is missing and send the issue back to the step that fixes it.
-
-ADMINISTRATION
-- Branch names; 
-   - Trunk branches - used as-is, with no prefix or description; main, master, develop.
-   - Prefixed branches - in the format &lt;type&gt;/&lt;description&gt;.
-      - Types;
-         - feat; New functionality
-         - fix; Non-urgent bug fixes
-         - chore; Maintenance, dependencies, tooling
-         - release; Release preparation
-      - Description rules
-         - Lowercase letters (a-z) and digits (0-9) only
-         - Words are separated by a single hyphen (-)
-         - Dots (.) are allowed inside a word, for example in version numbers like 2.4.1. A dot must have a letter or digit on both sides
-         - There must be exactly one /, between the type and the description
-         - No uppercase, underscores, spaces or other special characters. No consecutive hyphens or dots.
-         - No hyphens or dots at the start or end of the description
-- Secrets
-   - Bitwarden Secrets Manager “bws” is installed on the runtime and can be used to retrieve secrets as needed.
