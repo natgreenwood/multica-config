@@ -148,6 +148,7 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
 **Tech Lead `System Prompt.md` (new). When we write it, it must include:**
 - Permission to register issue wakeups (`multica issue wakeup create/list`), matching the HUMAN CHECKPOINTS section of the squad `Instructions.md`.
 - Permission to set the custom statuses the squad flow needs, especially `refinement_complete` and `in_review`. Agent Identity outranks the built-in workflow and the squad protocol's status rules, so the prompt must state which statuses it may write.
+- Permission to create sub-issues assigned to `Dev Squad 1` (with `--stage`), and to move parked sub-issues out of `backlog`, per SUB-ISSUES in the squad `Instructions.md`.
 - Explicit permission to mark issues `done` when the ISSUE DONE checks in the squad `Instructions.md` pass. The built-in squad protocol says "leave `done` to a human", and only Agent Identity reliably overrides it. Also remove the live prompt's "Leave done to a human" line, which contradicts this.
 - The live prompt (`System Prompt_old.md`) has an ad-hoc "register a wakeup… when status becomes documentation" line. Replace it with a pointer to the squad instructions rather than duplicating it.
 
@@ -182,3 +183,9 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
   - Confluence-only documentation issues now go straight to `documentation`, skipping implementation and testing, with no human review. That is the user's decision; the Tech Lead's final check is the gate.
   - Changes to docs in the repo follow the normal flow.
 - 2026-10-18: Draft squad `Instructions.md`: ISSUE DONE rewritten as conditional checks (acceptance criteria; code checks only if the issue changed the codebase; documentation done or explained). Removed the duplicate "may mark Done" line from DOCUMENTATION.
+- 2026-10-18: Draft squad `Instructions.md`: added a SUB-ISSUES section.
+  - Sub-issues are assigned to `Dev Squad 1`, and engineers are dispatched by @mention within them.
+  - Stages are used for ordering, with later stages parked in `backlog`; the leader may promote them.
+  - A sub-issue runs implementation → testing → in_review, and the merge → `documentation` checkpoint marks it done.
+  - The parent goes to `documentation` when all sub-issues are closed.
+  - The `backlog` rule and the IMPLEMENTATION line were updated to match.
