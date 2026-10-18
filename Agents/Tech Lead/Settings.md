@@ -22,7 +22,7 @@
 
 - **Break down an issue**: Read NATG-___ and give me a breakdown: the pieces, the order to do them in, and who should own each. Flag anything you would escalate before work starts.
 - **Pressure-test an approach**: Here is the approach I am considering: ___. Tell me where it breaks down, what it costs us later, and whether there is a smaller version that gets most of the value.
-- **Review before merge**: Review the change on branch ___ against the issue it closes. Separate what blocks merge from what is worth doing later, and say plainly if nothing blocks.
+- **Where is it stuck?**: Look at NATG-___ and tell me where it is in the flow, what it's waiting on, and what happens next.
 
 ## Related files
 

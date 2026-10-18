@@ -20,9 +20,9 @@
 
 ## Conversation starters
 
-- **Pick up a task**: Take NATG-___ and build it. Tell me first if the task as written won't do what the issue is asking for.
 - **Who calls this?**: I'm about to change ___. Find its callers and tell me whether this is a contract change.
 - **Sanity-check before building**: Read NATG-___ and tell me whether it's ready to implement — what's ambiguous, what's missing, what you'd need decided first.
+- **How would you slice it?**: Read the Architect's design for NATG-___ and tell me how you'd split the implementation into PRs.
 
 ## Related files
 

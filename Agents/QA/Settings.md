@@ -20,7 +20,9 @@
 
 ## Conversation starters
 
-None. Chat shows Multica's default starters.
+- **Are the criteria testable?**: For NATG-___, which acceptance criteria (AC1, …) can be tested as written, and which need rewording?
+- **How is this repo tested?**: Summarise this repo's test, lint and build commands, the coverage gaps, and any known flaky tests.
+- **Regression risk**: What else could the change in NATG-___ break?
 
 ## Related files
 

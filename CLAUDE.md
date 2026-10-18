@@ -296,7 +296,7 @@ Other changes: Research/Planning were added to the space structure, follow-up is
 
 ### Live Multica workspace (CLI connected 2026-10-18)
 - **Connection:** `multica` CLI is set up on the user's Mac. It's connected to Multica Cloud, workspace `natg` (`571ea6c3-5b15-49a5-ac6f-abfc5e395753`).
-  - Setup also started a local daemon (v0.4.40) on the Mac. It only claims runs for agents bound to it.
+  - Setup also started a local daemon on the user's Mac, which registered Claude, Codex and Hermes runtimes for `Mac.natg.co.uk`. The user says to ignore them: the normal runtimes are **dev-ai-1** and **dev-ai-3** (see `Runtimes/README.md`).
 - **Runtimes:**
   - `Claude (dev-ai-1)`, id `8fb37238…`
   - `Codex (dev-ai-3)`, id `e3c21b4a…`
@@ -454,3 +454,12 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **Stale conversation starters noted, not yet changed:**
     - The Tester starters use the `DEV-___` prefix, but the workspace prefix is `NATG`.
     - The Tech Lead's "Review before merge" and the Tester's "Verify a change" predate the Architect-review and Tester/QA split.
+- 2026-10-18: Conversation starters updated live and in `Agents/*/Settings.md` (user-approved).
+  - **Principle:** starters are chats, which get no squad flow, so they advise rather than do work.
+  - **Removed:** "Pick up a task" from both Engineers, the Tech Lead's "Review before merge", and the Tester's `DEV-___` starter.
+  - **Added:** starters for the Architect, Frontend Designer and QA.
+  - **Placeholders:** all now use `NATG-___`.
+- 2026-10-18: Added `Runtimes/README.md`.
+  - **dev-ai-1:** Claude Code 2.1.301, running the 7 Claude agents. It also has a spare Codex runtime.
+  - **dev-ai-3:** codex-cli 0.162.1, running the 5 Codex agents.
+  - **Still to confirm (❓ items in the README):** MCP servers other than Figma, `gh`, `bws`, the Foodie toolchain, branch protection, and the dev-ai-1 Codex account.
