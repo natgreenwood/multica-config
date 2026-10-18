@@ -22,6 +22,7 @@ Squads/Dev Squad 1/Instructions.md       -> DRAFT proposal for the new squad ins
 Workspace/Context.md                     -> DRAFT for Workspace Settings → Context (seen by EVERY agent on every run)
 Agents/<Agent Name>/Model.md             -> recommended runtime / model / thinking level (settings reference ONLY; never pasted into a prompt)
 Skills/<skill-name>/SKILL.md             -> Multica workspace skills; import from the GitHub URL so "update from source" works
+Agents/<Agent Name>/Skills.md            -> skill assignments for the agent, each with Attached/Removed/Not attached and the reason
 ```
 `Workspace/Context.md` holds rules every agent needs. Keep it short, because its tokens go to every agent on every run. Not yet deployed. If the server field already has content, merge it rather than pasting over it.
 Convention: `*_old.md` = live and deployed. The un-suffixed file = the new version being drafted, which the user deploys once it is approved.
@@ -291,6 +292,37 @@ Other changes: Research/Planning were added to the space structure, follow-up is
 7. A weekly autopilot health check: paused wakeups, issues stalled in `needs_refinement`, unpromoted stages, failed runs.
 8. **DONE 2026-10-18.** Release notes now: the Doc Owner adds merged, user-visible changes to the Release Notes page (stage 1). The `release` step waits until Foodie is deployed.
 
+### Live Multica workspace (CLI connected 2026-10-18)
+- **Connection:** `multica` CLI is set up on the user's Mac. It's connected to Multica Cloud, workspace `natg` (`571ea6c3-5b15-49a5-ac6f-abfc5e395753`).
+  - Setup also started a local daemon (v0.4.40) on the Mac. It only claims runs for agents bound to it.
+- **Runtimes:**
+  - `Claude (dev-ai-1)`, id `8fb37238…`
+  - `Codex (dev-ai-3)`, id `e3c21b4a…`
+- **Agents:** 12 in the workspace. The Tester prompt is used by two of them, `Tester (Claude)` and `Tester (Codex)`.
+- **Changes applied to the live workspace on 2026-10-18 (user-approved):**
+  - Imported the skills `confluence-pages` and `pull-requests` from this repo's GitHub URLs. They have a GitHub source, so `multica skill refresh <id>` pulls updates.
+  - Set every agent's skills as listed in `Agents/*/Skills.md`.
+  - Set every agent's model and thinking level as listed in `Agents/*/Model.md`. Before this, the Tech Lead and Product Owner were on Fable, Tester (Claude) on Opus, the Security Analyst on GPT-6 Astra, and most agents on thinking `medium`.
+- **Not yet confirmed at runtime:** `claude-sonnet-5-5` with `high` for Tester (Claude), and `xhigh` for the Security Analyst. The daemon only checks a model and thinking-level pair when a run starts.
+- **Rollback:** the settings before 2026-10-18 are in the table below. To restore them, re-run `multica agent update <id> --model … --thinking-level …` and `multica agent skills set <id> --skill-ids …` (get skill ids from `multica skill list`).
+
+| Agent | Agent id | Model | Thinking | Skills |
+|---|---|---|---|---|
+| Tech Lead | `0a2cf79b-2aca-4483-a2bc-04a339edf621` | claude-fable-5-1 | high | code-review, grill-me |
+| Tester (Claude) | `2fc80465-fe7d-460d-858a-049de399cf39` | claude-opus-5-5 | medium | code-review, testing-strategy |
+| Tester (Codex) | `c0a163bf-92d4-45f3-83a1-cef5b3733754` | gpt-6.1-sol | medium | code-review, testing-strategy |
+| Researcher | `250e294a-8afb-4f58-a900-c46bb8678aed` | gpt-6.1-sol | medium | — |
+| Frontend Engineer | `8c29de4a-e388-41bc-9784-afed10fe384e` | claude-opus-5-5 | medium | figma-code-connect, figma-design-to-code, frontend-ui-engineering |
+| Backend Engineer | `9be97dc7-f3b4-485a-a452-4897da6643c3` | claude-opus-5-5 | medium | — |
+| Product Owner | `5dbd5e9d-f0f6-439e-ab4a-77f7c2afbde4` | claude-fable-5-1 | high | grill-me |
+| Doc Owner | `5ac65b87-6860-48de-b643-94901710a58e` | gpt-6.1-sol | high | — |
+| Security Analyst | `da2b3f95-0ba0-4781-b844-d0fbf5f42e4c` | gpt-6-astra | medium | analyzing-code-security, detecting-secrets |
+| QA | `a281e28d-360d-42af-bdee-cb64ee373bfc` | gpt-6.1-sol | medium | — |
+| Frontend Designer | `8622da57-afa0-449e-b3c3-6ef4da3ddfbe` | claude-opus-5-5 | medium | figma-create-new-file, figma-generate-design, figma-generate-diagram, figma-generate-library, figma-use, figma-use-figjam, figma-use-motion, frontend-design |
+| Architect | `a76aa289-410c-47ea-ae0f-dbafc432b941` | claude-fable-5-1 | medium | architecture, code-review, system-design |
+
+- **Prompts and squad instructions are still the live `_old` versions.** Only skills and models changed.
+
 ### Failure-loop incident (why FAILURE NOTICES exists — do not weaken)
 When Claude ran out of usage allowance, an agent on Codex kept re-triggering the failing Claude agents, which caused **200+ failure loops**. Design constraints that follow from it:
 - Failure handling must **not depend on the Tech Lead**, which may be on the same exhausted provider. It must live in Workspace Context, which reaches every agent including Codex ones (via `AGENTS.md`).
@@ -397,3 +429,12 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - Replaced the duplicated procedures in 7 prompts with pointers: Researcher −290 words, Engineers about −165 each.
   - Found in source that any PR link counts towards merge status, not just "Closes", and corrected the earlier notes.
 - 2026-10-18: User confirmed the PR merge status is already `documentation`. From that, inferred the server has MUL-7726 (any link counts towards merge status).
+- 2026-10-18: Connected the Multica CLI. Reviewed all 19 workspace skills on their merits and wrote `Agents/*/Skills.md`.
+  - **Applied to the live workspace:** imported the 2 repo skills, set every agent's skill assignments, and set every agent's model and thinking level to match `Model.md`.
+  - **Removed skills:**
+    - `grill-me` (broken stub)
+    - `code-review` from the Tech Lead and Testers
+    - `testing-strategy`
+    - `figma-code-connect` (Figma plan is Professional)
+    - FigJam and diagram skills
+  - **Left unattached:** `threat-modeling` (Bitwarden-specific).
