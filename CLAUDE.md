@@ -270,8 +270,8 @@ Other changes: Research/Planning were added to the space structure, follow-up is
 1. **DONE 2026-10-18.** Trace acceptance criteria through the flow: the Product Owner's numbered criteria, the engineers' evidence for each, Tester and QA verdicts for each, and the Tech Lead's ISSUE DONE check.
 2. **DONE 2026-10-18.** A standard first line for hand-back comments (`Outcome: done | blocked | needs decision — …`), defined once in Workspace Context.
 3. **DONE 2026-10-18.** Separate Tester and QA duties: Tester does adversarial defect-hunting; QA does acceptance verification, regression and QA.md.
-4. A Tech Lead code review step before `in_review`.
-5. A CI gate: the Tech Lead registers `wakeup --until-pr checks` before testing starts.
+4. **DONE 2026-10-18 (option A: the Architect reviews, not the Tech Lead).** A code review step before `in_review`. The built-in squad protocol forbids the leader from reviewing PRs itself ("review this PR" must be delegated).
+5. **DONE 2026-10-18.** A CI gate: the Tech Lead checks `checks_conclusion` via `multica issue pull-requests`, and registers `--until-pr checks` only while checks are pending. The condition ignores results that finished before registration.
 6. Shared Multica skills (`confluence-pages`, `pull-requests`) to remove procedures duplicated across prompts.
 7. A weekly autopilot health check: paused wakeups, issues stalled in `needs_refinement`, unpromoted stages, failed runs.
 8. **DONE 2026-10-18.** Release notes now: the Doc Owner adds merged, user-visible changes to the Release Notes page (stage 1). The `release` step waits until Foodie is deployed.
@@ -372,3 +372,8 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **Tester vs QA:** the Tester hunts for defects; QA checks acceptance criteria, regressions and QA.md. QA waits until blocking Tester defects are fixed.
   - **Release notes:** the Doc Owner adds user-visible changes under "Unreleased".
   - Workspace Context is now 524 words.
+- 2026-10-18: Code review and CI gate (backlog items 4, 5):
+  - **New flow:** engineer PR → CI GATE → `testing`: Architect code review → Tester → Security Analyst → QA → `in_review`.
+  - **Requirements:** CI and Architect review are now required for every code change, alongside Security Analyst review. ISSUE DONE check 2 and the Tech Lead's wakeup permission were updated, and the Architect has a review bullet.
+  - **Decided:** the Architect stays on Fable 5.1, and its `Model.md` rationale is updated: design runs are rare, reviews are frequent but short.
+  - **No dedicated Code Reviewer agent yet** (decided 2026-10-18). The Architect's value is checking code against its own design, and a change already passes four other checks. Revisit if Fable's 50% cap starts to limit design work, if the Architect's reviews turn generic, or if review volume slows design work.
