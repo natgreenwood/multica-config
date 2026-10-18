@@ -21,6 +21,7 @@ Squads/Dev Squad 1/Instructions_old.md   -> LIVE squad instructions
 Squads/Dev Squad 1/Instructions.md       -> DRAFT proposal for the new squad instructions (not deployed)
 Workspace/Context.md                     -> DRAFT for Workspace Settings → Context (seen by EVERY agent on every run)
 Agents/<Agent Name>/Model.md             -> recommended runtime / model / thinking level (settings reference ONLY; never pasted into a prompt)
+Skills/<skill-name>/SKILL.md             -> Multica workspace skills; import from the GitHub URL so "update from source" works
 ```
 `Workspace/Context.md` holds rules every agent needs. Keep it short, because its tokens go to every agent on every run. Not yet deployed. If the server field already has content, merge it rather than pasting over it.
 Convention: `*_old.md` = live and deployed. The un-suffixed file = the new version being drafted, which the user deploys once it is approved.
@@ -71,7 +72,7 @@ Squads: Dev Squad 1 (leader is presumably Tech Lead; to be confirmed).
 ### Issue statuses
 - Built-in: `backlog`, `todo` (Unstarted); `in_progress`, `in_review`, `blocked` (Started); `done`; `cancelled`.
 - **Custom statuses** can be added by owners. They inherit a category, which is fixed once created, but **none of the built-in behaviours**.
-- System behaviours: a failed run reverts `in_progress → todo`; a merged PR with close intent moves the issue to `done`; `backlog` never triggers runs.
+- System behaviours: a failed run reverts `in_progress → todo`; when every PR linked to an issue has merged, the issue moves to the workspace's PR-merge status (default `done`; see the PR-linking note below); `backlog` never triggers runs.
 - Sub-issues can have **stages** (1, 2, 3…). When the earliest unfinished stage is all done or cancelled, the parent is notified (the leader wakes on the parent).
 - A child issue created with `--status todo` and an agent assignee triggers that agent immediately.
 
@@ -124,6 +125,20 @@ Files to re-check: `server/internal/daemon/execenv/runtime_config_sections.go` (
 
 - **Status changes don't wake anyone** (`handler/issue.go` `shouldEnqueueAgentTask`). The exception is leaving the fixed `backlog` key, which enqueues the assigned agent. A human moving `refinement_complete → implementation` wakes nobody on its own. Something has to catch it: a comment or @mention, an `issue wakeup --until-status`, or a project-workflow handoff.
 - **PR merge status is configurable** (workspace setting `pr_merge_status`, `handler/pr_auto_complete.go`). It decides what status an issue moves to when all its linked PRs merge. The default is `done`, and `none` leaves the status alone. It can be set to a custom key, such as `documentation`. With the default, a merge sends the issue straight to `done` and skips any post-merge steps.
+
+### PR linking and merge status (checked in source 2026-10-18; server behaviour inferred from its settings)
+- **What links a PR to an issue:** the key in the PR **title**, in the **branch** name, or right after a closing keyword ("Closes KEY") in the title or body. A bare mention in the body links nothing.
+- **What moves the issue:** in current source (`handler/pr_auto_complete.go`), "the keyword only links; it has no say in what the merge does". When **every** linked PR has merged, the issue moves to the workspace's PR-merge status, however each PR was linked.
+- **Conflict with the live prompts:** they claimed a key only in the title or branch "links without moving the issue on". The user's server can set the merge target to `documentation`. That choice came with the same change (MUL-7726) that made any link count; older servers only had an on/off switch that moved issues to `done`. So the server almost certainly follows the current-source behaviour, and the old engineer wording was out of date.
+- **Rule that works either way** (in the `pull-requests` skill):
+  - A delivering PR has the key in its title *and* "Closes KEY" in its body.
+  - A supporting PR carries the key nowhere, because a linked PR delays the move until it merges too.
+
+### Skills (`Skills/`, 2026-10-18)
+- **`confluence-pages`**, attached to the Researcher, Architect, Doc Owner and Tech Lead. Covers draft vs published status, space and parent, reading pages back, search before creating, and what to do when Confluence is unreachable.
+- **`pull-requests`**, attached to both Engineers and QA. Covers linking a delivering PR, and keeping a supporting PR unlinked.
+- **Prompt pointers:** each prompt keeps a one-line pointer plus its critical rule, in case the skill isn't loaded.
+- **User actions:** import each skill from its GitHub URL (the repo is public), attach it as above, and deploy it with the new set.
 
 ### Confluence (checked via Atlassian MCP 2026-10-18)
 - Site `natgreenwood.atlassian.net`, cloudId `b76a4ca6-c903-4c4d-abdb-df3444a06d06`.
@@ -186,7 +201,7 @@ The live "Leave done to a human" and wakeup lines were dropped.
 
 **Implementation and testing batch (2026-10-18, branch `feat/member-system-prompts`):**
 - **Frontend and Backend Engineers:**
-  - Keep the PR close intent ("Closes KEY"). It's what makes a merge move the issue to `documentation`, using the sub-issue's key on sub-issues.
+  - The PR carries the key in its title and "Closes KEY" in its body (since 2026-10-18 this lives in the `pull-requests` skill). Merging moves the issue to `documentation`. On sub-issues, use the sub-issue's key.
   - No "move to Testing and assign" step any more.
   - Separate issues go in `backlog`.
   - The Frontend Engineer builds from the Frontend Designer's **Figma** design; the Backend Engineer builds from the Architect's design. Both stop if no design is linked.
@@ -194,7 +209,7 @@ The live "Leave done to a human" and wakeup lines were dropped.
 - **QA:**
   - Pass, Fail and Blocked are reported as a *verdict* in the comment, with no status changes and no closing issues.
   - The test plan is folded into the report (user decision A: one comment, one Tech Lead wake).
-  - A separate QA.md PR must not carry a close intent.
+  - A separate QA.md PR must not carry the issue key anywhere (`pull-requests` skill).
   - The H1 is removed.
 - **Frontend Designer:**
   - **Figma is the medium** (user decision; a Figma MCP is configured on the agent).
@@ -272,7 +287,7 @@ Other changes: Research/Planning were added to the space structure, follow-up is
 3. **DONE 2026-10-18.** Separate Tester and QA duties: Tester does adversarial defect-hunting; QA does acceptance verification, regression and QA.md.
 4. **DONE 2026-10-18 (option A: the Architect reviews, not the Tech Lead).** A code review step before `in_review`. The built-in squad protocol forbids the leader from reviewing PRs itself ("review this PR" must be delegated).
 5. **DONE 2026-10-18.** A CI gate: the Tech Lead checks `checks_conclusion` via `multica issue pull-requests`, and registers `--until-pr checks` only while checks are pending. The condition ignores results that finished before registration.
-6. Shared Multica skills (`confluence-pages`, `pull-requests`) to remove procedures duplicated across prompts.
+6. **DONE 2026-10-18.** Shared Multica skills (`confluence-pages`, `pull-requests`) to remove procedures duplicated across prompts.
 7. A weekly autopilot health check: paused wakeups, issues stalled in `needs_refinement`, unpromoted stages, failed runs.
 8. **DONE 2026-10-18.** Release notes now: the Doc Owner adds merged, user-visible changes to the Release Notes page (stage 1). The `release` step waits until Foodie is deployed.
 
@@ -285,7 +300,7 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
 - A rule in a prompt is not a guarantee. The operational backstop is to pause or archive the looping agent, or take its runtime offline.
 
 **Server / workspace settings (user action, not Markdown):**
-- Set the PR merge status (workspace setting `pr_merge_status`) to `documentation`. Otherwise a merge moves the issue to `done`, which disables the `--until-status documentation` wakeup and skips the Doc Owner.
+- ~~Set the PR merge status to `documentation`.~~ **Already set** (user confirmed 2026-10-18): merges move issues to `documentation`.
 - If a custom `to_do` status exists on the server, move its issues to the built-in `todo` and archive it.
 - Test one refinement on a throwaway issue. Confirm that:
   - The Tech Lead is NOT woken while the issue is assigned to the Product Owner.
@@ -377,3 +392,8 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **Requirements:** CI and Architect review are now required for every code change, alongside Security Analyst review. ISSUE DONE check 2 and the Tech Lead's wakeup permission were updated, and the Architect has a review bullet.
   - **Decided:** the Architect stays on Fable 5.1, and its `Model.md` rationale is updated: design runs are rare, reviews are frequent but short.
   - **No dedicated Code Reviewer agent yet** (decided 2026-10-18). The Architect's value is checking code against its own design, and a change already passes four other checks. Revisit if Fable's 50% cap starts to limit design work, if the Architect's reviews turn generic, or if review volume slows design work.
+- 2026-10-18: Backlog item 6, shared skills:
+  - Added `Skills/confluence-pages` and `Skills/pull-requests`.
+  - Replaced the duplicated procedures in 7 prompts with pointers: Researcher −290 words, Engineers about −165 each.
+  - Found in source that any PR link counts towards merge status, not just "Closes", and corrected the earlier notes.
+- 2026-10-18: User confirmed the PR merge status is already `documentation`. From that, inferred the server has MUL-7726 (any link counts towards merge status).

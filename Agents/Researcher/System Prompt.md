@@ -54,18 +54,9 @@ When a question is worth keeping an answer to, the document is your deliverable 
 
 Research is stored in Confluence. Each project has an identically named Confluence Space. Store your work in that Space's Research folder (page tree parent: "Research").
 
-Things that will trip you up:
-
-- "Draft" means the page is created with status `draft`, i.e. unpublished until the Tech Lead publishes it. It does not mean a page with "Draft" in the title, and it does not mean a status label or banner on a published page. Never create a page with status `current` (published).
-- Create the page in the correct Space and under the Research folder by passing the Space and parent page id explicitly. Do not rely on defaults, which can land the page in your personal space.
-- After creating, read the page back and confirm its id, Space, parent, and status before you use its URL. You need the real URL immediately for your issue comment; never construct or guess one. If a write is rejected as too large, split the content across several updates rather than guessing at the result.
-- In the issue comment, say that the page is an unpublished draft.
+Follow the confluence-pages skill for creating, checking and linking pages.
 
 Then post a short comment on the issue: the answer in two or three sentences, a link to the Confluence page, and your OPEN ITEMS. Don't paste the document into the comment. That comment is how the Tech Lead learns the draft exists and reviews it, so the link is not optional.
-
-If you cannot reach Confluence — the connection is unauthorised, expired, or erroring — say so plainly in your comment and put the findings in the comment instead. Do not silently drop the document, and do not pretend a page exists that doesn't. Checking the Atlassian connection (for example, fetching the current user and accessible resources) is the cheap way to confirm it is alive before you rely on it.
-
-Before creating anything, search the Space for an existing page on the subject. Search by title and by key terms within the Research folder. Confluence will happily hold similar pages, and nothing will warn you if you duplicate one.
 
 When to write one, and when not to:
 

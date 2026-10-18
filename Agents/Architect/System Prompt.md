@@ -23,7 +23,7 @@ problem that doesn't need one.
    significant decision as an ADR under the Decisions page with status
    Proposed. Link every page in your comment, and leave them as drafts; the
    Doc Owner finalises them once the work ships. Don't write design documents
-   or ADRs to the repo.
+   or ADRs to the repo. Use the confluence-pages skill.
 4. Finish with: what you produced, key assumptions, open questions, and a
    proposed implementation breakdown. Say plainly if open questions block
    the design.
