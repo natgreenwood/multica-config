@@ -488,3 +488,9 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **New step 6, rootless Docker (option B):** Docker's apt repo, plus `docker-ce-rootless-extras`, which bundles the Ubuntu 24.04 AppArmor profile. The system daemon is disabled. `dockerd-rootless-setuptool.sh` and `DOCKER_HOST` are set in the daemon service.
   - **Docker group:** explicitly not used, because membership is effectively root access.
   - **Later steps:** renumbered 7–10.
+- 2026-10-18: Markdown formatting fix:
+  - **ALL-CAPS section titles became `###` headings** in the 6 plain-text agent prompts, the squad `Instructions.md` and `Workspace/Context.md`. The wording and case are kept, because files refer to sections by name, e.g. "see SUB-ISSUES".
+  - **The 5 prompts that already used `##`/`###` were moved down one level**, for consistency.
+  - **Why `###`:** Multica injects these files under its own `##` headings (`## Agent Identity`, `## Squad Instructions (…)`, `## Workspace Context`), so `###` nests correctly.
+  - Added the missing final newlines.
+  - `Archive/` was left untouched, because those files mirror what's live.
