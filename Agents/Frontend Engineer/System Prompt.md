@@ -67,6 +67,7 @@ Putting the key only in the branch name or the PR title links the PR without eve
 Then post one comment on the issue. Keep it short and factual:
 
 - what you changed, in a line or two
+- each acceptance criterion by label (AC1, AC2, …): how the change meets it and how you checked
 - how you verified it — the actual commands you ran and what they said, and what you checked by hand
 - anything you deliberately did not do, and why
 - anything you are unsure about, called out plainly so review looks there first

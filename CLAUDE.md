@@ -267,14 +267,14 @@ Other changes: Research/Planning were added to the space structure, follow-up is
 - **Foodie security:** the repo already has secret scanning, dependency scanning and CodeQL.
 
 ### Agreed improvement backlog (2026-10-18, in order)
-1. Trace acceptance criteria through the flow: the Product Owner's numbered criteria, the engineers' evidence for each, Tester and QA verdicts for each, and the Tech Lead's ISSUE DONE check.
-2. A standard first line for hand-back comments (`Outcome: done | blocked | needs decision — …`), defined once in Workspace Context.
-3. Separate Tester and QA duties: Tester does adversarial defect-hunting; QA does acceptance verification, regression and QA.md.
+1. **DONE 2026-10-18.** Trace acceptance criteria through the flow: the Product Owner's numbered criteria, the engineers' evidence for each, Tester and QA verdicts for each, and the Tech Lead's ISSUE DONE check.
+2. **DONE 2026-10-18.** A standard first line for hand-back comments (`Outcome: done | blocked | needs decision — …`), defined once in Workspace Context.
+3. **DONE 2026-10-18.** Separate Tester and QA duties: Tester does adversarial defect-hunting; QA does acceptance verification, regression and QA.md.
 4. A Tech Lead code review step before `in_review`.
 5. A CI gate: the Tech Lead registers `wakeup --until-pr checks` before testing starts.
 6. Shared Multica skills (`confluence-pages`, `pull-requests`) to remove procedures duplicated across prompts.
 7. A weekly autopilot health check: paused wakeups, issues stalled in `needs_refinement`, unpromoted stages, failed runs.
-8. Release notes now: the Doc Owner adds merged, user-visible changes to the Release Notes page (stage 1). The `release` step waits until Foodie is deployed.
+8. **DONE 2026-10-18.** Release notes now: the Doc Owner adds merged, user-visible changes to the Release Notes page (stage 1). The `release` step waits until Foodie is deployed.
 
 ### Failure-loop incident (why FAILURE NOTICES exists — do not weaken)
 When Claude ran out of usage allowance, an agent on Codex kept re-triggering the failing Claude agents, which caused **200+ failure loops**. Design constraints that follow from it:
@@ -366,3 +366,9 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - Agent-specific changes are listed under Pending follow-ups.
   - All 11 agent prompts are now drafted.
 - 2026-10-18: Added a `Model.md` to every agent folder (runtime, model, thinking level, why, and when to revisit). Recorded the model decisions, the "no Release Manager yet" decision, and the agreed improvement backlog.
+- 2026-10-18: Flow consistency pass (backlog items 1, 2, 3, 8):
+  - **Acceptance criteria:** labelled AC1, AC2, … by the Product Owner and carried through the engineers' hand-backs, Tester defects, QA's per-criterion results and the Tech Lead's ISSUE DONE check. Sub-issues get their own criteria.
+  - **Hand-back first line:** `Outcome: done | changes needed | blocked | needs decision`, defined in Workspace Context. The Tech Lead routes from it.
+  - **Tester vs QA:** the Tester hunts for defects; QA checks acceptance criteria, regressions and QA.md. QA waits until blocking Tester defects are fixed.
+  - **Release notes:** the Doc Owner adds user-visible changes under "Unreleased".
+  - Workspace Context is now 524 words.

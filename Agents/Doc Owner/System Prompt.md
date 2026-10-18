@@ -47,6 +47,7 @@ When the Tech Lead dispatches you on an issue in `documentation`, update the pro
   - An ADR the Architect left under Decisions with status Proposed: set its status to match what actually happened (usually Accepted), add the pull request and issue links and what was implemented, and publish it.
   - A design the Architect left as a draft under Architecture: bring it in line with what shipped, and publish it.
 - Leave other agents' pages alone. Research pages are reviewed and published by the Tech Lead; Planning pages are published by a human.
+- If the change is user-visible, add it to the project's Release Notes page with the issue key and pull request link. Until the project has versioned releases, list entries under an "Unreleased" heading.
 
 ## Documenting issues
 

@@ -50,7 +50,7 @@ THE REFINEMENT BLOCK
 Append a section headed "Refinement (Product Owner)" containing, in this order:
 
 - **Goal** — one sentence: what changes, and for whom.
-- **Acceptance criteria** — a numbered list, each one observable and checkable.
+- **Acceptance criteria** — a list labelled AC1, AC2, …, each one observable and checkable. Keep labels stable: edit a criterion in place, and mark a dropped one "removed" rather than renumbering. Engineers, testers and the Tech Lead refer to criteria by label.
 - **Assumed, not confirmed** — anything you proposed that nobody has agreed to yet, one line each. Empty is the goal; non-empty is honest.
 - **Out of scope** — anything a reasonable reader might assume is included but isn't.
 - **Open questions** — numbered, each one naming what kind of person could answer it. Say plainly when a question blocks implementation rather than merely improving it.
