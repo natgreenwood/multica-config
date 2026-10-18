@@ -20,11 +20,12 @@ Agents/<Agent Name>/System Prompt.md     -> NEW agent instructions being written
 Squads/Dev Squad 1/Instructions_old.md   -> LIVE squad instructions
 Squads/Dev Squad 1/Instructions.md       -> DRAFT proposal for the new squad instructions (not deployed)
 Workspace/Context.md                     -> DRAFT for Workspace Settings → Context (seen by EVERY agent on every run)
+Agents/<Agent Name>/Model.md             -> recommended runtime / model / thinking level (settings reference ONLY; never pasted into a prompt)
 ```
 `Workspace/Context.md` holds rules every agent needs. Keep it short, because its tokens go to every agent on every run. Not yet deployed. If the server field already has content, merge it rather than pasting over it.
 Convention: `*_old.md` = live and deployed. The un-suffixed file = the new version being drafted, which the user deploys once it is approved.
 
-**Current state (2026-10-17):** `Instructions_old.md` is live. `Instructions.md` is the user's new draft, written to introduce a status-driven flow (Research → Refinement → Implementation → Testing → Documentation, plus custom statuses). The live agent prompts (`System Prompt_old.md`) were written against the live squad instructions. The new `System Prompt.md` files start blank and will be rewritten to match the new squad flow.
+**Current state (2026-10-17):** `Instructions_old.md` is live. `Instructions.md` is the user's new draft, written to introduce a status-driven flow (Research → Refinement → Implementation → Testing → Documentation, plus custom statuses). The live agent prompts (`System Prompt_old.md`) were written against the live squad instructions. **Update 2026-10-18:** all 11 new `System Prompt.md` files are now drafted against the new squad flow. Together with the draft `Instructions.md` and `Workspace/Context.md`, they form one set to deploy together.
 
 Agents: Architect, Backend Engineer, Doc Owner, Frontend Designer, Frontend Engineer, Product Owner, QA, Researcher, Security Analyst, Tech Lead, Tester.
 Squads: Dev Squad 1 (leader is presumably Tech Lead; to be confirmed).
@@ -178,10 +179,29 @@ The live "Leave done to a human" and wakeup lines were dropped.
 - On squad issues it never changes status or assignee. A research issue assigned to it directly, outside the squad, keeps the live behaviour (`in_review`).
 - FAILURE NOTICES is removed (now in Workspace Context).
 
-**Every member agent's new `System Prompt.md` (all except Tech Lead):**
-- Post your result as a comment on the issue. That comment is what wakes the Tech Lead.
-- Do not reassign the issue. It stays assigned to `Dev Squad 1`, as the ROUTING section of the squad `Instructions.md` says. **Exception: the Product Owner**, see below.
-- Do not change the issue status (observation 7), or state explicitly which statuses this agent may write.
+**Every member agent's new `System Prompt.md` (all except Tech Lead): DONE 2026-10-18.** All 10 member prompts carry these rules:
+- The member posts its result as a comment on the issue, and that comment wakes the Tech Lead.
+- It doesn't reassign the issue. **Exception:** the Product Owner hands back after refinement.
+- It doesn't change status, explicitly overriding Multica's default workflow. **Exception:** the Researcher and Doc Owner keep their live behaviour for issues assigned to them directly, outside the squad.
+
+**Implementation and testing batch (2026-10-18, branch `feat/member-system-prompts`):**
+- **Frontend and Backend Engineers:**
+  - Keep the PR close intent ("Closes KEY"). It's what makes a merge move the issue to `documentation`, using the sub-issue's key on sub-issues.
+  - No "move to Testing and assign" step any more.
+  - Separate issues go in `backlog`.
+  - The Frontend Engineer builds from the Frontend Designer's **Figma** design; the Backend Engineer builds from the Architect's design. Both stop if no design is linked.
+- **Tester:** the `in_review` and reassign lines are removed. Defects are still filed in `backlog`, assigned to `Dev Squad 1`.
+- **QA:**
+  - Pass, Fail and Blocked are reported as a *verdict* in the comment, with no status changes and no closing issues.
+  - The test plan is folded into the report (user decision A: one comment, one Tech Lead wake).
+  - A separate QA.md PR must not carry a close intent.
+  - The H1 is removed.
+- **Frontend Designer:**
+  - **Figma is the medium** (user decision; a Figma MCP is configured on the agent).
+  - Handoff notes go in Figma and are summarised in the comment, with no @mention of the Frontend Engineer.
+  - A "can't reach Figma" honesty line is added.
+  - The H1 is removed.
+- **Security Analyst:** the comment is always the hand-back, because the Tech Lead needs APPROVED verdicts too, given mandatory review before `in_review`. It never reassigns.
 
 **Product Owner `System Prompt.md`: DONE 2026-10-18 (draft, 1,475 words).** Built from `_old` with three amended passages and a new IN DEV SQUAD 1 section:
 - It owns refinement while assigned and never changes status, overriding the default workflow.
@@ -216,6 +236,45 @@ Other changes: Research/Planning were added to the space structure, follow-up is
 **All new agent `System Prompt.md` files:**
 - Do NOT include a FAILURE NOTICES section. It lives in Workspace Context now; the 8 live `_old` prompts each carry an identical copy.
 - An agent with a named fallback (only the testers: Tester Claude ↔ Tester Codex) may use it **once** per failure. Decided 2026-10-18.
+
+### Models and subscriptions (decided 2026-10-18)
+- **Subscriptions:** Claude Max 20x and ChatGPT Pro $100 (5× Plus). The limit that matters is weekly allowance, not dollars.
+  - Fable 5.1 may use at most 50% of the weekly Claude allowance.
+  - Pro $100 has no 5-hour cap but does have a weekly limit.
+- **Per-agent choices** are in `Agents/*/Model.md`. In summary:
+  - **Claude:**
+    - Fable 5.1: the Architect.
+    - Opus 5.5: Tech Lead, Product Owner, both Engineers and the Frontend Designer.
+    - Sonnet 5.5: Tester Claude.
+  - **Codex (GPT-6.1 Sol):** Researcher, Doc Owner, QA, Security Analyst (xhigh) and Tester Codex.
+- **Design principles:**
+  - Spend capability where mistakes are costly or hard to spot.
+  - Keep reviewers on a different provider from the engineers.
+  - Keep both providers in use, so one exhausted allowance doesn't stop testing.
+  - Known single point of failure: the Tech Lead is on Claude.
+- **Sources:**
+  - The Claude model facts come from Anthropic's reference.
+  - The OpenAI lineup comes from third-party sources (GPT-6.1 Sol is Codex's default since 2026-09-29; GPT-6 Luna is the cheaper high-volume model).
+  - Always select from Multica's model list, because names come from each runtime.
+
+### Release management (decided 2026-10-18)
+- **No Release Manager agent yet.** Releasing is a process step before it is a role.
+- **Staged plan:**
+  1. The Doc Owner feeds the Release Notes page.
+  2. Once Foodie has a deploy pipeline, add a `release` step owned by the Tech Lead.
+  3. Add a dedicated agent only when there are environments to operate.
+- **Foodie is not deployed** (confirmed 2026-10-18). Stages 2–3 are deferred until it is. Stage 1 can be done now as a one-line Doc Owner change.
+- **Foodie security:** the repo already has secret scanning, dependency scanning and CodeQL.
+
+### Agreed improvement backlog (2026-10-18, in order)
+1. Trace acceptance criteria through the flow: the Product Owner's numbered criteria, the engineers' evidence for each, Tester and QA verdicts for each, and the Tech Lead's ISSUE DONE check.
+2. A standard first line for hand-back comments (`Outcome: done | blocked | needs decision — …`), defined once in Workspace Context.
+3. Separate Tester and QA duties: Tester does adversarial defect-hunting; QA does acceptance verification, regression and QA.md.
+4. A Tech Lead code review step before `in_review`.
+5. A CI gate: the Tech Lead registers `wakeup --until-pr checks` before testing starts.
+6. Shared Multica skills (`confluence-pages`, `pull-requests`) to remove procedures duplicated across prompts.
+7. A weekly autopilot health check: paused wakeups, issues stalled in `needs_refinement`, unpromoted stages, failed runs.
+8. Release notes now: the Doc Owner adds merged, user-visible changes to the Release Notes page (stage 1). The `release` step waits until Foodie is deployed.
 
 ### Failure-loop incident (why FAILURE NOTICES exists — do not weaken)
 When Claude ran out of usage allowance, an agent on Codex kept re-triggering the failing Claude agents, which caused **200+ failure loops**. Design constraints that follow from it:
@@ -301,3 +360,9 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - The squad status rule is added.
   - FAILURE NOTICES is removed, and the "Altassian" typo is fixed.
 - 2026-10-18: Wrote the new Doc Owner `System Prompt.md` (1,538 words, up from 1,437). It adds the "In Dev Squad 1" section, which finalises the Architect's drafts and leaves Research and Planning alone. Follow-up issues now go in `backlog`, and output goes in the issue comment. FAILURE NOTICES and the H1 were removed.
+- 2026-10-18: Wrote the last six member prompts:
+  - Frontend Engineer 1,208 words, Backend Engineer 1,183, Tester 794, QA 1,802, Frontend Designer 652, Security Analyst 507.
+  - Shared changes: comment as the hand-back, no status or assignee changes, issues filed in `backlog`, FAILURE NOTICES removed.
+  - Agent-specific changes are listed under Pending follow-ups.
+  - All 11 agent prompts are now drafted.
+- 2026-10-18: Added a `Model.md` to every agent folder (runtime, model, thinking level, why, and when to revisit). Recorded the model decisions, the "no Release Manager yet" decision, and the agreed improvement backlog.
