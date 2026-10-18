@@ -20,6 +20,7 @@ Agents/<Agent Name>/System Prompt.md     -> NEW agent instructions being written
 Squads/Dev Squad 1/Instructions_old.md   -> LIVE squad instructions
 Squads/Dev Squad 1/Instructions.md       -> DRAFT proposal for the new squad instructions (not deployed)
 Workspace/Context.md                     -> DRAFT for Workspace Settings → Context (seen by EVERY agent on every run)
+Agents/<Agent Name>/Model.md             -> recommended runtime / model / thinking level (settings reference ONLY; never pasted into a prompt)
 ```
 `Workspace/Context.md` holds rules every agent needs. Keep it short, because its tokens go to every agent on every run. Not yet deployed. If the server field already has content, merge it rather than pasting over it.
 Convention: `*_old.md` = live and deployed. The un-suffixed file = the new version being drafted, which the user deploys once it is approved.
@@ -236,6 +237,45 @@ Other changes: Research/Planning were added to the space structure, follow-up is
 - Do NOT include a FAILURE NOTICES section. It lives in Workspace Context now; the 8 live `_old` prompts each carry an identical copy.
 - An agent with a named fallback (only the testers: Tester Claude ↔ Tester Codex) may use it **once** per failure. Decided 2026-10-18.
 
+### Models and subscriptions (decided 2026-10-18)
+- **Subscriptions:** Claude Max 20x and ChatGPT Pro $100 (5× Plus). The limit that matters is weekly allowance, not dollars.
+  - Fable 5.1 may use at most 50% of the weekly Claude allowance.
+  - Pro $100 has no 5-hour cap but does have a weekly limit.
+- **Per-agent choices** are in `Agents/*/Model.md`. In summary:
+  - **Claude:**
+    - Fable 5.1: the Architect.
+    - Opus 5.5: Tech Lead, Product Owner, both Engineers and the Frontend Designer.
+    - Sonnet 5.5: Tester Claude.
+  - **Codex (GPT-6.1 Sol):** Researcher, Doc Owner, QA, Security Analyst (xhigh) and Tester Codex.
+- **Design principles:**
+  - Spend capability where mistakes are costly or hard to spot.
+  - Keep reviewers on a different provider from the engineers.
+  - Keep both providers in use, so one exhausted allowance doesn't stop testing.
+  - Known single point of failure: the Tech Lead is on Claude.
+- **Sources:**
+  - The Claude model facts come from Anthropic's reference.
+  - The OpenAI lineup comes from third-party sources (GPT-6.1 Sol is Codex's default since 2026-09-29; GPT-6 Luna is the cheaper high-volume model).
+  - Always select from Multica's model list, because names come from each runtime.
+
+### Release management (decided 2026-10-18)
+- **No Release Manager agent yet.** Releasing is a process step before it is a role.
+- **Staged plan:**
+  1. The Doc Owner feeds the Release Notes page.
+  2. Once Foodie has a deploy pipeline, add a `release` step owned by the Tech Lead.
+  3. Add a dedicated agent only when there are environments to operate.
+- **Open:** is Foodie deployed anywhere yet?
+- **Foodie security:** the repo already has secret scanning, dependency scanning and CodeQL.
+
+### Agreed improvement backlog (2026-10-18, in order)
+1. Trace acceptance criteria through the flow: the Product Owner's numbered criteria, the engineers' evidence for each, Tester and QA verdicts for each, and the Tech Lead's ISSUE DONE check.
+2. A standard first line for hand-back comments (`Outcome: done | blocked | needs decision — …`), defined once in Workspace Context.
+3. Separate Tester and QA duties: Tester does adversarial defect-hunting; QA does acceptance verification, regression and QA.md.
+4. A Tech Lead code review step before `in_review`.
+5. A CI gate: the Tech Lead registers `wakeup --until-pr checks` before testing starts.
+6. Shared Multica skills (`confluence-pages`, `pull-requests`) to remove procedures duplicated across prompts.
+7. A weekly autopilot health check: paused wakeups, issues stalled in `needs_refinement`, unpromoted stages, failed runs.
+8. The release step (see Release management).
+
 ### Failure-loop incident (why FAILURE NOTICES exists — do not weaken)
 When Claude ran out of usage allowance, an agent on Codex kept re-triggering the failing Claude agents, which caused **200+ failure loops**. Design constraints that follow from it:
 - Failure handling must **not depend on the Tech Lead**, which may be on the same exhausted provider. It must live in Workspace Context, which reaches every agent including Codex ones (via `AGENTS.md`).
@@ -325,3 +365,4 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - Shared changes: comment as the hand-back, no status or assignee changes, issues filed in `backlog`, FAILURE NOTICES removed.
   - Agent-specific changes are listed under Pending follow-ups.
   - All 11 agent prompts are now drafted.
+- 2026-10-18: Added a `Model.md` to every agent folder (runtime, model, thinking level, why, and when to revisit). Recorded the model decisions, the "no Release Manager yet" decision, and the agreed improvement backlog.
