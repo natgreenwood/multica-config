@@ -171,9 +171,12 @@ It also:
 
 The live "Leave done to a human" and wakeup lines were dropped.
 
-**Researcher new `System Prompt.md`:**
-- Drop the `docs/research/[ISSUE KEY].md` index PR entirely (Confluence-only decision). Its issue comment must link the Draft page in the `Research` folder; that comment is the review signal for the Tech Lead.
-- It must not publish its own pages. The Tech Lead publishes after review.
+**Researcher `System Prompt.md`: DONE 2026-10-18 (draft, 1,544 words).** Built from `_old`:
+- The index PR is gone, along with all repo writes.
+- The issue comment links the Draft page and is the Tech Lead's review signal.
+- The Tech Lead publishes the page.
+- On squad issues it never changes status or assignee. A research issue assigned to it directly, outside the squad, keeps the live behaviour (`in_review`).
+- FAILURE NOTICES is removed (now in Workspace Context).
 
 **Every member agent's new `System Prompt.md` (all except Tech Lead):**
 - Post your result as a comment on the issue. That comment is what wakes the Tech Lead.
@@ -289,3 +292,7 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - A new "In Dev Squad 1" section adds the status rule and the refinement reply rule.
   - Skills are now `architecture` and `system-design`.
   - Added a Doc Owner follow-up.
+- 2026-10-18: Wrote the new Researcher `System Prompt.md` (1,544 words, down from 1,704):
+  - No repo writes and no index PR. The issue comment with the Draft link is the review signal, and the Tech Lead publishes.
+  - The squad status rule is added.
+  - FAILURE NOTICES is removed, and the "Altassian" typo is fixed.
