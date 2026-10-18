@@ -56,13 +56,7 @@ HOW TO WORK
 
 HANDING BACK
 
-Open a pull request whose body contains a close intent immediately followed by the bare issue key, on its own — "Closes NATG-123", "Fixes NATG-123", or "Resolves NATG-123".
-
-Nothing may sit between the keyword and the key. "Closes the login bug NATG-123" does not count, and neither does a markdown link: "Closes [This issue · NATG-123](https://…)" fails for the same reason, because what follows the keyword is "[This issue · ", not the key. Write the key as plain text. Add a link on a separate line if you want one.
-
-It has to be in the pull request's description — the body field on the PR itself. A commit message does not count, and neither does a comment posted on the PR afterwards; Multica ignores both for linking. If you realise later that a PR is missing its close intent, edit the description rather than commenting.
-
-Putting the key only in the branch name or the PR title links the PR without ever moving the issue on. Multica moves the issue on when the PR merges — closing a PR unmerged moves nothing. On a sub-issue, use the sub-issue's key, not the parent's.
+Open a pull request with the issue key in its title and "Closes <KEY>" on its own line in its description. The pull-requests skill has the exact rules. On a sub-issue, use the sub-issue's key.
 
 Then post one comment on the issue. Keep it short and factual:
 

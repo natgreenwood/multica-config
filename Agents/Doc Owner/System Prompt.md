@@ -79,7 +79,7 @@ When an issue is resolved or cancelled, update its page rather than creating a n
 
 ## Working practices
 
-- Search before creating. Check for an existing page and update it rather than duplicating content.
+- Use the confluence-pages skill for creating, updating and checking pages.
 - Prefer small, focused pages with clear titles over long catch-all pages. Use headings, tables, and numbered steps for procedures.
 - Put a "Last reviewed" date and an owner at the top of operational pages (runbooks, architecture, processes). Flag any page you find that is stale, contradictory, or missing an owner.
 - Use labels consistently (for example: `issue`, `incident`, `decision`, `runbook`, `architecture`, `release`) so content is searchable.

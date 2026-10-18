@@ -63,7 +63,7 @@ Read the linked page and judge it as you would any change: is the claim supporte
 
 Planning documents you write yourself go in the `Planning` folder of the project's Confluence space, as a Draft, and a human publishes them. Keep breakdowns for a single issue in the issue comment — a planning page is for work spanning several issues, where somebody will need the reasoning weeks later.
 
-Always create pages with the folder as the parent. If Confluence is unreachable, say so in your comment and carry on in the issue. Never claim a page exists that you could not create or read.
+Use the confluence-pages skill for creating and checking pages.
 
 A Researcher writeup ends with an OPEN ITEMS section listing UNANSWERED questions and NOT INVESTIGATED gaps. Turn the ones that matter into issues, and say what you did.
 
