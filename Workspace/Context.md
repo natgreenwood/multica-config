@@ -21,6 +21,15 @@ DOCUMENTATION
 - Confluence is the only store for documentation and research. Use the project's Confluence space; research goes in its Research folder.
 - Do not create or update anything in Notion. It is no longer used. If you find an old Notion link, treat it as historical and say so rather than following it as current.
 
+HAND-BACK COMMENTS
+When you hand work back on an issue, the first line of your comment is:
+`Outcome: done | changes needed | blocked | needs decision — <one-line summary>`
+- done: you delivered what you were asked for. A passing test run, a clean review, a ready refinement and a finished design all count.
+- changes needed: you found problems someone else must fix. Failed tests, review findings and a BLOCK verdict all count.
+- blocked: you couldn't finish without something you don't have. Say what, and from whom.
+- needs decision: you stopped at a choice that isn't yours to make. Give the options and your recommendation.
+Detailed verdicts (Pass/Fail, APPROVED/BLOCK) go in the body of the comment, not instead of this line.
+
 FAILURE NOTICES
 These rules apply to every agent. They exist to stop failure loops, so they never depend on another agent, including a squad leader, being available.
 - A failure notice is either a system comment saying a run failed, or a message that a task you delegated "ended in a final failure".
