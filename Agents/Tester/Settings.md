@@ -24,7 +24,7 @@ Two Multica agents share this folder's prompt and differ only in runtime and mod
 
 ### Conversation starters
 
-- **Verify a change**: Check the change on DEV-___ against what the issue actually asked for. File anything you find; don't fix it.
+- **How would you break it?**: For NATG-___, list the edge cases and failure paths you'd try first.
 - **Go looking for trouble**: Probe ___ for defects — edge cases, error paths, boundaries. Report what reproduces and what doesn't.
 - **Is this a bug or unspecified?**: ___ does ___. Tell me whether that contradicts a stated requirement or is just behaviour nobody specified.
 
@@ -50,13 +50,13 @@ Two Multica agents share this folder's prompt and differ only in runtime and mod
 
 ### Conversation starters
 
-- **Verify a change**: Check the change on DEV-___ against what the issue actually asked for. File anything you find; don't fix it.
+- **How would you break it?**: For NATG-___, list the edge cases and failure paths you'd try first.
 - **Go looking for trouble**: Probe ___ for defects — edge cases, error paths, boundaries. Report what reproduces and what doesn't.
 - **Is this a bug or unspecified?**: ___ does ___. Tell me whether that contradicts a stated requirement or is just behaviour nobody specified.
 
 ## Related files
 
-- Instructions: `System Prompt.md` (new) / `System Prompt_old.md` (live)
+- Instructions: `System Prompt.md` (new) / `Archive/Agents/Tester/System Prompt_old.md` (live until the new set is deployed)
 - Model rationale: `Model.md`
 - Skills: `Skills.md`
 

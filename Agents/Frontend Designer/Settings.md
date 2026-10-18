@@ -20,11 +20,13 @@
 
 ## Conversation starters
 
-None. Chat shows Multica's default starters.
+- **Critique a screen**: Review the Figma frames at ___ against our design system and accessibility. What would you change?
+- **Missing states**: For NATG-___, list the states and edge cases the design needs to cover.
+- **What can we reuse?**: Before we design ___, what in our Figma design system could it reuse?
 
 ## Related files
 
-- Instructions: `System Prompt.md` (new) / `System Prompt_old.md` (live)
+- Instructions: `System Prompt.md` (new) / `Archive/Agents/Frontend Designer/System Prompt_old.md` (live until the new set is deployed)
 - Model rationale: `Model.md`
 - Skills: `Skills.md`
 

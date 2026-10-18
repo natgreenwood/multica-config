@@ -20,11 +20,13 @@
 
 ## Conversation starters
 
-None. Chat shows Multica's default starters.
+- **Weigh the options**: We need ___. Give me two or three options with honest trade-offs and your recommendation.
+- **Challenge a design**: Review the design for NATG-___. What breaks first, and what would you change?
+- **Does this need an ADR?**: Is the decision in NATG-___ significant enough for an ADR? If so, draft it under Decisions as Proposed.
 
 ## Related files
 
-- Instructions: `System Prompt.md` (new) / `System Prompt_old.md` (live)
+- Instructions: `System Prompt.md` (new) / `Archive/Agents/Architect/System Prompt_old.md` (live until the new set is deployed)
 - Model rationale: `Model.md`
 - Skills: `Skills.md`
 

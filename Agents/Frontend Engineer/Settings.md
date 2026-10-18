@@ -20,13 +20,13 @@
 
 ## Conversation starters
 
-- **Pick up a task**: Take NATG-___ and build it. Tell me first if the task as written won't do what the issue is asking for.
 - **Sanity-check before building**: Read NATG-___ and tell me whether it's ready to implement — what's ambiguous, what's missing, what states the design doesn't specify.
 - **Explain a package's conventions**: I'm about to change ___. What are that package's actual conventions — component patterns, test command, lint setup?
+- **Is the design buildable?**: Look at the Figma design for NATG-___ and tell me what's missing before it can be implemented.
 
 ## Related files
 
-- Instructions: `System Prompt.md` (new) / `System Prompt_old.md` (live)
+- Instructions: `System Prompt.md` (new) / `Archive/Agents/Frontend Engineer/System Prompt_old.md` (live until the new set is deployed)
 - Model rationale: `Model.md`
 - Skills: `Skills.md`
 

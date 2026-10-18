@@ -20,12 +20,13 @@
 
 ## Conversation starters
 
-- **Review this change**: Review the diff on [branch] for security issues before we merge
+- **Review this change**: Review the pull request for NATG-___ for security issues.
 - **Summarise any security findings**: Summarise all open security findings on this issue by severity.
+- **Threat-check a design**: What are the security risks in the design for NATG-___?
 
 ## Related files
 
-- Instructions: `System Prompt.md` (new) / `System Prompt_old.md` (live)
+- Instructions: `System Prompt.md` (new) / `Archive/Agents/Security Analyst/System Prompt_old.md` (live until the new set is deployed)
 - Model rationale: `Model.md`
 - Skills: `Skills.md`
 
