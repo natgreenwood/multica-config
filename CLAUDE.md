@@ -263,7 +263,7 @@ Other changes: Research/Planning were added to the space structure, follow-up is
   1. The Doc Owner feeds the Release Notes page.
   2. Once Foodie has a deploy pipeline, add a `release` step owned by the Tech Lead.
   3. Add a dedicated agent only when there are environments to operate.
-- **Open:** is Foodie deployed anywhere yet?
+- **Foodie is not deployed** (confirmed 2026-10-18). Stages 2–3 are deferred until it is. Stage 1 can be done now as a one-line Doc Owner change.
 - **Foodie security:** the repo already has secret scanning, dependency scanning and CodeQL.
 
 ### Agreed improvement backlog (2026-10-18, in order)
@@ -274,7 +274,7 @@ Other changes: Research/Planning were added to the space structure, follow-up is
 5. A CI gate: the Tech Lead registers `wakeup --until-pr checks` before testing starts.
 6. Shared Multica skills (`confluence-pages`, `pull-requests`) to remove procedures duplicated across prompts.
 7. A weekly autopilot health check: paused wakeups, issues stalled in `needs_refinement`, unpromoted stages, failed runs.
-8. The release step (see Release management).
+8. Release notes now: the Doc Owner adds merged, user-visible changes to the Release Notes page (stage 1). The `release` step waits until Foodie is deployed.
 
 ### Failure-loop incident (why FAILURE NOTICES exists — do not weaken)
 When Claude ran out of usage allowance, an agent on Codex kept re-triggering the failing Claude agents, which caused **200+ failure loops**. Design constraints that follow from it:
