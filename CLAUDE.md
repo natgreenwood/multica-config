@@ -23,6 +23,7 @@ Workspace/Context.md                     -> DRAFT for Workspace Settings → Con
 Agents/<Agent Name>/Model.md             -> recommended runtime / model / thinking level (settings reference ONLY; never pasted into a prompt)
 Skills/<skill-name>/SKILL.md             -> Multica workspace skills; import from the GitHub URL so "update from source" works
 Agents/<Agent Name>/Skills.md            -> skill assignments for the agent, each with Attached/Removed/Not attached and the reason
+Agents/<Agent Name>/Settings.md          -> every item on the agent's Settings tab, exported from Multica; together with avatar*.webp it lets someone rebuild the agent
 Autopilots/<Name>/Runbook.md             -> the autopilot's description (its run prompt); Settings.md holds mode, assignee, schedule and subscriber
 ```
 `Workspace/Context.md` holds rules every agent needs. Keep it short, because its tokens go to every agent on every run. Not yet deployed. If the server field already has content, merge it rather than pasting over it.
@@ -447,3 +448,9 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - Added `Autopilots/Weekly Health Check/` (Runbook.md and Settings.md) and created the autopilot live with the CLI.
   - It's report-only, with 5 checks: wakeups that won't fire, stalled issues (3 days active, 7 days waiting), stages not promoted, failed runs and loop patterns, and untriaged backlog.
   - All 8 backlog items are now done.
+- 2026-10-18: Added `Agents/*/Settings.md`, generated from `multica agent list`, and the agent avatars (`avatar.webp`; the Tester folder has `avatar-claude.webp` and `avatar-codex.webp`).
+  - **Contents:** name, description, avatar, runtime, model, thinking level, service tier, access, maximum concurrent runs, environment variables, CLI arguments, MCP, disabled runtime skills, and conversation starters.
+  - **Not included:** agent IDs and owners. No environment variable values exist.
+  - **Stale conversation starters noted, not yet changed:**
+    - The Tester starters use the `DEV-___` prefix, but the workspace prefix is `NATG`.
+    - The Tech Lead's "Review before merge" and the Tester's "Verify a change" predate the Architect-review and Tester/QA split.
