@@ -23,6 +23,7 @@ Workspace/Context.md                     -> DRAFT for Workspace Settings → Con
 Agents/<Agent Name>/Model.md             -> recommended runtime / model / thinking level (settings reference ONLY; never pasted into a prompt)
 Skills/<skill-name>/SKILL.md             -> Multica workspace skills; import from the GitHub URL so "update from source" works
 Agents/<Agent Name>/Skills.md            -> skill assignments for the agent, each with Attached/Removed/Not attached and the reason
+Autopilots/<Name>/Runbook.md             -> the autopilot's description (its run prompt); Settings.md holds mode, assignee, schedule and subscriber
 ```
 `Workspace/Context.md` holds rules every agent needs. Keep it short, because its tokens go to every agent on every run. Not yet deployed. If the server field already has content, merge it rather than pasting over it.
 Convention: `*_old.md` = live and deployed. The un-suffixed file = the new version being drafted, which the user deploys once it is approved.
@@ -289,7 +290,7 @@ Other changes: Research/Planning were added to the space structure, follow-up is
 4. **DONE 2026-10-18 (option A: the Architect reviews, not the Tech Lead).** A code review step before `in_review`. The built-in squad protocol forbids the leader from reviewing PRs itself ("review this PR" must be delegated).
 5. **DONE 2026-10-18.** A CI gate: the Tech Lead checks `checks_conclusion` via `multica issue pull-requests`, and registers `--until-pr checks` only while checks are pending. The condition ignores results that finished before registration.
 6. **DONE 2026-10-18.** Shared Multica skills (`confluence-pages`, `pull-requests`) to remove procedures duplicated across prompts.
-7. A weekly autopilot health check: paused wakeups, issues stalled in `needs_refinement`, unpromoted stages, failed runs.
+7. **DONE 2026-10-18 (live).** A weekly autopilot health check: paused wakeups, issues stalled in `needs_refinement`, unpromoted stages, failed runs.
 8. **DONE 2026-10-18.** Release notes now: the Doc Owner adds merged, user-visible changes to the Release Notes page (stage 1). The `release` step waits until Foodie is deployed.
 
 ### Live Multica workspace (CLI connected 2026-10-18)
@@ -322,6 +323,10 @@ Other changes: Research/Planning were added to the space structure, follow-up is
 | Architect | `a76aa289-410c-47ea-ae0f-dbafc432b941` | claude-fable-5-1 | medium | architecture, code-review, system-design |
 
 - **Prompts and squad instructions are still the live `_old` versions.** Only skills and models changed.
+- **Weekly Health Check autopilot created 2026-10-18** (id `e5f8f176-74eb-4749-bd50-f3df42500e09`, trigger `f0027a59-…`):
+  - Mode `create_issue`, assigned to the Tech Lead, with the user as subscriber.
+  - Runs Saturdays at 09:00 Europe/London (cron `0 9 * * 6`). First run: 2026-10-24.
+  - Its description is `Autopilots/Weekly Health Check/Runbook.md`. After editing the runbook, push it with `multica autopilot update <id> --description "$(cat …/Runbook.md)"`.
 
 ### Failure-loop incident (why FAILURE NOTICES exists — do not weaken)
 When Claude ran out of usage allowance, an agent on Codex kept re-triggering the failing Claude agents, which caused **200+ failure loops**. Design constraints that follow from it:
@@ -438,3 +443,7 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
     - `figma-code-connect` (Figma plan is Professional)
     - FigJam and diagram skills
   - **Left unattached:** `threat-modeling` (Bitwarden-specific).
+- 2026-10-18: Backlog item 7, the Weekly Health Check autopilot.
+  - Added `Autopilots/Weekly Health Check/` (Runbook.md and Settings.md) and created the autopilot live with the CLI.
+  - It's report-only, with 5 checks: wakeups that won't fire, stalled issues (3 days active, 7 days waiting), stages not promoted, failed runs and loop patterns, and untriaged backlog.
+  - All 8 backlog items are now done.
