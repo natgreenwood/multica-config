@@ -178,11 +178,17 @@ The live "Leave done to a human" and wakeup lines were dropped.
 **Every member agent's new `System Prompt.md` (all except Tech Lead):**
 - Post your result as a comment on the issue. That comment is what wakes the Tech Lead.
 - Do not reassign the issue. It stays assigned to `Dev Squad 1`, as the ROUTING section of the squad `Instructions.md` says. **Exception: the Product Owner**, see below.
-
-**Product Owner new `System Prompt.md`:**
-- During refinement the issue is assigned to the Product Owner, not the squad. When refinement is done or blocked, it assigns the issue back to `Dev Squad 1` with a comment that says *ready* or names the blocking question. It does not change the status. It may involve the Architect and the person as needed.
-- Because the Tech Lead no longer watches refinement, the Product Owner owns chasing stalled questions. Once a question blocks progress, it hands the issue back rather than waiting indefinitely.
 - Do not change the issue status (observation 7), or state explicitly which statuses this agent may write.
+
+**Product Owner `System Prompt.md`: DONE 2026-10-18 (draft, 1,475 words).** Built from `_old` with three amended passages and a new IN DEV SQUAD 1 section:
+- It owns refinement while assigned and never changes status, overriding the default workflow.
+- It hands back to `Dev Squad 1` with a *ready* or *blocked* comment. "Blocked" means a question nobody in the conversation can answer.
+- **Decision 2A:** if a person stops replying, the issue stays in `needs_refinement`. No chasing and no wakeup.
+- It appends the refinement block when the issue is in `needs_refinement`, and comments instead when someone is already building.
+- **Decision 1A:** it may @mention the Architect once per set of questions, with no acknowledgement replies. These are the loop stop conditions.
+
+**Architect new `System Prompt.md`:**
+- When the Product Owner @mentions it during refinement: answer once, replying in that thread (`--parent`), and do NOT @mention the Product Owner or anyone else back. That is the matching half of the loop stop condition.
 
 **Workspace Context (`Workspace/Context.md`):**
 - Done 2026-10-18: DOCUMENTATION section (Confluence only, Research folder, no Notion).
@@ -206,7 +212,10 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
 **Server / workspace settings (user action, not Markdown):**
 - Set the PR merge status (workspace setting `pr_merge_status`) to `documentation`. Otherwise a merge moves the issue to `done`, which disables the `--until-status documentation` wakeup and skips the Doc Owner.
 - If a custom `to_do` status exists on the server, move its issues to the built-in `todo` and archive it.
-- Test one refinement on a throwaway issue: confirm the Tech Lead is NOT woken while the issue is assigned to the Product Owner, and IS woken when it is assigned back to `Dev Squad 1`.
+- Test one refinement on a throwaway issue. Confirm that:
+  - The Tech Lead is NOT woken while the issue is assigned to the Product Owner.
+  - The Tech Lead IS woken when the issue is assigned back to `Dev Squad 1`.
+  - The Architect's threaded reply (no @mention) wakes the Product Owner. If it doesn't, the Architect needs to @mention the Product Owner once instead.
 - Test on a throwaway issue that a wakeup-started Tech Lead run still behaves as squad leader (gets the squad briefing and instructions).
 
 ## Change log
@@ -260,3 +269,8 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - Trimmed the @mention paragraph, which the built-in Mentions section covers.
   - The squad `Instructions.md` WHEN WORK COMES BACK research lines are replaced by a pointer to the Tech Lead's own instructions.
   - `gitleaks` secret scanning runs in GitHub Actions (`.github/workflows/gitleaks.yml`). The repo is **public**, so never commit secrets.
+- 2026-10-18: Wrote the new Product Owner `System Prompt.md` (1,475 words): the live prompt plus IN DEV SQUAD 1. Changes:
+  - The assignee rule has a hand-back exception.
+  - The @mention rule has an Architect exception.
+  - It appends the refinement block in `needs_refinement`.
+  - User decisions: 1A (the Product Owner @mentions the Architect, with stop conditions) and 2A (no chasing a silent person).
