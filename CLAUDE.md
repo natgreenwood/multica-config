@@ -473,4 +473,4 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
     - The Architect's role doesn't mention code review.
     - The Tester and QA roles don't reflect the split.
     - The user's "Solutions Architect" may compete with the Architect agent.
-    - Proposed replacement roles were shown to the user but **not yet approved**. Apply them together with the new set, not before, because they describe the new flow.
+    - Proposed replacement roles are recorded in `Members.md` under "Proposed roles (not yet applied)". Apply them together with the new set, not before, because they describe the new flow.

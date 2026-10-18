@@ -27,6 +27,25 @@ The **role** column is the text set on each member in Multica. It isn't just a l
 | Doc Owner | Agent | Codex (dev-ai-3) · `gpt-6.1-sol` | Creates and updates Project Documentation | `Agents/Doc Owner/` |
 | Nathaniel Greenwood | Human (workspace owner) | — | Solutions Architect | — |
 
+## Proposed roles (not yet applied)
+
+These replace the roles above. Apply them in Multica **together with the new prompt set and `Instructions.md`, not before**: they describe the new flow, so applying them while the old instructions are live would send work to steps those instructions don't have. They fix outdated text: the Researcher said "Claude models", and the Product Owner was called "Product Lead". They also add the new duties (Architect code review, the Tester/QA split), and they drop model names except where the leader needs them to alternate between the testers.
+
+| Member | Proposed role |
+|---|---|
+| Product Owner | Refines underspecified issues into a goal and labelled acceptance criteria (AC1, …). Doesn't decide what gets built or its priority. |
+| Researcher | Investigates open technical questions with evidence and writes up the options. Doesn't decide or build. |
+| Architect | Owns system design, API contracts, data models and technology choices; writes ADRs. Reviews every code PR before testing. |
+| Frontend Designer | Designs web UI in Figma, with all states, breakpoints and accessibility. Required before any frontend engineering. |
+| Frontend Engineer | Builds frontend changes from the Figma design and opens a PR. |
+| Backend Engineer | Builds backend changes from the Architect's design and opens a PR. |
+| Tester (Claude) | Hunts for defects in a PR: edge cases, failure paths, misuse. Runs on Claude; alternate with Tester (Codex). |
+| Tester (Codex) | Hunts for defects in a PR: edge cases, failure paths, misuse. Runs on GPT; alternate with Tester (Claude). |
+| Security Analyst | Reviews every code change for security. Verdict: APPROVED, CHANGES REQUESTED or BLOCK. |
+| QA | Verifies each acceptance criterion and checks for regressions, after the Tester and Security Analyst. |
+| Doc Owner | Updates Confluence documentation and release notes once work ships, and finalises the Architect's drafts. |
+| Nathaniel Greenwood | Workspace owner. Approves refinement, merges PRs and takes escalations. |
+
 The leader receives work assigned to the squad and delegates by @mention. Members never receive the squad instructions; they only receive their own prompt and Workspace Context.
 
 Exported from Multica on 2026-10-18. Squad, member and agent IDs aren't included, because a recreated workspace generates its own.
