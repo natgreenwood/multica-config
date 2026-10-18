@@ -24,6 +24,7 @@ Agents/<Agent Name>/Model.md             -> recommended runtime / model / thinki
 Skills/<skill-name>/SKILL.md             -> Multica workspace skills; import from the GitHub URL so "update from source" works
 Agents/<Agent Name>/Skills.md            -> skill assignments for the agent, each with Attached/Removed/Not attached and the reason
 Agents/<Agent Name>/Settings.md          -> every item on the agent's Settings tab, exported from Multica; together with avatar*.webp it lets someone rebuild the agent
+Squads/Dev Squad 1/Members.md            -> the squad's leader and members, with each member's role as set in Multica (roles feed the leader's roster)
 Autopilots/<Name>/Runbook.md             -> the autopilot's description (its run prompt); Settings.md holds mode, assignee, schedule and subscriber
 ```
 `Workspace/Context.md` holds rules every agent needs. Keep it short, because its tokens go to every agent on every run. Not yet deployed. If the server field already has content, merge it rather than pasting over it.
@@ -464,3 +465,12 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **dev-ai-3:** codex-cli 0.162.1, running the 5 Codex agents.
   - **Still to confirm (❓ items in the README):** MCP servers other than Figma, `gh`, `bws`, the Foodie toolchain, branch protection, and the dev-ai-1 Codex account.
 - 2026-10-18: Moved all `_old.md` files (11 agent prompts and the squad's `Instructions_old.md`) into `Archive/`, mirroring the folder structure. Updated the links in `Settings.md` and the repo layout in `CLAUDE.md`. Older change-log entries keep their original paths.
+- 2026-10-18: Added `Squads/Dev Squad 1/Members.md`, exported from the live squad: 13 members including the leader, 11 member agents and 1 human (the user, role "Solutions Architect"). **No live changes; the user said not to deploy yet.** Open items for deployment:
+  - **The live squad instructions still say "Notion".** The Confluence fix exists only in `Archive/Squads/Dev Squad 1/Instructions_old.md` and was never pasted. It becomes moot once the new `Instructions.md` is deployed.
+  - **Member roles are out of date. They feed the leader's roster, so they steer routing:**
+    - The Researcher's role says "Claude models", but it runs on Codex.
+    - The Product Owner is called "Product Lead".
+    - The Architect's role doesn't mention code review.
+    - The Tester and QA roles don't reflect the split.
+    - The user's "Solutions Architect" may compete with the Architect agent.
+    - Proposed replacement roles were shown to the user but **not yet approved**. Apply them together with the new set, not before, because they describe the new flow.
