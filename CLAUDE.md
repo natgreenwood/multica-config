@@ -187,8 +187,17 @@ The live "Leave done to a human" and wakeup lines were dropped.
 - It appends the refinement block when the issue is in `needs_refinement`, and comments instead when someone is already building.
 - **Decision 1A:** it may @mention the Architect once per set of questions, with no acknowledgement replies. These are the loop stop conditions.
 
-**Architect new `System Prompt.md`:**
-- When the Product Owner @mentions it during refinement: answer once, replying in that thread (`--parent`), and do NOT @mention the Product Owner or anyone else back. That is the matching half of the loop stop condition.
+**Architect `System Prompt.md`: DONE 2026-10-18 (draft, 900 words).** Built from `_old`:
+- Designs and ADRs are Confluence Drafts (user decision A): a design is a child of the **Architecture** page; an ADR goes under **Decisions** with status *Proposed*. Nothing goes in the repo.
+- It doesn't dispatch, @mention engineers or create issues; its brief goes to the Tech Lead.
+- It never changes status or assignee.
+- It answers the Product Owner's refinement questions once, in thread, with no @mention back.
+- Skills: `architecture` + `system-design` (both attached in Multica, both from `anthropics/knowledge-work-plugins`). Their "action items / create tasks" output is treated as a proposal only.
+- Mermaid renders in Confluence through the `narva.net.mermaid-diagrams` app.
+
+**Doc Owner new `System Prompt.md`:**
+- It finalises the Architect's *Proposed* ADR drafts under Decisions (marking them Accepted and implemented, with PR and issue links) and design drafts under Architecture, once the work ships. That matches how the existing Decision pages are maintained.
+- It must not publish research pages (the Tech Lead does) or the Tech Lead's Planning pages (a human does).
 
 **Workspace Context (`Workspace/Context.md`):**
 - Done 2026-10-18: DOCUMENTATION section (Confluence only, Research folder, no Notion).
@@ -274,3 +283,9 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - The @mention rule has an Architect exception.
   - It appends the refinement block in `needs_refinement`.
   - User decisions: 1A (the Product Owner @mentions the Architect, with stop conditions) and 2A (no chasing a silent person).
+- 2026-10-18: Wrote the new Architect `System Prompt.md` (900 words).
+  - Designs and ADRs are Confluence Drafts under Architecture and Decisions; nothing goes in the repo.
+  - The implementation brief goes to the Tech Lead, with no dispatching.
+  - A new "In Dev Squad 1" section adds the status rule and the refinement reply rule.
+  - Skills are now `architecture` and `system-design`.
+  - Added a Doc Owner follow-up.
