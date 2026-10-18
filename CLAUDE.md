@@ -198,9 +198,13 @@ The live "Leave done to a human" and wakeup lines were dropped.
 - Skills: `architecture` + `system-design` (both attached in Multica, both from `anthropics/knowledge-work-plugins`). Their "action items / create tasks" output is treated as a proposal only.
 - Mermaid renders in Confluence through the `narva.net.mermaid-diagrams` app.
 
-**Doc Owner new `System Prompt.md`:**
-- It finalises the Architect's *Proposed* ADR drafts under Decisions (marking them Accepted and implemented, with PR and issue links) and design drafts under Architecture, once the work ships. That matches how the existing Decision pages are maintained.
-- It must not publish research pages (the Tech Lead does) or the Tech Lead's Planning pages (a human does).
+**Doc Owner `System Prompt.md`: DONE 2026-10-18 (draft, 1,538 words).** Built from `_old` with a new "In Dev Squad 1" section:
+- It works in `documentation`, and its comment wakes the Tech Lead.
+- It never changes status or assignee.
+- It finalises and publishes the Architect's Proposed ADRs and design drafts.
+- It leaves Research and Planning pages to their publishers.
+
+Other changes: Research/Planning were added to the space structure, follow-up issues go in `backlog`, the output goes in the issue comment, and FAILURE NOTICES and the `# Docs Agent` H1 were removed.
 
 **Workspace Context (`Workspace/Context.md`):**
 - Done 2026-10-18: DOCUMENTATION section (Confluence only, Research folder, no Notion).
@@ -296,3 +300,4 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - No repo writes and no index PR. The issue comment with the Draft link is the review signal, and the Tech Lead publishes.
   - The squad status rule is added.
   - FAILURE NOTICES is removed, and the "Altassian" typo is fixed.
+- 2026-10-18: Wrote the new Doc Owner `System Prompt.md` (1,538 words, up from 1,437). It adds the "In Dev Squad 1" section, which finalises the Architect's drafts and leaves Research and Planning alone. Follow-up issues now go in `backlog`, and output goes in the issue comment. FAILURE NOTICES and the H1 were removed.
