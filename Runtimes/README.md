@@ -25,38 +25,37 @@ Agents on the same subscription share its weekly allowance; see `Agents/*/Model.
 
 ## MCP servers
 
-No agent has an MCP configuration in Multica (see `Agents/*/Settings.md`), so these come from each machine's own tool configuration.
+No agent has an MCP configuration in Multica (see `Agents/*/Settings.md`). The MCP servers come from the coding agent on each runtime machine.
 
-| MCP server | Needed by | Runtime machine | Status |
-|---|---|---|---|
-| Figma | Frontend Designer, Frontend Engineer | dev-ai-1 (Claude) | ✅ confirmed by the user to be configured |
-| Atlassian (Confluence) | Researcher, Doc Owner | dev-ai-3 (Codex) | ❓ |
-| Atlassian (Confluence) | Tech Lead, Architect | dev-ai-1 (Claude) | ❓ |
-| Context7 | Researcher, Architect | dev-ai-3, dev-ai-1 | ❓ |
-| AWS Knowledge / AWS MCP | Architect | dev-ai-1 | ❓ (named in the Architect's prompt) |
-| Microsoft Learn | Architect | dev-ai-1 | ❓ (named in the Architect's prompt) |
+| Runtime machine | How MCP servers are provided | Status |
+|---|---|---|
+| dev-ai-1 (Claude Code) | Synced from the claude.ai account Claude Code is signed in with, so no setup is needed on the machine | ✅ user confirmed 2026-10-18 |
+| dev-ai-3 (Codex) | Codex's own configuration (`codex mcp list`) | ❓ |
+
+| MCP server | Needed by | Runtime |
+|---|---|---|
+| Figma | Frontend Designer, Frontend Engineer | dev-ai-1 |
+| Atlassian (Confluence) | Tech Lead, Architect | dev-ai-1 |
+| Atlassian (Confluence) | Researcher, Doc Owner | dev-ai-3 ❓ |
+| Context7 | Architect / Researcher | dev-ai-1 / dev-ai-3 ❓ |
+| AWS Knowledge / AWS MCP, Microsoft Learn | Architect (named in its prompt) | dev-ai-1 |
 
 All agents share one Atlassian account, so Confluence drafts are visible to every agent.
-
-To check what is configured, run these on the machine:
-
-```bash
-claude mcp list     # dev-ai-1 (Claude Code)
-codex mcp list      # dev-ai-3 (Codex)
-```
 
 ## CLI tools and credentials
 
 | Tool | Why | Machines | Status |
 |---|---|---|---|
 | `git` | Branches and commits | dev-ai-1, dev-ai-3 | ❓ |
-| `gh`, authenticated to GitHub with access to the Foodie repo | Pull requests, CI checks | dev-ai-1, dev-ai-3 | ❓ |
-| `bws` (Bitwarden Secrets Manager) | Secrets, per `Workspace/Context.md` | dev-ai-1, dev-ai-3 | ❓ (stated as installed in Workspace Context) |
+| `gh`, authenticated to GitHub with access to the Foodie repo | Pull requests, CI checks | dev-ai-1, dev-ai-3 | ✅ installed (user confirmed 2026-10-18) |
+| `bws` (Bitwarden Secrets Manager) | Secrets, per `Workspace/Context.md` | dev-ai-1, dev-ai-3 | ✅ installed (user confirmed 2026-10-18) |
 | Foodie's own toolchain (language runtimes, package manager, test and lint commands) | Engineers, Tester and QA run the project's checks | dev-ai-1, dev-ai-3 | ❓ |
 
 **GitHub permissions.** Agents open pull requests but never merge. Branch protection on the Foodie repo's `main`, requiring a human review, enforces that regardless of what any prompt says. ❓ Confirm it's enabled.
 
 ## Rebuilding a runtime machine
+
+For a full walkthrough on Ubuntu, see [`Setup.md`](Setup.md). In short:
 
 1. Install the AI coding tool (Claude Code or Codex) and sign in with the subscription above.
 2. Install and configure the MCP servers this machine needs (table above).

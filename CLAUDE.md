@@ -474,3 +474,17 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
     - The Tester and QA roles don't reflect the split.
     - The user's "Solutions Architect" may compete with the Architect agent.
     - **Update (user decision):** `Squads/Dev Squad 1/Members.md` now holds the **new** roles. The live roles moved to `Archive/Squads/Dev Squad 1/Members_old.md`, matching the `_old` = live convention. Apply the new roles with the CLI only when the new set is deployed.
+- 2026-10-18: Added `Runtimes/Setup.md`, a step-by-step guide to setting up an Ubuntu 24.04 host as a Multica runtime.
+  - **Sources are marked in the guide:**
+    - 📘 official documentation: Multica CLI and daemon, Claude Code install and `setup-token`, Codex install and `--device-auth`, gh, bws.
+    - 🛠 this repo's own recommendations, not covered by Multica's docs: a dedicated `multica` user without sudo, a systemd user service with linger, an environment file for `BWS_ACCESS_TOKEN`, and hardening.
+  - **MCP setup is described generically**: "configure any MCP servers on the coding agent". On dev-ai-1, the Claude Code MCP servers sync from the claude.ai account, but that isn't safe to assume for someone else's setup (user, 2026-10-18).
+  - **Still to document:** the Foodie toolchain, and how MCP is provided on the Codex runtime (dev-ai-3).
+  - `gh` and `bws` are confirmed installed on both runtimes (user, 2026-10-18).
+- 2026-10-18: `Runtimes/Setup.md` additions (user-approved):
+  - **Step 1, packages:** wget, zip, gnupg, make, python3/venv/pip, ripgrep, fd-find (plus an `fd` link), jq, tree, htop, less, openssh-client.
+  - **Step 1, Node.js LTS:** installed via NodeSource.
+  - **Step 1, linger:** moved here from the daemon step, because rootless Docker needs it too.
+  - **New step 6, rootless Docker (option B):** Docker's apt repo, plus `docker-ce-rootless-extras`, which bundles the Ubuntu 24.04 AppArmor profile. The system daemon is disabled. `dockerd-rootless-setuptool.sh` and `DOCKER_HOST` are set in the daemon service.
+  - **Docker group:** explicitly not used, because membership is effectively root access.
+  - **Later steps:** renumbered 7–10.
