@@ -24,7 +24,7 @@ Agents/<Agent Name>/Model.md             -> recommended runtime / model / thinki
 Skills/<skill-name>/SKILL.md             -> Multica workspace skills; import from the GitHub URL so "update from source" works
 Agents/<Agent Name>/Skills.md            -> skill assignments for the agent, each with Attached/Removed/Not attached and the reason
 Agents/<Agent Name>/Settings.md          -> every item on the agent's Settings tab, exported from Multica; together with avatar*.webp it lets someone rebuild the agent
-Squads/Dev Squad 1/Members.md            -> the squad's leader and members, with each member's role as set in Multica (roles feed the leader's roster)
+Squads/Dev Squad 1/Members.md            -> the squad's leader and members with their NEW roles (roles feed the leader's roster); live roles are in Archive/.../Members_old.md
 Autopilots/<Name>/Runbook.md             -> the autopilot's description (its run prompt); Settings.md holds mode, assignee, schedule and subscriber
 ```
 `Workspace/Context.md` holds rules every agent needs. Keep it short, because its tokens go to every agent on every run. Not yet deployed. If the server field already has content, merge it rather than pasting over it.
@@ -473,4 +473,4 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
     - The Architect's role doesn't mention code review.
     - The Tester and QA roles don't reflect the split.
     - The user's "Solutions Architect" may compete with the Architect agent.
-    - Proposed replacement roles are recorded in `Members.md` under "Proposed roles (not yet applied)". Apply them together with the new set, not before, because they describe the new flow.
+    - **Update (user decision):** `Squads/Dev Squad 1/Members.md` now holds the **new** roles. The live roles moved to `Archive/Squads/Dev Squad 1/Members_old.md`, matching the `_old` = live convention. Apply the new roles with the CLI only when the new set is deployed.
