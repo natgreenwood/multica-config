@@ -8,6 +8,8 @@ Source of truth for the configuration of a Multica (multica.ai) workspace: agent
 - **Present changes in small pieces**: one file, or one section, at a time.
 - This file (CLAUDE.md) is project tracking and may be updated as needed.
 - **Confluence is the only documentation and research store** (decided 2026-10-18). Notion was the old solution: never reference it in new or revised files. Research output goes in the project Confluence space, Research folder.
+- **Research and planning are Confluence-only, with no repo index** (decided 2026-10-18). Drop the `docs/research/[KEY].md` index PR: it required human merges, and with PR-merge-status = `documentation` it would push research issues to `documentation`. All agents share one Atlassian account, so Draft pages are visible to every agent. The Researcher posts the page link in its issue comment, and that comment is the review signal.
+- **The Tech Lead is used in chat too** (only about Dev Squad 1 work). Chat runs get only the System Prompt and Workspace Context: no squad instructions and no squad protocol. The Tech Lead prompt must therefore stand alone; see the chat rule in its PERMISSIONS.
 - Commit or push only when the user asks. Branch off `main` first (the repo uses PRs, e.g. `CHORE--...`).
 
 ## Repo layout
@@ -94,6 +96,7 @@ Files to re-check: `server/internal/daemon/execenv/runtime_config_sections.go` (
 
 - **Where our agent instructions land.** They go verbatim under `## Agent Identity`, after `**You are: <Agent Name>** (ID: ...)`. So a prompt that starts with its own `# Heading` ends up as an H1 nested inside an H2 section. That's harmless, but it's redundant with the name line.
 - **Workspace Context** (Workspace settings → "context") is a per-workspace system prompt injected into *every* agent's brief as `## Workspace Context`. Shared rules belong there rather than being copied into each agent: branch naming, secrets (`bws`), monorepo conventions, Confluence space.
+- **On squad-leader runs, the squad briefing is part of Agent Identity** (`handler/daemon.go`: the briefing is appended to the agent's instructions). That makes it System Prompt + Squad Operating Protocol + roster + squad Instructions in one block, so any duplication between the leader's System Prompt and the squad instructions is paid twice. There is no stated precedence *within* that block, so state permissions explicitly in the System Prompt. Chats, direct agent @mentions and possibly wakeup-started runs get the System Prompt only.
 - **Instruction precedence** (issue runs): "Agent Identity instructions have priority over the issue workflow… skip the conflicting action." Agent instructions can therefore *forbid* status writes, comments, delegation and similar actions. That is the lever for controlling built-in behaviour.
 - **The built-in issue workflow is given to every agent on every issue run:**
   1. Read the issue.
@@ -120,6 +123,10 @@ Files to re-check: `server/internal/daemon/execenv/runtime_config_sections.go` (
 
 - **Status changes don't wake anyone** (`handler/issue.go` `shouldEnqueueAgentTask`). The exception is leaving the fixed `backlog` key, which enqueues the assigned agent. A human moving `refinement_complete → implementation` wakes nobody on its own. Something has to catch it: a comment or @mention, an `issue wakeup --until-status`, or a project-workflow handoff.
 - **PR merge status is configurable** (workspace setting `pr_merge_status`, `handler/pr_auto_complete.go`). It decides what status an issue moves to when all its linked PRs merge. The default is `done`, and `none` leaves the status alone. It can be set to a custom key, such as `documentation`. With the default, a merge sends the issue straight to `done` and skips any post-merge steps.
+
+### Confluence (checked via Atlassian MCP 2026-10-18)
+- Site `natgreenwood.atlassian.net`, cloudId `b76a4ca6-c903-4c4d-abdb-df3444a06d06`.
+- The space `Foodie` has the folders `Research` (id 524516) and `Planning` (id 1081666). Prompts say "the project's Confluence space" generically, because each project has its own space.
 
 ### Docs index
 Key pages: `/docs/concepts`, `/docs/how-multica-works`, `/docs/agents`, `/docs/agents-create`, `/docs/skills`, `/docs/squads`, `/docs/triggering-agents`, `/docs/mentioning-agents`, `/docs/tasks`, `/docs/issues`, `/docs/autopilots`, `/docs/project-resources`, `/docs/cli`.
@@ -148,12 +155,25 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
 
 ## Pending follow-ups (carry into later stages)
 
-**Tech Lead `System Prompt.md` (new). When we write it, it must include:**
-- Permission to register issue wakeups (`multica issue wakeup create/list`), matching the HUMAN CHECKPOINTS section of the squad `Instructions.md`.
-- Permission to set the custom statuses the squad flow needs, especially `refinement_complete` and `in_review`. Agent Identity outranks the built-in workflow and the squad protocol's status rules, so the prompt must state which statuses it may write.
-- Permission to create sub-issues assigned to `Dev Squad 1` (with `--stage`), and to move parked sub-issues out of `backlog`, per SUB-ISSUES in the squad `Instructions.md`.
-- Explicit permission to mark issues `done` when the ISSUE DONE checks in the squad `Instructions.md` pass. The built-in squad protocol says "leave `done` to a human", and only Agent Identity reliably overrides it. Also remove the live prompt's "Leave done to a human" line, which contradicts this.
-- The live prompt (`System Prompt_old.md`) has an ad-hoc "register a wakeup… when status becomes documentation" line. Replace it with a pointer to the squad instructions rather than duplicating it.
+**Tech Lead `System Prompt.md`: DONE 2026-10-18 (draft, 1,348 words).** All earlier follow-ups are covered by its WHAT YOU MAY DO ON THE PLATFORM section:
+- wakeups
+- every squad status, with an explicit override of the default `in_progress` progression
+- staged sub-issues and promotion out of `backlog`
+- assigning to the Product Owner
+- `done` per ISSUE DONE, overriding "leave done to a human"
+- a guard for issues not assigned to the squad
+- the chat rule
+
+It also:
+- publishes approved research pages itself
+- leaves rejected drafts for a human to archive
+- leaves its own Planning pages for a human to publish
+
+The live "Leave done to a human" and wakeup lines were dropped.
+
+**Researcher new `System Prompt.md`:**
+- Drop the `docs/research/[ISSUE KEY].md` index PR entirely (Confluence-only decision). Its issue comment must link the Draft page in the `Research` folder; that comment is the review signal for the Tech Lead.
+- It must not publish its own pages. The Tech Lead publishes after review.
 
 **Every member agent's new `System Prompt.md` (all except Tech Lead):**
 - Post your result as a comment on the issue. That comment is what wakes the Tech Lead.
@@ -236,3 +256,7 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - The ROUTING "keep assigned to squad" rule now has a refinement exception.
   - The trigger "a question that blocks and nobody has answered for a while" moved to the Product Owner.
 - 2026-10-18: Added a DOCUMENTATION section to `Workspace/Context.md`: Confluence is the only store, research goes in the Research folder, and old Notion links are treated as historical.
+- 2026-10-18: Wrote the new Tech Lead `System Prompt.md` (1,348 words), section by section from `System Prompt_old.md`. The new sections are WHAT YOU MAY DO ON THE PLATFORM (permissions, guard, chat rule) and RESEARCH AND PLANNING (Confluence-only, publishes approved research).
+  - Trimmed the @mention paragraph, which the built-in Mentions section covers.
+  - The squad `Instructions.md` WHEN WORK COMES BACK research lines are replaced by a pointer to the Tech Lead's own instructions.
+  - `gitleaks` secret scanning runs in GitHub Actions (`.github/workflows/gitleaks.yml`). The repo is **public**, so never commit secrets.
