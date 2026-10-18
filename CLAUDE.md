@@ -15,9 +15,9 @@ Source of truth for the configuration of a Multica (multica.ai) workspace: agent
 ## Repo layout
 
 ```
-Agents/<Agent Name>/System Prompt_old.md -> LIVE agent instructions (what the server runs today)
+Archive/Agents/<Agent Name>/System Prompt_old.md -> LIVE agent instructions (what the server runs today)
 Agents/<Agent Name>/System Prompt.md     -> NEW agent instructions being written (blank as of 2026-10-17)
-Squads/Dev Squad 1/Instructions_old.md   -> LIVE squad instructions
+Archive/Squads/Dev Squad 1/Instructions_old.md   -> LIVE squad instructions
 Squads/Dev Squad 1/Instructions.md       -> DRAFT proposal for the new squad instructions (not deployed)
 Workspace/Context.md                     -> DRAFT for Workspace Settings → Context (seen by EVERY agent on every run)
 Agents/<Agent Name>/Model.md             -> recommended runtime / model / thinking level (settings reference ONLY; never pasted into a prompt)
@@ -27,7 +27,7 @@ Agents/<Agent Name>/Settings.md          -> every item on the agent's Settings t
 Autopilots/<Name>/Runbook.md             -> the autopilot's description (its run prompt); Settings.md holds mode, assignee, schedule and subscriber
 ```
 `Workspace/Context.md` holds rules every agent needs. Keep it short, because its tokens go to every agent on every run. Not yet deployed. If the server field already has content, merge it rather than pasting over it.
-Convention: `*_old.md` = live and deployed. The un-suffixed file = the new version being drafted, which the user deploys once it is approved.
+Convention: `*_old.md` = live and deployed, kept under `Archive/` (moved there 2026-10-18), with a folder structure that mirrors the repo root. The un-suffixed file = the new version, which the user deploys once it is approved. **Until the new set is deployed, the files in `Archive/` are still what Multica runs.** After deployment they become history only.
 
 **Current state (2026-10-17):** `Instructions_old.md` is live. `Instructions.md` is the user's new draft, written to introduce a status-driven flow (Research → Refinement → Implementation → Testing → Documentation, plus custom statuses). The live agent prompts (`System Prompt_old.md`) were written against the live squad instructions. **Update 2026-10-18:** all 11 new `System Prompt.md` files are now drafted against the new squad flow. Together with the draft `Instructions.md` and `Workspace/Context.md`, they form one set to deploy together.
 
@@ -463,3 +463,4 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **dev-ai-1:** Claude Code 2.1.301, running the 7 Claude agents. It also has a spare Codex runtime.
   - **dev-ai-3:** codex-cli 0.162.1, running the 5 Codex agents.
   - **Still to confirm (❓ items in the README):** MCP servers other than Figma, `gh`, `bws`, the Foodie toolchain, branch protection, and the dev-ai-1 Codex account.
+- 2026-10-18: Moved all `_old.md` files (11 agent prompts and the squad's `Instructions_old.md`) into `Archive/`, mirroring the folder structure. Updated the links in `Settings.md` and the repo layout in `CLAUDE.md`. Older change-log entries keep their original paths.
