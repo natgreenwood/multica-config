@@ -24,7 +24,7 @@ Workspace/Context.md                     -> DRAFT for Workspace Settings → Con
 `Workspace/Context.md` holds rules every agent needs. Keep it short, because its tokens go to every agent on every run. Not yet deployed. If the server field already has content, merge it rather than pasting over it.
 Convention: `*_old.md` = live and deployed. The un-suffixed file = the new version being drafted, which the user deploys once it is approved.
 
-**Current state (2026-10-17):** `Instructions_old.md` is live. `Instructions.md` is the user's new draft, written to introduce a status-driven flow (Research → Refinement → Implementation → Testing → Documentation, plus custom statuses). The live agent prompts (`System Prompt_old.md`) were written against the live squad instructions. The new `System Prompt.md` files start blank and will be rewritten to match the new squad flow.
+**Current state (2026-10-17):** `Instructions_old.md` is live. `Instructions.md` is the user's new draft, written to introduce a status-driven flow (Research → Refinement → Implementation → Testing → Documentation, plus custom statuses). The live agent prompts (`System Prompt_old.md`) were written against the live squad instructions. **Update 2026-10-18:** all 11 new `System Prompt.md` files are now drafted against the new squad flow. Together with the draft `Instructions.md` and `Workspace/Context.md`, they form one set to deploy together.
 
 Agents: Architect, Backend Engineer, Doc Owner, Frontend Designer, Frontend Engineer, Product Owner, QA, Researcher, Security Analyst, Tech Lead, Tester.
 Squads: Dev Squad 1 (leader is presumably Tech Lead; to be confirmed).
@@ -178,10 +178,29 @@ The live "Leave done to a human" and wakeup lines were dropped.
 - On squad issues it never changes status or assignee. A research issue assigned to it directly, outside the squad, keeps the live behaviour (`in_review`).
 - FAILURE NOTICES is removed (now in Workspace Context).
 
-**Every member agent's new `System Prompt.md` (all except Tech Lead):**
-- Post your result as a comment on the issue. That comment is what wakes the Tech Lead.
-- Do not reassign the issue. It stays assigned to `Dev Squad 1`, as the ROUTING section of the squad `Instructions.md` says. **Exception: the Product Owner**, see below.
-- Do not change the issue status (observation 7), or state explicitly which statuses this agent may write.
+**Every member agent's new `System Prompt.md` (all except Tech Lead): DONE 2026-10-18.** All 10 member prompts carry these rules:
+- The member posts its result as a comment on the issue, and that comment wakes the Tech Lead.
+- It doesn't reassign the issue. **Exception:** the Product Owner hands back after refinement.
+- It doesn't change status, explicitly overriding Multica's default workflow. **Exception:** the Researcher and Doc Owner keep their live behaviour for issues assigned to them directly, outside the squad.
+
+**Implementation and testing batch (2026-10-18, branch `feat/member-system-prompts`):**
+- **Frontend and Backend Engineers:**
+  - Keep the PR close intent ("Closes KEY"). It's what makes a merge move the issue to `documentation`, using the sub-issue's key on sub-issues.
+  - No "move to Testing and assign" step any more.
+  - Separate issues go in `backlog`.
+  - The Frontend Engineer builds from the Frontend Designer's **Figma** design; the Backend Engineer builds from the Architect's design. Both stop if no design is linked.
+- **Tester:** the `in_review` and reassign lines are removed. Defects are still filed in `backlog`, assigned to `Dev Squad 1`.
+- **QA:**
+  - Pass, Fail and Blocked are reported as a *verdict* in the comment, with no status changes and no closing issues.
+  - The test plan is folded into the report (user decision A: one comment, one Tech Lead wake).
+  - A separate QA.md PR must not carry a close intent.
+  - The H1 is removed.
+- **Frontend Designer:**
+  - **Figma is the medium** (user decision; a Figma MCP is configured on the agent).
+  - Handoff notes go in Figma and are summarised in the comment, with no @mention of the Frontend Engineer.
+  - A "can't reach Figma" honesty line is added.
+  - The H1 is removed.
+- **Security Analyst:** the comment is always the hand-back, because the Tech Lead needs APPROVED verdicts too, given mandatory review before `in_review`. It never reassigns.
 
 **Product Owner `System Prompt.md`: DONE 2026-10-18 (draft, 1,475 words).** Built from `_old` with three amended passages and a new IN DEV SQUAD 1 section:
 - It owns refinement while assigned and never changes status, overriding the default workflow.
@@ -301,3 +320,8 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - The squad status rule is added.
   - FAILURE NOTICES is removed, and the "Altassian" typo is fixed.
 - 2026-10-18: Wrote the new Doc Owner `System Prompt.md` (1,538 words, up from 1,437). It adds the "In Dev Squad 1" section, which finalises the Architect's drafts and leaves Research and Planning alone. Follow-up issues now go in `backlog`, and output goes in the issue comment. FAILURE NOTICES and the H1 were removed.
+- 2026-10-18: Wrote the last six member prompts:
+  - Frontend Engineer 1,208 words, Backend Engineer 1,183, Tester 794, QA 1,802, Frontend Designer 652, Security Analyst 507.
+  - Shared changes: comment as the hand-back, no status or assignee changes, issues filed in `backlog`, FAILURE NOTICES removed.
+  - Agent-specific changes are listed under Pending follow-ups.
+  - All 11 agent prompts are now drafted.
