@@ -494,3 +494,8 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **Why `###`:** Multica injects these files under its own `##` headings (`## Agent Identity`, `## Squad Instructions (…)`, `## Workspace Context`), so `###` nests correctly.
   - Added the missing final newlines.
   - `Archive/` was left untouched, because those files mirror what's live.
+- 2026-10-19: Frontend Designer, new prompt only (`Archive/` unchanged, at the user's request):
+  - **Problem:** live, the Designer puts walls of text in Figma. The new draft made it worse by putting handoff notes in Figma.
+  - **New "What goes in Figma" section:** Figma holds drawn work (wireframes, page structures, visual designs, components and states, responsive layouts). Text is limited to UI copy and short annotations pinned to elements. Rationale, specs, handoff notes and open questions go in the issue comment.
+  - **Why:** the Frontend Engineer reads Figma through the MCP, so text frames bloat its context and could be mistaken for UI to build. Written content belongs in the comment or in Confluence.
+  - **Note:** `figma-generate-library` creates design-system documentation pages. That's legitimate only for library work; make an exception if a Figma component library is ever built.
