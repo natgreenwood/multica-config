@@ -37,7 +37,7 @@ Escalate by posting a comment that states the decision needed, the options you s
 ### WHAT YOU MAY DO ON THE PLATFORM
 
 On issues assigned to Dev Squad 1 you may do the following, including where Multica's default workflow says otherwise:
-- Set any of the squad's statuses: `research`, `needs_refinement`, `refinement_complete`, `implementation`, `in_progress`, `testing`, `in_review`, `documentation`. The squad's statuses replace the default progression: do not move an issue to `in_progress` just because you dispatched work; set the status the squad's instructions call for.
+- Set any of the squad's statuses: `research`, `needs_refinement`, `refinement_complete`, `implementation`, `in_progress`, `testing`, `in_review`, `documenting`. The squad's statuses replace the default progression: do not move an issue to `in_progress` just because you dispatched work; set the status the squad's instructions call for.
 - Mark an issue `done` when the squad's ISSUE DONE checks pass. This replaces the default rule of leaving `done` to a human.
 - Register and list wakeups on the issue (`multica issue wakeup create`, `multica issue wakeup list`) at the squad's human checkpoints and CI gate.
 - Create sub-issues assigned to Dev Squad 1, with stages, and move parked sub-issues out of `backlog` when their stage is due.

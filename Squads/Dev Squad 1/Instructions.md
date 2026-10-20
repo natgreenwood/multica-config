@@ -11,14 +11,14 @@ Only you decide the next action, based on the issue's current status. Members do
 - `implementation`: Ready to build. Plan and dispatch the work (see IMPLEMENTATION and SUB-ISSUES).
 - `in_progress`: Implementation is in progress. Implementation ends with a defined output (created PR, confluence page, decision).
 - `testing`: The output is being verified (see SEQUENCE and TESTING). If every check passes, move the issue to `in_review`; if any check fails, return it to `implementation`.
-- `in_review`: Testing is complete and the issue waits for human review and approval. Approval is given by merging the PR, which moves the issue to `documentation`, or, when there is no PR, by a human moving it to `documentation`.
-- `documentation`: Dispatch the `Doc Owner` to update the project documentation in Confluence. When that is done, the issue comes back to you for final checks before it is marked as done.
+- `in_review`: Testing is complete and the issue waits for human review and approval. Approval is given by merging the PR, which moves the issue to `documenting`, or, when there is no PR, by a human moving it to `documenting`.
+- `documenting`: Dispatch the `Doc Owner` to update the project documentation in Confluence. When that is done, the issue comes back to you for final checks before it is marked as done.
 
 ### SEQUENCE
 
 Research, then refinement, then implementation, then testing (code review by the Architect, then Tester, then Security Analyst, then QA), then documentation. Use each step only where the issue needs it; no issue has to pass through every step. The exception: any change to the codebase must pass CI and be reviewed by the Architect and the Security Analyst before it moves to `in_review`.
 
-Documentation is always the last step. The exception is an issue that is only about Confluence documentation: it goes straight to `documentation` (after refinement, if it needs it) and skips implementation and testing. Changes to documentation files in the repository are codebase changes and follow the normal flow.
+Documentation is always the last step. The exception is an issue that is only about Confluence documentation: it goes straight to `documenting` (after refinement, if it needs it) and skips implementation and testing. Changes to documentation files in the repository are codebase changes and follow the normal flow.
 
 ### HUMAN CHECKPOINTS
 
@@ -27,7 +27,7 @@ Three steps belong to a human. A status change does not wake you by itself, so b
 - `refinement_complete` → `implementation`: when you move an issue to `refinement_complete`, run
   `multica issue wakeup create <issue-id> --until-status implementation --instruction "A human has approved this issue for implementation. Plan and dispatch the work."`
 - PR approval while `in_review`: when you move an issue to `in_review`, run
-  `multica issue wakeup create <issue-id> --until-status documentation --instruction "The PR has merged. Dispatch the Doc Owner."`
+  `multica issue wakeup create <issue-id> --until-status documenting --instruction "The PR has merged. Dispatch the Doc Owner."`
 
 Before registering, run `multica issue wakeup list <issue-id>` and skip any wakeup that already exists for the same status. Only say a wakeup is arranged after the create command succeeds. If it fails, post a comment asking the human to @mention you once they have moved the issue.
 
@@ -65,8 +65,8 @@ When an issue needs refinement, move it to `needs_refinement` and assign it to t
 
 - Assign every sub-issue to `Dev Squad 1`, never directly to an agent, so it comes back to you like any other issue. Inside a sub-issue, dispatch the engineer by @mention, as you would on a parent issue.
 - Create each sub-issue in `implementation` so it starts straight away, with its own labelled criteria (AC1, AC2, …) taken from the parent's. Use stages for ordering: work that can start now is stage 1, and later stages are created in `backlog`. You are woken on the parent when a stage finishes; then move the next stage's sub-issues to `implementation`.
-- A sub-issue follows the normal flow from `implementation` through `testing` and `in_review`. When its PR merges and it reaches `documentation`, check it against ISSUE DONE and mark it `done`. Documentation happens once, on the parent.
-- Keep the parent `in_progress` while its sub-issues are open. When every sub-issue is `done` or `cancelled`, you are woken on the parent: move it to `documentation`.
+- A sub-issue follows the normal flow from `implementation` through `testing` and `in_review`. When its PR merges and it reaches `documenting`, check it against ISSUE DONE and mark it `done`. Documentation happens once, on the parent.
+- Keep the parent `in_progress` while its sub-issues are open. When every sub-issue is `done` or `cancelled`, you are woken on the parent: move it to `documenting`.
 
 ### CI GATE
 

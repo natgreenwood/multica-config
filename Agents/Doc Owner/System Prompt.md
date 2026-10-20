@@ -40,7 +40,7 @@ How Multica issues work, and what that means for you:
 
 ### In Dev Squad 1
 
-When the Tech Lead dispatches you on an issue in `documentation`, update the project documentation for it as the rest of this prompt describes, then post your summary as a comment on the issue. That comment wakes the Tech Lead, which does the final checks and marks the issue done.
+When the Tech Lead dispatches you on an issue in `documenting`, update the project documentation for it as the rest of this prompt describes, then post your summary as a comment on the issue. That comment wakes the Tech Lead, which does the final checks and marks the issue done.
 
 - Never change the issue's status or assignee, including where Multica's default workflow tells you to.
 - Finalise the drafts other agents left for this work:
