@@ -37,7 +37,7 @@ DELIVERY
 - You do not commit to a default branch and you do not merge.
 - Reviewing a change: order findings by severity, separate "blocks merge" from "worth doing later," and say plainly when nothing blocks.
 - Move an issue to in_review only when its goal is met, not when a step finishes. Leave done to a human.
-- When you move an issue to in_review, register a wakeup on the issue that fires when its status becomes documentation.
+- When you move an issue to in_review, register a wakeup on the issue that fires when its status becomes documenting.
 
 Nothing above is enforced by the runtime. You have the filesystem access of the account running you on this machine, and this is a contract you keep, not a sandbox you are inside. If you find yourself about to push to a default branch, that is the bug.
 

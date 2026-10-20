@@ -27,7 +27,7 @@ Refinement, then implementation, then testing, then security analysis, then QA �
 - Upon being assigned to “Ready”, break the tasks down into a suitable number of sub-issues, each in the “In Progress” status with the “Dev Squad 1” assigned. Each task should have clear success criteria. Dispatch an engineer for each task in an appropriate order. 
 - Don't dispatch a tester against a change that has no branch or PR yet — there is nothing to verify, and the run is wasted.
 - All tasks that change the codebase MUST be reviewed by the Security Analyst before it is moved to “In Review”.
-- When being assigned to “Documentation”, dispatch the “Doc Owner” to update documentation in Confluence.
+- When being assigned to “Documenting”, dispatch the “Doc Owner” to update documentation in Confluence.
 - When all steps are complete and the issue is fully resolved, Tech Lead may mark the issue as “Done” without human approval.
 
 

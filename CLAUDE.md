@@ -26,6 +26,9 @@ Agents/<Agent Name>/Skills.md            -> skill assignments for the agent, eac
 Agents/<Agent Name>/Settings.md          -> every item on the agent's Settings tab, exported from Multica; together with avatar*.webp it lets someone rebuild the agent
 Squads/Dev Squad 1/Members.md            -> the squad's leader and members with their NEW roles (roles feed the leader's roster); live roles are in Archive/.../Members_old.md
 Autopilots/<Name>/Runbook.md             -> the autopilot's description (its run prompt); Settings.md holds mode, assignee, schedule and subscriber
+Archive/Agents/<Agent Name>/{Settings,Model,Skills}_old.md + avatar*_old.webp -> LIVE agent config exported from Multica, mirroring Agents/
+Archive/Workspace/{Settings,Context}_old.md -> LIVE workspace settings (prefix, repos, PR merge status, MCP server library names) and Workspace Context
+Workspace/Issue Status.md + Archive/Workspace/Issue Status_old.md -> the workspace's issue statuses (display name, description, group), from Workspace Settings → Issue Statuses (supplied by the user)
 ```
 `Workspace/Context.md` holds rules every agent needs. Keep it short, because its tokens go to every agent on every run. Not yet deployed. If the server field already has content, merge it rather than pasting over it.
 Convention: `*_old.md` = live and deployed, kept under `Archive/` (moved there 2026-10-18), with a folder structure that mirrors the repo root. The un-suffixed file = the new version, which the user deploys once it is approved. **Until the new set is deployed, the files in `Archive/` are still what Multica runs.** After deployment they become history only.
@@ -340,7 +343,11 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
 
 **Server / workspace settings (user action, not Markdown):**
 - ~~Set the PR merge status to `documentation`.~~ **Already set** (user confirmed 2026-10-18): merges move issues to `documentation`.
-- If a custom `to_do` status exists on the server, move its issues to the built-in `todo` and archive it.
+- ~~If a custom `to_do` status exists, archive it.~~ There is no `to_do` status (checked 2026-10-20).
+- ~~Statuses at deployment~~ **Done live by the user on 2026-10-20, and verified:**
+  - The PR merge status is `documenting`.
+  - No issues remain on `ready` or `documentation`; both are retired.
+  - The live Tech Lead and squad instructions now refer to `documenting` / “Documenting”, and `Archive/` was refreshed to match.
 - Test one refinement on a throwaway issue. Confirm that:
   - The Tech Lead is NOT woken while the issue is assigned to the Product Owner.
   - The Tech Lead IS woken when the issue is assigned back to `Dev Squad 1`.
@@ -466,7 +473,7 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **Still to confirm (❓ items in the README):** MCP servers other than Figma, `gh`, `bws`, the Foodie toolchain, branch protection, and the dev-ai-1 Codex account.
 - 2026-10-18: Moved all `_old.md` files (11 agent prompts and the squad's `Instructions_old.md`) into `Archive/`, mirroring the folder structure. Updated the links in `Settings.md` and the repo layout in `CLAUDE.md`. Older change-log entries keep their original paths.
 - 2026-10-18: Added `Squads/Dev Squad 1/Members.md`, exported from the live squad: 13 members including the leader, 11 member agents and 1 human (the user, role "Solutions Architect"). **No live changes; the user said not to deploy yet.** Open items for deployment:
-  - **The live squad instructions still say "Notion".** The Confluence fix exists only in `Archive/Squads/Dev Squad 1/Instructions_old.md` and was never pasted. It becomes moot once the new `Instructions.md` is deployed.
+  - ~~The live squad instructions still say "Notion".~~ **Fixed live by the user on 2026-10-20**, and the archive was refreshed to match.
   - **Member roles are out of date. They feed the leader's roster, so they steer routing:**
     - The Researcher's role says "Claude models", but it runs on Codex.
     - The Product Owner is called "Product Lead".
@@ -499,3 +506,39 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **New "What goes in Figma" section:** Figma holds drawn work (wireframes, page structures, visual designs, components and states, responsive layouts). Text is limited to UI copy and short annotations pinned to elements. Rationale, specs, handoff notes and open questions go in the issue comment.
   - **Why:** the Frontend Engineer reads Figma through the MCP, so text frames bloat its context and could be mistaken for UI to build. Written content belongs in the comment or in Confluence.
   - **Note:** `figma-generate-library` creates design-system documentation pages. That's legitimate only for library work; make an exception if a Figma component library is ever built.
+- 2026-10-20: Exported the current live config into `Archive/`, mirroring the new files:
+  - **Agents:** `Settings_old.md`, `Model_old.md`, `Skills_old.md` and `avatar*_old.webp` for each agent.
+  - **Workspace:** `Archive/Workspace/Settings_old.md` and `Context_old.md`.
+  - **Models, skills and conversation starters already match the new files,** because they were applied live on 2026-10-18. The pre-2026-10-18 values exist only in the rollback table above.
+  - **Findings:**
+    - **The live Workspace Context is empty,** so `Workspace/Context.md` can be pasted in directly with nothing to merge.
+    - **Drift: the live Doc Owner instructions differ from `Archive/Agents/Doc Owner/System Prompt_old.md`.** Live opens "You are Docs"; the archive says "You are Doc Owner". The other 11 live prompts match the archive exactly. The archive prompt was left unchanged (user instruction 2026-10-19).
+    - **The workspace has an MCP server library** of 7 servers: Altassian-MCP (sic), AWS-Knowledge, Composio, Context7, Figma, NetBox-MCP and SearXNG. No agent has an MCP configuration, so how (or whether) agents use this library is unverified. `Runtimes/README.md` currently says MCP servers come from the runtime machine.
+    - **The workspace has 7 linked repos.** Their names aren't exported (user decision, 2026-10-20). Per the docs, the workspace's repos are always included in a run's context.
+    - **The workspace settings confirm** `pr_merge_status: documentation`.
+- 2026-10-20: Made the archive an exact copy of live, for rollback.
+  - **Refreshed from live:** `Archive/Agents/Doc Owner/System Prompt_old.md` (live says "You are Docs") and `Archive/Squads/Dev Squad 1/Instructions_old.md`.
+  - **Squad instructions:** the user fixed the live "Notion" line to say Confluence, so the archive now matches with no diff.
+  - **Check:** all 12 live agent prompts and the squad instructions now match `Archive/` byte for byte.
+  - **Status files:** the user supplied the issue-status list, now in `Workspace/Issue Status.md` and `Archive/Workspace/Issue Status_old.md` (identical).
+  - **Findings from the status list:**
+    - Research, Needs Refinement, Refinement Complete, Implementation and Testing **already exist live**. There is no `to_do` status, so that follow-up is closed.
+    - ⚠️ **Documentation is in the Done group.** Done-group statuses may count as complete: a move there could disable the issue's wakeups and count sub-issues as finished before the Doc Owner runs. The group can't be changed after creation, so the fix may be a new Started-group status (for example "Documenting") with the PR merge status pointed at it. **Test this on a throwaway issue before deploying.**
+    - ⚠️ **Keys vs display names.** 355 live issues use the key `ready` (9 issues), but no status is displayed as "Ready", so a status was probably renamed while keeping its key (most likely "Implementation"). The prompts and wakeups use keys (`implementation`, `refinement_complete`, `testing`, …), so **the actual keys must be confirmed before deployment**.
+  - **Still to do for rollback:** a cutover snapshot of open issues (key, status, assignee), and `Archive/README.md` restore steps.
+- 2026-10-20: Issue statuses for the new flow.
+  - **Verified in the Multica source** (`internal/handler/issue_status.go`, `internal/issuestatus/issuestatus.go`):
+    - Status keys are **immutable**, and so are status groups (categories).
+    - An **archived status keeps its key**, so the key can't be reused.
+    - Built-in keys: `backlog`, `todo`, `in_progress`, `in_review`, `blocked`, `done`, `cancelled`.
+    - Custom statuses in the Done or Closed group behave as `done` / `cancelled`. Entering one runs `StopClosedIssueWakeups`, which disables every wakeup on the issue.
+  - **Live problems found:**
+    - "Implementation" had the key `ready`, because it was renamed after creation.
+    - "Documentation" (`documentation`) was in the **Done** group, which would disable the checkpoint wakeup at the moment it should fire, and count sub-issues as finished.
+  - **The user created two new statuses live:** Implementation (`implementation`) and **Documenting (`documenting`, Started group)**.
+  - **Repo changes:**
+    - `Workspace/Issue Status.md` is the target set, with all keys and a "Retiring the old statuses" table.
+    - `Archive/Workspace/Issue Status_old.md` records the pre-migration set (`ready`, and `documentation` in Done).
+    - **Every new file now uses `documenting`** (10 places): the squad `Instructions.md` (status list, checkpoint wakeup, docs-only path, SUB-ISSUES), the Tech Lead's permissions, the Doc Owner's squad section, and both Engineers' `Skills.md`.
+  - **Repository names removed** from `Archive/Workspace/Settings_old.md` and from this file (user decision: the repo is public, and the list is easy to recreate by hand).
+- 2026-10-20: The user completed the status migration live (PR merge status → `documenting`, issues moved, old statuses retired, live Tech Lead and squad instructions updated), and it was verified. The `Archive/` copies of the Tech Lead prompt and the squad instructions were refreshed to stay exact. `Archive/Workspace/Issue Status_old.md` stays as the **pre-migration** status set; `Workspace/Issue Status.md` now matches live.
