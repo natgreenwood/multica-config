@@ -129,7 +129,7 @@ Files to re-check: `server/internal/daemon/execenv/runtime_config_sections.go` (
     - A rule pauses when its trigger chain passes through it a 3rd time without a person in between (`paused_reason=loop`), or after 12 runs in an hour (`rate`). A paused rule stays off until someone re-enables it.
     - `done`/`cancelled` disables a rule permanently; reopening the issue doesn't restore it.
     - The registering agent's own status changes and comments never wake it.
-  - Unverified: whether a wakeup run for the squad leader carries the squad briefing. User rules target an *agent*, whereas the built-in child-done rule targets the squad's leader. Test this on a real issue.
+  - **Verified 2026-10-24 (NATG-381):** a wakeup run for the squad leader carries the full squad briefing.
 - **Project workflows** (in source, not yet in the public docs). A project can define ordered status columns where entering a column **reassigns the issue to that column's handler** (an agent, squad, member, project lead or creator) and starts their run. A column may also name a "needs changes" status. A named workflow rejects statuses outside it, and only the assignee gets the step's instructions. **This could replace much of the status-routing logic currently written into the Dev Squad 1 instructions.** Availability on our server version is unconfirmed.
 
 - **Status changes don't wake anyone** (`handler/issue.go` `shouldEnqueueAgentTask`). The exception is leaving the fixed `backlog` key, which enqueues the assigned agent. A human moving `refinement_complete → implementation` wakes nobody on its own. Something has to catch it: a comment or @mention, an `issue wakeup --until-status`, or a project-workflow handoff.
@@ -350,11 +350,8 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - The PR merge status is `documenting`.
   - No issues remain on `ready` or `documentation`; both are retired.
   - The live Tech Lead and squad instructions now refer to `documenting` / “Documenting”, and `Archive/` was refreshed to match.
-- Test one refinement on a throwaway issue. Confirm that:
-  - The Tech Lead is NOT woken while the issue is assigned to the Product Owner.
-  - The Tech Lead IS woken when the issue is assigned back to `Dev Squad 1`.
-  - The Architect's threaded reply (no @mention) wakes the Product Owner. If it doesn't, the Architect needs to @mention the Product Owner once instead.
-- Test on a throwaway issue that a wakeup-started Tech Lead run still behaves as squad leader (gets the squad briefing and instructions).
+- ~~Test one refinement on a throwaway issue~~ **Done 2026-10-24 (NATG-380, passed).** The Tech Lead is not woken while the Product Owner has the issue, and is woken by the hand-back. **Still untested:** whether the Architect's threaded reply (no @mention) wakes the Product Owner; the Product Owner didn't involve the Architect. If it doesn't, the Architect needs to @mention the Product Owner once.
+- ~~Test that a wakeup-started Tech Lead run still behaves as squad leader~~ **Done 2026-10-24 (NATG-381, passed).** A wakeup-started run's `CLAUDE.md` has the Squad Operating Protocol, the Squad Roster and the (new) Squad Instructions.
 
 ## Change log
 - 2026-10-17: Created CLAUDE.md with condensed Multica knowledge and an initial list of observations.
@@ -550,4 +547,8 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **All 61 open issues not in `backlog` were moved to `backlog`** (user decision), so the new flow starts clean and the user re-triages. None of the 9 enabled wakeups on them fires on a move to `backlog`.
   - Context: the first scheduled Weekly Health Check (NATG-379, 2026-10-24) found the live squad instructions still said "Ready" after the 10-20 migration, so 9 `implementation` issues had no run. The new instructions don't have that problem. Its question about the 12-runs-per-hour guard on NATG-320/327 was a misreading: that guard covers wakeup rules, not comment-triggered runs (the 10-17 failure loop).
   - **Leftover:** NATG-222 still has an enabled wakeup on the retired key `documentation`; it can never fire. Replace with `documenting` or delete when the issue is re-triaged.
-  - **Still to do:** the two throwaway-issue tests (refinement wakes; wakeup-started leader run gets the squad briefing); `Members.md` still says "apply together with the new set" and could be reworded as live; Health Check runbook check 5 should include unassigned `research-followup` issues.
+  - **Still to do:** `Members.md` still says "apply together with the new set" and could be reworded as live; Health Check runbook check 5 should include unassigned `research-followup` issues.
+- 2026-10-24: Cutover tests on throwaway issues, both passed, both issues then cancelled (wakeups disabled):
+  - **NATG-380 (refinement), 4 runs:** Tech Lead → `needs_refinement` + assigned to the Product Owner (no @mention); Product Owner's round of questions did not wake the Tech Lead; the human's reply woke the Product Owner, which mapped answers to ACs and handed back with `Outcome: done`; the Tech Lead woke, moved it to `refinement_complete` and registered the `--until-status implementation` wakeup.
+  - **NATG-381 (wakeup path):** a timer wakeup aimed at the Tech Lead on a `backlog` issue started a run whose brief had all three squad headings and the new squad instructions. It changed nothing else.
+  - Not covered: the Architect's threaded reply waking the Product Owner.
