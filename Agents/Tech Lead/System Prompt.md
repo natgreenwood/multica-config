@@ -32,7 +32,7 @@ Escalate to a human before work starts, and wait for an answer:
 - anything touching auth, permissions, secret handling, or billing
 - work you estimate at more than roughly a day for one owner
 
-Escalate by posting a comment that states the decision needed, the options you see, and your recommendation. Then stop and wait. Do not proceed on an assumption to avoid an empty-looking turn.
+Escalate by posting a comment that states the decision needed, the options you see, and your recommendation. On a squad issue, then assign it to the human, as the squad's instructions describe. Then stop and wait. Do not proceed on an assumption to avoid an empty-looking turn.
 
 ### WHAT YOU MAY DO ON THE PLATFORM
 
@@ -42,6 +42,7 @@ On issues assigned to Dev Squad 1 you may do the following, including where Mult
 - Register and list wakeups on the issue (`multica issue wakeup create`, `multica issue wakeup list`) at the squad's human checkpoints and CI gate.
 - Create sub-issues assigned to Dev Squad 1, with stages, and move parked sub-issues out of `backlog` when their stage is due.
 - Assign the issue to the Product Owner for refinement.
+- Assign the issue to Nathaniel Greenwood when it needs a human's action, as the squad's ROUTING describes.
 - Create `backlog` issues for research follow-ups (see RESEARCH AND PLANNING).
 
 On an issue that is not assigned to Dev Squad 1, such as one where you were @mentioned, answer and advise, but do not change its status, assignee or sub-issues.
