@@ -230,7 +230,7 @@ The live "Leave done to a human" and wakeup lines were dropped.
 **Product Owner `System Prompt.md`: DONE 2026-10-18 (draft, 1,475 words).** Built from `_old` with three amended passages and a new IN DEV SQUAD 1 section:
 - It owns refinement while assigned and never changes status, overriding the default workflow.
 - It hands back to `Dev Squad 1` with a *ready* or *blocked* comment. "Blocked" means a question nobody in the conversation can answer.
-- **Decision 2A:** if a person stops replying, the issue stays in `needs_refinement`. No chasing and no wakeup.
+- ~~**Decision 2A:** if a person stops replying, the issue stays in `needs_refinement`.~~ **Superseded 2026-10-28:** questions for a person go to Nathaniel by assignment (see the change log). Still no chasing and no wakeup.
 - It appends the refinement block when the issue is in `needs_refinement`, and comments instead when someone is already building.
 - **Decision 1A:** it may @mention the Architect once per set of questions, with no acknowledgement replies. These are the loop stop conditions.
 
@@ -350,7 +350,7 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - The PR merge status is `documenting`.
   - No issues remain on `ready` or `documentation`; both are retired.
   - The live Tech Lead and squad instructions now refer to `documenting` / “Documenting”, and `Archive/` was refreshed to match.
-- ~~Test one refinement on a throwaway issue~~ **Done 2026-10-24 (NATG-380, passed).** The Tech Lead is not woken while the Product Owner has the issue, and is woken by the hand-back. **Still untested:** whether the Architect's threaded reply (no @mention) wakes the Product Owner; the Product Owner didn't involve the Architect. If it doesn't, the Architect needs to @mention the Product Owner once.
+- ~~Test one refinement on a throwaway issue~~ **Done 2026-10-24 (NATG-380, passed).** The Tech Lead is not woken while the Product Owner has the issue, and is woken by the hand-back. ~~Still untested: whether the Architect's threaded reply wakes the Product Owner.~~ **Answered 2026-10-28 (NATG-455): it does not.** The Architect replied in the Product Owner's thread at 15:28 with no @mention, and the Product Owner never ran again.
 - ~~Test that a wakeup-started Tech Lead run still behaves as squad leader~~ **Done 2026-10-24 (NATG-381, passed).** A wakeup-started run's `CLAUDE.md` has the Squad Operating Protocol, the Squad Roster and the (new) Squad Instructions.
 
 ## Change log
@@ -551,8 +551,20 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
 - 2026-10-24: Cutover tests on throwaway issues, both passed, both issues then cancelled (wakeups disabled):
   - **NATG-380 (refinement), 4 runs:** Tech Lead → `needs_refinement` + assigned to the Product Owner (no @mention); Product Owner's round of questions did not wake the Tech Lead; the human's reply woke the Product Owner, which mapped answers to ACs and handed back with `Outcome: done`; the Tech Lead woke, moved it to `refinement_complete` and registered the `--until-status implementation` wakeup.
   - **NATG-381 (wakeup path):** a timer wakeup aimed at the Tech Lead on a `backlog` issue started a run whose brief had all three squad headings and the new squad instructions. It changed nothing else.
-  - Not covered: the Architect's threaded reply waking the Product Owner.
+  - Not covered: the Architect's threaded reply waking the Product Owner. **Answered 2026-10-28 (NATG-455): it doesn't.**
 - 2026-10-26: **Open item, no change made (user is testing more first):** NATG-392 (repo Markdown only: `HOST.md` + an `AGENTS.md` permission line, PR #44) took ~23 runs in ~40 min.
   - Cause: squad `Instructions.md` SEQUENCE treats repo docs as codebase changes (mandatory Architect + Security), and the Tech Lead also chose Tester and QA. Security re-reviewed 3 times, including after the Tech Lead called the remaining points "theoretical".
   - Security was justified here (agent permission change, a credentialed API lookup block; SEC-01 was a real leak). Tester, QA and the repeated re-reviews were not.
   - Proposed if more tests show the same pattern: repo-docs changes get Architect review only, plus Security when they touch agent permissions, credentials or commands agents run; re-review only for blocking findings; matching ISSUE DONE check 2 wording.
+- 2026-10-27: **Human-action assignment** (user decision: escalations only), **deployed live 2026-10-27** (squad instructions + Tech Lead prompt, read back byte for byte; live matched `main` beforehand). Rollback: re-push both files from `main` before PR #25. Still to test: assigning back to `Dev Squad 1` wakes the Tech Lead.
+  - When an issue needs the user's action, the Tech Lead posts the comment and then assigns the issue to Nathaniel Greenwood (`multica issue assign <id> --to "Nathaniel Greenwood"`), leaving the status unchanged. Covers escalations, `blocked`/`needs decision` hand-backs it can't resolve, a blocked refinement and session-limit stops. The user acts and assigns it back to `Dev Squad 1`, which wakes the Tech Lead (assigning to a member starts no run).
+  - Not used at HUMAN CHECKPOINTS (their `--until-status` wakeups would fire while the issue isn't assigned to the squad, and the Tech Lead's guard would stop it acting) or during refinement Q&A (the human's reply has to wake the Product Owner).
+  - Files: squad `Instructions.md` (ROUTING, REFINEMENT) and the Tech Lead's escalation paragraph and platform permissions.
+- 2026-10-28: **Product Owner hand-off fix** (user decision: option A), branch `feat/po-refinement-handback`, stacked on PR #25. **Not deployed.**
+  - **Problem:** on NATG-441 and NATG-455 the Product Owner (PO) asked Nathaniel questions and then kept the issue, as decision 2A said it should. Nothing showed that the issue was waiting on him.
+    - On NATG-455 the PO also opened with `Outcome: needs decision`, which reads as a hand-back, but it didn't reassign.
+    - The Architect's threaded reply, with no @mention, never woke the PO.
+  - **PO prompt (IN DEV SQUAD 1, WHAT YOU NEVER DO):** every round ends with an assignment. A ready issue goes to `Dev Squad 1`. Questions for a person go to Nathaniel Greenwood, with the status unchanged. An `Outcome:` line appears only when the issue is assigned. The PO keeps the issue only while it waits on the Architect alone. If the Architect answers while the issue is with Nathaniel, the issue stays with him.
+  - **Squad `Instructions.md` (ROUTING, REFINEMENT):** when Nathaniel assigns an issue back in `needs_refinement`, the Tech Lead reassigns it to the PO silently. The blocked-escalation path is gone, and refinement is no longer excluded from human assignment.
+  - **Architect prompt:** its refinement answer @mentions the PO once, and it doesn't reply again.
+  - **To test after deploying:** the PO assigns to Nathaniel; Nathaniel assigns back and the Tech Lead returns the issue to the PO; the Architect's @mention wakes the PO while the issue is assigned to someone else.

@@ -42,7 +42,9 @@ problem that doesn't need one.
 - Never change an issue's status or assignee, including where Multica's
   default workflow tells you to.
 - When the Product Owner @mentions you during refinement, answer its
-  questions once, in a reply to its comment, without @mentioning anyone.
+  questions once, in a reply to its comment that @mentions the Product
+  Owner. Without that @mention it never sees your answer. Mention no one
+  else, and don't reply again after it acknowledges or folds in your answer.
   Don't edit the issue description: the Product Owner owns the refinement
   block. If you need more information, say so in that same reply.
 - When the Tech Lead dispatches you to review a pull request, review it
