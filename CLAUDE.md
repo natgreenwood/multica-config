@@ -176,6 +176,13 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
 7. **Status-write conflict.** The built-in workflow tells every agent to set `in_progress`/`in_review` itself. None of the member agents' instructions restrict this, so after (say) Researcher finishes, it will likely move the issue to `in_review` and skip the squad's custom flow. Each member agent probably needs a line stating which statuses it may write, or that it must not write status.
 8. **Shared rules.** Branch naming and the `bws` secrets note live only in the squad instructions, which only the leader sees, so engineers never see them. Candidates for Workspace Context.
 9. **Project workflows** may be a better fit than prose routing for the Research → Refinement → Implementation → Testing → Documentation flow. Need to check whether our server version has them.
+   - **Live 2026-10-28** (Settings → Workflows; checked in source `d5d1382`, `issueworkflow/issueworkflow.go`, `workflows/handoff-form.tsx`, docs `workflows.mdx`):
+     - **Handlers:** an agent, a member, the project lead or the creator. The server also accepts a squad, but the UI leaves squads out on purpose ("they route work themselves", MUL-7420).
+     - **Handoffs reassign the issue** to the step's handler and start its run. **No handoff keeps the current assignee**, so after an agent step the issue stays with that agent and the Tech Lead is never woken.
+     - **The handler moves the status itself**, using the brief's "Your moves" commands (Step done / Needs changes / Can't proceed). A run ending doesn't advance the status. Agent Identity outranks the workflow, so a prompt saying "never change status" makes the handler skip the move and the issue stalls.
+     - **Shape:** one handler per status, at most 8,000 characters of step instructions, and a fixed done/back graph. Workflows are set per project (definitions can be shared).
+     - **Unverified:** whether a PR-merge status move triggers a handoff.
+     - **Assessment:** it doesn't work alongside a squad leader. It would have to replace the Tech Lead's routing (status per agent, no conditional steps). Not adopted.
 10. **Addressed in the draft 2026-10-17** (ROUTING rewritten; member side tracked under Pending follow-ups). Leader wakes: a squad member's reply already wakes the leader. The rule "assign back to Dev Squad 1" re-triggers it again, so it is likely redundant or the cause of double runs.
 
 ## Pending follow-ups (carry into later stages)
@@ -560,11 +567,15 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - When an issue needs the user's action, the Tech Lead posts the comment and then assigns the issue to Nathaniel Greenwood (`multica issue assign <id> --to "Nathaniel Greenwood"`), leaving the status unchanged. Covers escalations, `blocked`/`needs decision` hand-backs it can't resolve, a blocked refinement and session-limit stops. The user acts and assigns it back to `Dev Squad 1`, which wakes the Tech Lead (assigning to a member starts no run).
   - Not used at HUMAN CHECKPOINTS (their `--until-status` wakeups would fire while the issue isn't assigned to the squad, and the Tech Lead's guard would stop it acting) or during refinement Q&A (the human's reply has to wake the Product Owner).
   - Files: squad `Instructions.md` (ROUTING, REFINEMENT) and the Tech Lead's escalation paragraph and platform permissions.
-- 2026-10-28: **Product Owner hand-off fix** (user decision: option A), branch `feat/po-refinement-handback`, stacked on PR #25. **Not deployed.**
+- 2026-10-28: **Product Owner hand-off fix** (user decision: option A), PR #26 (merged with #25). **Deployed live 2026-10-28:** the PO prompt, Architect prompt and squad instructions were pushed together and read back byte for byte. Live matched `6a156bf` beforehand. Rollback: re-push those three files from `6a156bf`.
   - **Problem:** on NATG-441 and NATG-455 the Product Owner (PO) asked Nathaniel questions and then kept the issue, as decision 2A said it should. Nothing showed that the issue was waiting on him.
     - On NATG-455 the PO also opened with `Outcome: needs decision`, which reads as a hand-back, but it didn't reassign.
     - The Architect's threaded reply, with no @mention, never woke the PO.
   - **PO prompt (IN DEV SQUAD 1, WHAT YOU NEVER DO):** every round ends with an assignment. A ready issue goes to `Dev Squad 1`. Questions for a person go to Nathaniel Greenwood, with the status unchanged. An `Outcome:` line appears only when the issue is assigned. The PO keeps the issue only while it waits on the Architect alone. If the Architect answers while the issue is with Nathaniel, the issue stays with him.
   - **Squad `Instructions.md` (ROUTING, REFINEMENT):** when Nathaniel assigns an issue back in `needs_refinement`, the Tech Lead reassigns it to the PO silently. The blocked-escalation path is gone, and refinement is no longer excluded from human assignment.
   - **Architect prompt:** its refinement answer @mentions the PO once, and it doesn't reply again.
-  - **To test after deploying:** the PO assigns to Nathaniel; Nathaniel assigns back and the Tech Lead returns the issue to the PO; the Architect's @mention wakes the PO while the issue is assigned to someone else.
+  - **Tested 2026-10-28 on NATG-456, all three checks passed.** The issue was then cancelled, and its checkpoint wakeup is disabled. The full cycle took 7 runs in 8 minutes.
+    1. The PO's first round ended with `Outcome: needs decision` and an assignment to Nathaniel. In the same comment it @mentioned the Architect.
+    2. The Architect's reply @mentioned the PO and woke it while the issue was assigned to Nathaniel. The PO folded in the answers and posted a comment with no `Outcome:` line. It left the issue with Nathaniel.
+    3. Nathaniel answered and assigned the issue back to `Dev Squad 1`. The Tech Lead reassigned it to the PO. The PO handed it back with `Outcome: done`, and the Tech Lead moved it to `refinement_complete` and registered the checkpoint wakeup.
+  - **Minor deviation, no change made:** when the Tech Lead returned the issue to the PO, it also posted a comment, although the instructions say "no comment". The comment was useful (it flagged scope growth from the answers) and cost no extra run.
