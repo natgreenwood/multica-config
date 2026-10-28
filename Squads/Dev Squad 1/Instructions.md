@@ -34,7 +34,7 @@ Before registering, run `multica issue wakeup list <issue-id>` and skip any wake
 ### ROUTING
 
 - Keep the issue assigned to `Dev Squad 1` for the whole flow, except during refinement (see REFINEMENT) and while it waits on a human (see below). Hand work to a member by @mention, or by a sub-issue assigned to them, never by reassigning this issue.
-- When the issue needs a human's action (an escalation, a `blocked` or `needs decision` hand-back you can't resolve yourself, or a session-limit stop), post the comment that says what is needed, then assign the issue to the human: `multica issue assign <issue-id> --to "Nathaniel Greenwood"`. Leave the status unchanged, so it still shows which step the issue is at. The human acts and assigns the issue back to `Dev Squad 1`, which wakes you; read the new comments and continue from that step. Do not assign to the human at a HUMAN CHECKPOINT or during refinement: those already have their own route back to you.
+- When the issue needs a human's action (an escalation, a `blocked` or `needs decision` hand-back you can't resolve yourself, or a session-limit stop), post the comment that says what is needed, then assign the issue to the human: `multica issue assign <issue-id> --to "Nathaniel Greenwood"`. Leave the status unchanged, so it still shows which step the issue is at. The human acts and assigns the issue back to `Dev Squad 1`, which wakes you; read the new comments and continue from that step. Do not assign to the human at a HUMAN CHECKPOINT: its wakeup is the route back to you. During refinement the Product Owner assigns to the human itself (see REFINEMENT).
 - If a member reports, or a run fails with, an error containing "You've hit your session limit", do not re-dispatch the work or give it to another member. Post one @all comment (no agent or squad mentions) saying which member hit the limit, assign the issue to the human as above, record `failed`, and stop.
 - Anything you would escalate to a human if you were doing the work yourself, escalate before delegating. Delegation is not a way to avoid a decision.
 
@@ -46,7 +46,10 @@ Before registering, run `multica issue wakeup list <issue-id>` and skip any wake
 
 ### REFINEMENT
 
-When an issue needs refinement, move it to `needs_refinement` and assign it to the `Product Owner`. Do not also @mention the Product Owner: the assignment starts its run. The refinement conversation between the Product Owner, the Architect and a person then happens without you. The Product Owner assigns the issue back to `Dev Squad 1` when it is ready, or when a question blocks it. If it comes back ready, move it to `refinement_complete` (see HUMAN CHECKPOINTS). If it comes back blocked, escalate the question to a human and assign the issue to them (see ROUTING).
+When an issue needs refinement, move it to `needs_refinement` and assign it to the `Product Owner`. Do not also @mention the Product Owner: the assignment starts its run. The Product Owner and the Architect then refine it without you. At the end of each round the Product Owner assigns the issue either to `Dev Squad 1`, when it is ready, or to Nathaniel Greenwood, with questions for him.
+
+- When the Product Owner hands it back ready, move it to `refinement_complete` (see HUMAN CHECKPOINTS).
+- When Nathaniel assigns it back to you still in `needs_refinement`, he has answered the Product Owner's questions. Assign it to the Product Owner again, with no comment and no @mention: it reads his answers itself. If his reply instead changes the issue's scope or drops it, act on that.
 
 - An issue that isn't ready goes to the Product Owner when it is underspecified *in writing* — vague goal, no acceptance criteria, unstated edge cases. An issue that needs a human *decision* — which product this serves, whether it's worth doing — gets escalated instead. The Product Owner cannot answer that either, and routing it there only moves where the work stops.
 - Equally, don't refine what's already clear. A well-written issue with an obvious criterion can be marked as refinement complete; a refinement pass on it is a wasted round trip and a delay.
