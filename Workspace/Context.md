@@ -17,7 +17,9 @@
 
 ### SECRETS
 
-- Bitwarden Secrets Manager (`bws`) is installed on the runtime. Use it to retrieve secrets as needed.
+- Fetch credentials from our Infisical (https://infisical.natg.co.uk) with the repository's `scripts/secret.sh <NAME>`, into one command's environment only: `NAME=$(scripts/secret.sh NAME) <command>`. Never print, store or commit a secret.
+- The script uses the token the Infisical Agent keeps on the runtime host. Never read that token file, and never log in to Infisical another way.
+- If the repository has no `scripts/secret.sh`, or the script fails, stop and tell Nathaniel. Don't get the secret another way.
 
 ### DOCUMENTATION
 

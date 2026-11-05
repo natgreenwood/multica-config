@@ -48,7 +48,7 @@ All agents share one Atlassian account, so Confluence drafts are visible to ever
 |---|---|---|---|
 | `git` | Branches and commits | dev-ai-1, dev-ai-3 | ❓ |
 | `gh`, authenticated to GitHub with access to the Foodie repo | Pull requests, CI checks | dev-ai-1, dev-ai-3 | ✅ installed (user confirmed 2026-10-18) |
-| `bws` (Bitwarden Secrets Manager) | Secrets, per `Workspace/Context.md` | dev-ai-1, dev-ai-3 | ✅ installed (user confirmed 2026-10-18) |
+| Infisical CLI (`/usr/bin/infisical`) and Infisical Agent, with the pinned server and token file `scripts/secret.sh` reads | Secrets from `https://infisical.natg.co.uk`, per `Workspace/Context.md` | dev-ai-1, dev-ai-3 | ✅ in use (the containers repo's agents fetch secrets this way); ❓ service setup not yet documented from the hosts. `bws` is retired (2026-11-05) |
 | Foodie's own toolchain (language runtimes, package manager, test and lint commands) | Engineers, Tester and QA run the project's checks | dev-ai-1, dev-ai-3 | ❓ |
 
 **GitHub permissions.** Agents open pull requests but never merge. Branch protection on the Foodie repo's `main`, requiring a human review, enforces that regardless of what any prompt says. ❓ Confirm it's enabled.
@@ -59,7 +59,7 @@ For a full walkthrough on Ubuntu, see [`Setup.md`](Setup.md). In short:
 
 1. Install the AI coding tool (Claude Code or Codex) and sign in with the subscription above.
 2. Install and configure the MCP servers this machine needs (table above).
-3. Install the CLI tools and authenticate `gh` and `bws`.
+3. Install the CLI tools, authenticate `gh`, and set up the Infisical Agent with this host's machine identity.
 4. Install the Multica CLI, then run `multica setup` and `multica daemon start`.
 5. Confirm the runtime is `online` with `multica runtime list`.
 6. Bind the agents to it, using the runtime and model from each `Agents/*/Settings.md`.

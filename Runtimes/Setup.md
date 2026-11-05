@@ -2,9 +2,9 @@
 
 This guide turns a fresh Ubuntu server into a Multica runtime like **dev-ai-1** (Claude Code) or **dev-ai-3** (Codex). It assumes Ubuntu 24.04 LTS on x86_64, a headless server you reach over SSH, and Multica Cloud.
 
-A runtime is two things on one machine: the **Multica daemon**, which connects to Multica and claims runs, and an **AI coding tool**, which the daemon runs for each agent. Everything an agent uses that isn't in its Multica settings also has to be on this machine: MCP servers, `gh`, `bws` and the project's toolchain (see `README.md`).
+A runtime is two things on one machine: the **Multica daemon**, which connects to Multica and claims runs, and an **AI coding tool**, which the daemon runs for each agent. Everything an agent uses that isn't in its Multica settings also has to be on this machine: MCP servers, `gh`, the Infisical CLI and Agent, and the project's toolchain (see `README.md`).
 
-> **Sources.** Steps marked 📘 follow official documentation: Multica, Claude Code, Codex, GitHub CLI and Bitwarden. Steps marked 🛠 are this repo's recommendations; Multica's docs don't cover them. Those are the dedicated user, running the daemon as a systemd service, and the hardening notes. Check versions and URLs against the linked docs before following them.
+> **Sources.** Steps marked 📘 follow official documentation: Multica, Claude Code, Codex, GitHub CLI and Infisical. Steps marked 🛠 are this repo's recommendations; Multica's docs don't cover them. Those are the dedicated user, running the daemon and the Infisical Agent as systemd services, and the hardening notes. Check versions and URLs against the linked docs before following them.
 
 ## 1. Prepare the host 🛠 + 📘
 
@@ -99,7 +99,7 @@ codex exec "Reply OK"     # Codex
 
 Configure any MCP servers the agents need on the coding agent itself, as the `multica` user. See `README.md` for which agents use which servers. How you do this depends on the tool and your account: servers can be added through the tool's own configuration, or synced from the account the tool is signed in with. Check that they're connected before starting the daemon. Multica's agent settings don't provide them.
 
-## 5. Install `gh` and `bws` 📘
+## 5. Install `gh` and Infisical 📘 + 🛠
 
 **GitHub CLI** ([install guide](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)):
 
@@ -119,16 +119,96 @@ gh auth setup-git    # lets git push over HTTPS using gh's credentials
 gh auth status
 ```
 
-**Bitwarden Secrets Manager CLI** ([releases](https://github.com/bitwarden/sdk-sm/releases)). Pick the latest `bws-v*` release; 2.1.0 is shown here:
+**Infisical** gives agents their secrets from our self-hosted Infisical, `https://infisical.natg.co.uk`. Agents never sign in to it themselves. Each repository that uses secrets carries `scripts/secret.sh` and an `.infisical.yaml` naming its Infisical project (see `natgreenwood/containers`). The script reads an access token that the **Infisical Agent** keeps renewed on this host, and sends it only to the server pinned on this host. Its paths and checks are fixed, so this host needs exactly the layout below.
+
+| Path | Owner and mode | Holds |
+|---|---|---|
+| `/usr/bin/infisical` | root, from apt | The CLI. The script runs only this path |
+| `/etc/infisical-agent/multica/domain` | `root:root`, `0644` | The pinned server URL. Only root may write it, or the script refuses |
+| `/etc/infisical-agent/multica/auth/` | `infisical-agent`, `0700` | The machine identity's client ID and secret: this host's only long-lived Infisical credential |
+| `/var/lib/infisical-agent/multica/token` | `infisical-agent:multica`, `0640` | The access token the Agent renews, which the script reads |
+
+The client secret stays with a separate `infisical-agent` user, so an agent running as `multica` can read the short-lived token but never the credential that creates it.
+
+**Install the CLI** 📘 ([CLI docs](https://infisical.com/docs/cli/overview)), from an admin account:
 
 ```bash
-cd /tmp
-curl -fsSLO https://github.com/bitwarden/sdk-sm/releases/download/bws-v2.1.0/bws-x86_64-unknown-linux-gnu-2.1.0.zip
-unzip bws-x86_64-unknown-linux-gnu-2.1.0.zip && install -m 755 bws ~/.local/bin/bws
-bws --version
+curl -1sLf 'https://artifacts-cli.infisical.com/setup.deb.sh' | sudo -E bash
+sudo apt-get install -y infisical
+command -v infisical      # must print /usr/bin/infisical
 ```
 
-`bws` authenticates with a **machine account access token** in `BWS_ACCESS_TOKEN`. Create a machine account in Bitwarden Secrets Manager with access to only the projects the agents need, then supply its token through the environment file in step 8.
+**Create a machine identity** 📘 ([Universal Auth](https://infisical.com/docs/documentation/platform/identities/universal-auth)). In Infisical, create one identity per runtime host, such as `dev-ai-4`, with Universal Auth. Give it read-only access to only the projects the agents' repositories name in `.infisical.yaml`, then create a client secret. Only Nathaniel adds or changes secrets in Infisical.
+
+**Lay out the files** 🛠, from an admin account:
+
+```bash
+sudo adduser --system --group --no-create-home infisical-agent
+sudo install -d -m 0755 /etc/infisical-agent /etc/infisical-agent/multica
+echo 'https://infisical.natg.co.uk' | sudo tee /etc/infisical-agent/multica/domain > /dev/null
+sudo chmod 0644 /etc/infisical-agent/multica/domain
+sudo install -d -m 0700 -o infisical-agent -g infisical-agent /etc/infisical-agent/multica/auth
+sudo install -m 0600 -o infisical-agent -g infisical-agent /dev/null /etc/infisical-agent/multica/auth/client-id
+sudo install -m 0600 -o infisical-agent -g infisical-agent /dev/null /etc/infisical-agent/multica/auth/client-secret
+sudoedit /etc/infisical-agent/multica/auth/client-id       # paste the client ID
+sudoedit /etc/infisical-agent/multica/auth/client-secret   # paste the client secret
+sudo install -d -m 2750 -o infisical-agent -g multica /var/lib/infisical-agent /var/lib/infisical-agent/multica
+```
+
+The setgid bit (`2750`) on the token folder gives the token file the `multica` group, so `multica` can read it.
+
+```yaml
+# /etc/infisical-agent/multica/agent-config.yml (no secrets, only paths)
+infisical:
+  address: 'https://infisical.natg.co.uk'
+auth:
+  type: 'universal-auth'
+  config:
+    client-id: '/etc/infisical-agent/multica/auth/client-id'
+    client-secret: '/etc/infisical-agent/multica/auth/client-secret'
+    remove_client_secret_on_read: false
+sinks:
+  - type: 'file'
+    config:
+      path: '/var/lib/infisical-agent/multica/token'
+```
+
+**Run the Agent as a system service** 🛠 ([Infisical Agent docs](https://infisical.com/docs/integrations/platforms/infisical-agent)):
+
+```ini
+# /etc/systemd/system/infisical-agent-multica.service
+[Unit]
+Description=Infisical Agent for the Multica runtime
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=infisical-agent
+Group=infisical-agent
+UMask=0027
+Environment=HOME=/tmp
+Environment=INFISICAL_DISABLE_TELEMETRY=1
+ExecStart=/usr/bin/infisical agent start --config /etc/infisical-agent/multica/agent-config.yml
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/infisical-agent/multica
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now infisical-agent-multica
+sudo systemctl status infisical-agent-multica
+sudo -u multica test -s /var/lib/infisical-agent/multica/token && echo "token readable by multica"
+```
+
+❓ This layout is derived from `scripts/secret.sh` in `natgreenwood/containers`. How dev-ai-1 and dev-ai-3 actually run the Agent (service name, user, unit options) is not yet confirmed. Step 9 checks a real fetch.
 
 ## 6. Install Docker (rootless) 📘
 
@@ -206,7 +286,7 @@ mkdir -p ~/.config/multica && touch ~/.config/multica/daemon.env && chmod 600 ~/
 
 ```ini
 # ~/.config/multica/daemon.env
-BWS_ACCESS_TOKEN=...
+# No Infisical credential goes here (see below).
 # Only if Claude Code uses a setup-token instead of an interactive login:
 # CLAUDE_CODE_OAUTH_TOKEN=...
 ```
@@ -239,7 +319,7 @@ systemctl --user status multica-daemon
 multica daemon status
 ```
 
-Everything in the daemon's environment is passed to agent runs, including `BWS_ACCESS_TOKEN`. That's deliberate, because agents use `bws`. It's also why the machine account should be scoped tightly.
+Everything in the daemon's environment is passed to agent runs. That's why no Infisical credential goes in this file: agents get secrets only through `scripts/secret.sh`, which reads the Agent's token file (step 5). The token can still read whatever the machine identity can, which is why the identity is read-only and scoped to the agents' projects.
 
 ## 9. Verify the runtime 📘
 
@@ -248,10 +328,17 @@ multica runtime list      # the new machine's tool should show "online"
 journalctl --user -u multica-daemon -f   # or: multica daemon logs -f
 ```
 
+To check secrets end to end, as `multica`, in a checkout of a repository that has `scripts/secret.sh`, fetch one secret the repository's instructions name, without printing it:
+
+```bash
+scripts/secret.sh <NAME> > /dev/null && echo "secret fetch OK"
+```
+
 In Multica, open **Runtimes**. The machine and its tool should appear and show as online. If the tool is missing, check, in order:
 - `command -v claude` / `command -v codex` as the `multica` user
 - that the tool works on its own (step 3)
 - `docker info` as `multica`, if agents need containers (step 6)
+- `systemctl status infisical-agent-multica`, if agents need secrets (step 5)
 - the daemon logs
 - `systemctl --user restart multica-daemon`
 
@@ -264,7 +351,7 @@ In Multica, open **Runtimes**. The machine and its tool should appear and show a
 
 ## Maintenance 🛠
 
-- **Updates:** the Claude Code native install updates itself. For Codex, re-run its installer. For Multica, run `multica update`, then `systemctl --user restart multica-daemon`. Restart the daemon after any tool update or sign-in change, so it re-detects the tools.
-- **Expired credentials:** a failed sign-in shows up as failed runs. Check `claude` / `codex login status`, `gh auth status` and `multica auth status`.
+- **Updates:** the Claude Code native install updates itself. For Codex, re-run its installer. For Multica, run `multica update`, then `systemctl --user restart multica-daemon`. For Infisical, an admin runs `sudo apt update && sudo apt install --only-upgrade infisical`, then `sudo systemctl restart infisical-agent-multica`. Restart the daemon after any tool update or sign-in change, so it re-detects the tools.
+- **Expired credentials:** a failed sign-in shows up as failed runs. Check `claude` / `codex login status`, `gh auth status`, `multica auth status` and `systemctl status infisical-agent-multica`. A `scripts/secret.sh` failure that names the token file usually means the Agent has stopped or its client secret has expired.
 - **Network:** the daemon only connects outwards to Multica, so no inbound ports need to be open.
-- **Retiring a host:** stop and disable the service, revoke its Multica PAT, GitHub sign-in and Bitwarden machine-account token, then delete the runtime from **Runtimes**. Multica also removes runtimes that have been offline for more than 7 days with no agents bound.
+- **Retiring a host:** stop and disable both services (`multica-daemon` and `infisical-agent-multica`). Revoke the host's Multica PAT and GitHub sign-in, and its Infisical machine identity's client secret (or delete the identity), then delete the runtime from **Runtimes**. Multica also removes runtimes that have been offline for more than 7 days with no agents bound.
