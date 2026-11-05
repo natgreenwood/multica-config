@@ -118,7 +118,7 @@ Files to re-check: `server/internal/daemon/execenv/runtime_config_sections.go` (
 
   This applies **"whoever the assignee is"**. A squad member that finishes its step will therefore move the parent to `in_review` unless its own instructions say otherwise. When custom statuses exist, the brief adds that these rules refer to exact built-in keys.
 - **Custom statuses** carry lifecycle category only, with none of the built-in behaviours (backlog parking, In Review completion, Blocked failure, In Progress recovery). Moving `backlog` → *any* non-terminal status enqueues the assigned agent, so `to_do` triggers just like `todo`. A failed run rolls back only `in_progress` → `todo`.
-- **Mention types.** `agent` → runs that agent. `squad` → runs the leader only. `member` → link only, **no run and no notification**. `issue` → link only. `[@all](mention://all/all)` is a broadcast that *suppresses* the assignee's implicit on-comment trigger; explicit agent/squad mentions in the same comment still fire. A wrong UUID fails silently (`invocation_not_allowed`).
+- **Mention types.** `agent` → runs that agent. `squad` → runs the leader only. `member` → link only, **no run and no notification**. `issue` → link only. `[@all](mention://all/all)` is a broadcast that *suppresses* the assignee's implicit on-comment trigger; explicit agent/squad mentions in the same comment still fire. A wrong UUID gives `invocation_not_allowed`; since v0.7.2 the server also posts a system reply on the comment saying so. Since v0.7.1, mentions inside code blocks or inline code are inert.
 - **Issue wakeups exist** (`multica issue wakeup create <issue> ...`). They persist on the issue and start a later ordinary run.
   - Conditions: `--until-status KEY` (custom keys work), `--until-pr checks|merged`, `--until-children-done [--stage N]`, `--until-issue X --until-issue-state done|ended|in_review`, `--until-assignee`, `--until-label`, `--until-property`.
   - Timers: `--kind at|every|cron`.
@@ -134,6 +134,29 @@ Files to re-check: `server/internal/daemon/execenv/runtime_config_sections.go` (
 
 - **Status changes don't wake anyone** (`handler/issue.go` `shouldEnqueueAgentTask`). The exception is leaving the fixed `backlog` key, which enqueues the assigned agent. A human moving `refinement_complete → implementation` wakes nobody on its own. Something has to catch it: a comment or @mention, an `issue wakeup --until-status`, or a project-workflow handoff.
 - **PR merge status is configurable** (workspace setting `pr_merge_status`, `handler/pr_auto_complete.go`). It decides what status an issue moves to when all its linked PRs merge. The default is `done`, and `none` leaves the status alone. It can be set to a custom key, such as `documentation`. With the default, a merge sends the issue straight to `done` and skips any post-merge steps.
+
+### Changes v0.6.4 → v0.8.0 (release notes and PRs checked 2026-11-05; main at `98846ce`)
+Multica Cloud runs the latest server. Daemon-side changes need the runtime daemons (dev-ai-1, dev-ai-3) on v0.8.0 too. The local Mac CLI is still 0.6.3, so it has no `workflow` commands.
+
+**Affects our config:**
+- **Statuses follow the issue's workflow, Default included** (v0.8.0, MUL-8250). Once the workspace has *stored* its Default workflow, status writes to keys Default doesn't list are rejected (`status_not_in_workflow`). This applies on Default projects and on issues outside any project. A write that keeps the current status is always allowed. **Checked live 2026-11-05:** Default is stored and lists every squad status (`backlog todo research needs_refinement refinement_complete implementation in_progress testing in_review documenting blocked done cancelled`), and all 7 projects use Default. **Rule: any new custom status must also be added to Default, or agents can't write it.** A second workflow, "V2", is the user's own test (user, 2026-11-05): ignore it.
+- **Sub-issues: "one issue, one PR" by default** (v0.8.0, MUL-8441). The brief's Sub-issue Creation section now says split only when each piece can be merged and verified on its own (another repo, separate code, a different owner), slice by user-visible behaviour and **never by layer** (backend/frontend), and don't split just because a PR is big. A sub-issue run now gets a `[Parent issue]` block telling it to read the parent and its threads first; the sub-issue description defines scope, and on a conflict it asks. **Possible tension** with our SUB-ISSUES section and the Tech Lead's splitting (see Pending follow-ups).
+- **Project workflows replace the brief's status rules** (v0.7.1, MUL-8145). When a project has a non-Default workflow (or Default with handoffs), the brief drops "set `in_progress` first" and "deliver → `in_review`" and points at the `[Project workflow]` block. Not active for us: Default has no handoffs.
+- **PR merge move respects named workflows** (v0.7.2, #9598). If the project's named workflow doesn't list `pr_merge_status`, the move is silently skipped. Default accepts it, so `documenting` still works.
+- **Wakeup runs for the squad leader are stamped as leader tasks** (v0.7.0, #9427). Before this, `multica squad activity` was rejected on wakeup-started leader runs (the briefing itself was already present, as NATG-381 showed).
+- **Sweeper failures now post a terminal-failure system comment** (v0.7.0, MUL-7847). This is one more failure comment on the issue, so FAILURE NOTICES applies to it too.
+
+**New capabilities (not used yet):**
+- **Wakeups:** `--until-pr conflicts` (v0.7.0; once, or every new conflict with `--mode continuous`), and `--until-issue-state blocked` (v0.7.1). `--until-pr reviewed` was added and reverted on 2026-11-03.
+- **Agent steering** (v0.7.2, MUL-8285): an agent's comment with `steer: true` can join another agent's *running* turn on the issue, if its comment could start that agent. Cap: 10 agent steers per turn, 3 per author; past that it's an ordinary trigger.
+- **CLI:**
+  - `multica workflow list|get|create|update|delete|handoff set` and `multica project workflow get|set` (v0.8.0).
+  - `multica issue rerun-task <run-id> [--fresh]` keeps the original agent after a reassignment; `issue rerun` is deprecated (v0.7.2).
+  - `issue list --property` takes comparison operators (v0.7.0); `issue list` has updated-time filters (main, unreleased).
+  - Agents can read the issues in a saved view (main).
+- **Brief:** Available Commands now keeps signatures and points at `--help` for details, e.g. the full `--until-*` catalogue (v0.7.2). That's about 590 characters less per run.
+- **Skills:** version history and restore (main), and the file-count cap is 512 (v0.8.0).
+- **UI only:** conversation starters moved to the agent profile (v0.7.0), Workflows went GA (v0.7.0), the Inbox has per-kind routing, and there's an agent-status filter for views. Issue deletion is restricted to creators and admins (main).
 
 ### PR linking and merge status (checked in source 2026-10-18; server behaviour inferred from its settings)
 - **What links a PR to an issue:** the key in the PR **title**, in the **branch** name, or right after a closing keyword ("Closes KEY") in the title or body. A bare mention in the body links nothing.
@@ -181,7 +204,7 @@ Items 2, 3, 5 and 10 concern the **draft** `Instructions.md`. Items 4, 7 and 8 a
      - **Handoffs reassign the issue** to the step's handler and start its run. **No handoff keeps the current assignee**, so after an agent step the issue stays with that agent and the Tech Lead is never woken.
      - **The handler moves the status itself**, using the brief's "Your moves" commands (Step done / Needs changes / Can't proceed). A run ending doesn't advance the status. Agent Identity outranks the workflow, so a prompt saying "never change status" makes the handler skip the move and the issue stalls.
      - **Shape:** one handler per status, at most 8,000 characters of step instructions, and a fixed done/back graph. Workflows are set per project (definitions can be shared).
-     - **Unverified:** whether a PR-merge status move triggers a handoff.
+     - **Unverified:** whether a PR-merge status move triggers a handoff. (Since v0.7.2, the move is skipped when a named project workflow doesn't list the target; the source says whether it should hand off is "a separate decision".)
      - **Assessment:** it doesn't work alongside a squad leader. It would have to replace the Tech Lead's routing (status per agent, no conditional steps). Not adopted.
 10. **Addressed in the draft 2026-10-17** (ROUTING rewritten; member side tracked under Pending follow-ups). Leader wakes: a squad member's reply already wakes the leader. The rule "assign back to Dev Squad 1" re-triggers it again, so it is likely redundant or the cause of double runs.
 
@@ -579,3 +602,7 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
     2. The Architect's reply @mentioned the PO and woke it while the issue was assigned to Nathaniel. The PO folded in the answers and posted a comment with no `Outcome:` line. It left the issue with Nathaniel.
     3. Nathaniel answered and assigned the issue back to `Dev Squad 1`. The Tech Lead reassigned it to the PO. The PO handed it back with `Outcome: done`, and the Tech Lead moved it to `refinement_complete` and registered the checkpoint wakeup.
   - **Minor deviation, no change made:** when the Tech Lead returned the issue to the PO, it also posted a comment, although the instructions say "no comment". The comment was useful (it flagged scope growth from the answers) and cost no extra run.
+- 2026-11-05: **Multica knowledge refreshed to v0.8.0** (release notes v0.6.4–v0.8.0, the key PRs, and main to `98846ce`); see "Changes v0.6.4 → v0.8.0". Read-only live check: the stored Default workflow lists every squad status, all projects use Default ("V2" is the user's test; ignore it). No config Markdown changed. **Open items for the user:**
+  - Review the squad SUB-ISSUES section and the Tech Lead's splitting against the new brief default (one issue, one PR; never split by layer). The engineers' "use the sub-issue's key" rule still holds.
+  - Any new custom status must also be added to the Default workflow.
+  - ~~Upgrade the local CLI~~ **Done 2026-11-05:** the Mac CLI is now 0.8.0 (`multica workflow list` works). Still to do: confirm the dev-ai-1/dev-ai-3 daemons are on v0.8.0, since the `[Parent issue]` block and the workflow-aware brief are rendered by the daemon.
