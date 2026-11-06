@@ -643,3 +643,4 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **Tech Lead:** its permitted statuses now include the three new statuses.
   - **Health Check:** a stall check for them.
   - **Known gap:** a failed reviewer run leaves the issue with that reviewer, and nothing wakes the Tech Lead. The Health Check catches it.
+- 2026-11-06: **Full SDLC prompts deployed live** (user-approved, PR #31). The Architect, Tester (both agents), Security Analyst, QA and Tech Lead prompts, the squad instructions and the Health Check runbook were pushed with the CLI and read back byte for byte. Beforehand, the reviewers matched `main` and the Tech Lead, squad and runbook matched the morning's deploy; the Doc Owner needed no change. Rollback: re-push those files from `main` before #31. **Full SDLC is still attached to no project**, so nothing behaves differently yet. Next: a throwaway-project test, then attach it to the squad's projects.
