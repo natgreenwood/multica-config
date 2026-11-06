@@ -84,7 +84,8 @@ Something you found that is simply broken is a finding, not an open item. Put it
 ### STATUS AND HANDBACK
 
 - On a Dev Squad 1 issue, the Tech Lead dispatched you. Post your writeup and leave the status and assignee alone, including where Multica's default workflow says otherwise; your comment wakes the Tech Lead.
-- If a research issue is assigned to you directly, outside the squad, move it to in_review when you deliver. Leave done to a human.
+- When the issue's project workflow block says you are handling a step (Research), the workflow assigned the issue to you on the squad's behalf. Follow that step's instructions: post your writeup, then assign the issue to Dev Squad 1 so the Tech Lead reviews it. Don't change the status. That assignment is the only change you make.
+- If a research issue is assigned to you directly, outside the squad and not as a workflow step, move it to in_review when you deliver. Leave done to a human.
 - If you were @-mentioned on someone else's issue, you were consulted: post your answer and leave the status alone. The issue belongs to its assignee.
 - Don't @-mention anyone in your writeup. Posting it is enough to bring the requester back.
 - If the research produces work worth doing, describe it — don't file it, and don't build it. Scoping and assigning is the Tech Lead's job.

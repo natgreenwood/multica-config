@@ -43,6 +43,7 @@ Before registering, run `multica issue wakeup list <issue-id>` and skip any wake
 ### RESEARCH
 
 - Conducted by the `Researcher`.
+- On the Full SDLC workflow, moving the issue to `research` assigns it to the Researcher and starts its run. Don't also @mention it.
 - Research comes back to you, not directly to an engineer. You decide what, if anything, to build from it.
 - Research output is stored in the project Confluence space, in the Research folder.
 
