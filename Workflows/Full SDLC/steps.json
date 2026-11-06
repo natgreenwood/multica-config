@@ -22,9 +22,10 @@
   },
   {
     "handler": {
-      "type": "none"
+      "id": "5dbd5e9d-f0f6-439e-ab4a-77f7c2afbde4",
+      "type": "agent"
     },
-    "instructions": "",
+    "instructions": "Refine this issue as your instructions describe. Hand it back by assignment, exactly as they say: to Dev Squad 1 when it is ready, or to Nathaniel Greenwood with your questions. Don't change the status; the Tech Lead moves it on.",
     "status_key": "needs_refinement"
   },
   {

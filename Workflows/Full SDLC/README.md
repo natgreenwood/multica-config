@@ -8,14 +8,18 @@ A Multica project workflow (Settings → Workflows) for projects that Dev Squad 
 
 | Step | Handler | Step done → | Needs changes → |
 |---|---|---|---|
+| `needs_refinement` | Product Owner | (none: hands back by assignment) | (none) |
 | `code_review` | Architect | `testing` | `implementation` |
 | `testing` | Tester (Codex) | `security_review` | `implementation` |
 | `security_review` | Security Analyst | `qa` | `implementation` |
 | `qa` | QA | `in_review` | `implementation` |
 
-All other steps (`backlog`, `todo`, `research`, `needs_refinement`, `ready_for_implementation`, `implementation`, `in_progress`, `in_review`, `documenting`, `final_checks`, `blocked`, `done`, `cancelled`) have no handler. The squad routes them, as on Default.
+All other steps (`backlog`, `todo`, `research`, `ready_for_implementation`, `implementation`, `in_progress`, `in_review`, `documenting`, `final_checks`, `blocked`, `done`, `cancelled`) have no handler. The squad routes them, as on Default.
 
 ## How issues get back to the squad
+
+The PR-merge move into `documenting` writes the status directly and never hands off (`pr_auto_complete.go`), which is why `documenting` has no handler.
+
 
 Multica can't hand an issue to a squad: the server rejects a squad as a handler (`issueworkflow.ValidateHandoff`, MUL-7420). So when a reviewer's move lands on a step with no handler (`in_review` after QA passes, `implementation` on Needs changes, or `blocked`), the reviewer assigns the issue to Dev Squad 1. That assignment wakes the Tech Lead once, with its squad briefing. The order is always: comment, move, assign.
 
@@ -30,6 +34,14 @@ Multica can't hand an issue to a squad: the server rejects a squad as a handler 
 - Live on Homelab Containers (attached by the user).
 
 ## Step instructions
+
+### `needs_refinement`: Needs Refinement → Product Owner
+
+```
+Refine this issue as your instructions describe. Hand it back by assignment, exactly as they say: to Dev Squad 1 when it is ready, or to Nathaniel Greenwood with your questions. Don't change the status; the Tech Lead moves it on.
+```
+
+The Product Owner makes no workflow move: its prompt already hands back by assignment and never changes status. The handoff only replaces the Tech Lead's assignment, so an issue a person moves into `needs_refinement` reaches the Product Owner without a Tech Lead run.
 
 ### `code_review`: Code Review → Architect
 
