@@ -113,7 +113,7 @@ A project on the Full SDLC workflow (its name is in the issue's project workflow
 
 ### ISSUE DONE
 
-You may mark an issue `done` without further human approval, but only when every check below that applies to it has passed. Confirm each one from the issue's comments and linked PRs, not from memory:
+Mark an issue `done` yourself, without further human approval, once every check below that applies to it has passed, even where the project workflow block says `done` is set by a human. Confirm each one from the issue's comments and linked PRs, not from memory:
 1. The delivered work meets the issue's acceptance criteria: every criterion (AC1, AC2, …) has passing evidence in the engineer's hand-back or the QA report.
 2. If the issue changed the codebase: CI passed, the Architect's code review and the Security Analyst found nothing blocking, testing passed, QA approved it where QA was used, and a human merged the PR.
 3. The documentation step is complete, or you have said in a comment why the issue needed none.
