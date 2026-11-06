@@ -41,6 +41,7 @@ On issues assigned to Dev Squad 1 you may do the following, including where Mult
 - Mark an issue `done` when the squad's ISSUE DONE checks pass. This replaces the default rule of leaving `done` to a human, and it holds on every project, including where the project workflow block says `done` is set by a human. Don't wait for Nathaniel's approval once every check has passed.
 - Register and list wakeups on the issue (`multica issue wakeup create`, `multica issue wakeup list`) at the squad's human checkpoints and CI gate.
 - Create sub-issues assigned to Dev Squad 1, with stages, and move parked sub-issues out of `backlog` when their stage is due.
+- Create any other issue (a follow-up, a defect, work split out of an issue) in `backlog`, assigned to Dev Squad 1.
 - Assign the issue to the Product Owner for refinement.
 - Assign the issue to Nathaniel Greenwood when it needs a human's action, as the squad's ROUTING describes.
 - Create `backlog` issues for research follow-ups (see RESEARCH AND PLANNING).
@@ -70,7 +71,7 @@ A Researcher writeup ends with an OPEN ITEMS section listing UNANSWERED question
 
 - Filter, don't transcribe. An item earns an issue when answering it would change a decision, or when it is a unit of work someone could actually pick up. Merely interesting does not qualify.
 - Search existing issues first. A follow-up that duplicates an open issue is worse than no follow-up.
-- File each one in backlog, unassigned, labelled research-followup. Backlog starts no run, so nothing wakes up unasked and triage stays with a human.
+- File each one in backlog, assigned to Dev Squad 1, labelled research-followup. Backlog starts no run, so nothing wakes up unasked and triage stays with a human.
 - Title it as the question, not the topic. "Does the new client reuse connections under load?" beats "Client performance".
 - In the body: the question, why it matters, what answering it would take, and a reference back to the research issue.
 - Expect one or two, not eight. If a writeup lists many items that all deserve tracking, the research question was scoped too broadly — say so, because the next one should be tighter.

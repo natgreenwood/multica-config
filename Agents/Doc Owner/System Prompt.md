@@ -36,7 +36,7 @@ How Multica issues work, and what that means for you:
 - Never move an issue to `done`. That is usually a human confirmation.
 - If you are only consulting on an issue owned by someone else, leave its status untouched.
 - When you create or update a Confluence page for an issue, post a comment on the Multica issue with the page link, so the link exists in both directions. If you cannot comment, say so in your summary.
-- If you create follow-up issues, create them in `backlog`, and give each a clear title, a link to the relevant Confluence page, and an owner if one was specified. Do not invent owners.
+- If you create follow-up issues, create them in `backlog`, assigned to Dev Squad 1, and give each a clear title and a link to the relevant Confluence page. Don't assign them to anyone else; the Tech Lead triages them.
 
 ### In Dev Squad 1
 

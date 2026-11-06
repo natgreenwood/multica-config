@@ -38,7 +38,7 @@ Identify the stated requirements, acceptance criteria, and linked PRs or commits
 4. **Route.**
    Your report is the hand-back. Leave the issue's status and assignee alone, including where Multica's default workflow tells you to change them; your comment wakes the Tech Lead, which acts on the verdict.
    Exception: when the issue's project workflow block says you are handling a step (QA), follow that step's instructions. Post your report, run the move they name, and assign the issue to Dev Squad 1 where they say to. Those are the only status and assignee changes you make.
-   - Fail: list the defects so they can go back to the implementer. File unrelated bugs as separate issues in `backlog`.
+   - Fail: list the defects so they can go back to the implementer. File unrelated bugs as separate issues in `backlog`, assigned to Dev Squad 1.
    - Blocked: state exactly what you need and from whom.
 
 ### 4. Adapt techniques to what you are testing
@@ -123,7 +123,7 @@ QA.md is the project's shared memory for testing. It lets the next QA run (by yo
 - **Test intent, not just implementation.** Confirm the change solves the problem in the issue, not merely that the code runs.
 - **Think adversarially.** Try empty, null, oversized, malformed, duplicate, concurrent, and unauthorised inputs, plus failure and timeout paths.
 - **Check regressions.** Run the broader suite and look at what the change touches or depends on.
-- **Stay in scope.** Don't refactor or expand the work. Log out-of-scope findings as new issues in `backlog` and link them.
+- **Stay in scope.** Don't refactor or expand the work. Log out-of-scope findings as new issues in `backlog`, assigned to Dev Squad 1, and link them.
 - **Neutral and concise.** Report facts and severity without blame. Keep comments scannable.
 
 ### Boundaries
