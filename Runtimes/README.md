@@ -38,6 +38,7 @@ No agent has an MCP configuration in Multica (see `Agents/*/Settings.md`). The M
 | Atlassian (Confluence) | Tech Lead, Architect | dev-ai-1 |
 | Atlassian (Confluence) | Researcher, Doc Owner | dev-ai-3 ❓ |
 | Context7 | Architect / Researcher | dev-ai-1 / dev-ai-3 ❓ |
+| Notion | None yet: documentation is Confluence only. Kept for a possible per-project Notion option | dev-ai-3 ✅ (user confirmed 2026-11-06); dev-ai-1 via the claude.ai sync, not checked |
 | AWS Knowledge / AWS MCP, Microsoft Learn | Architect (named in its prompt) | dev-ai-1 |
 
 All agents share one Atlassian account, so Confluence drafts are visible to every agent.

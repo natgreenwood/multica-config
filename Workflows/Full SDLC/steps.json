@@ -1,0 +1,133 @@
+[
+  {
+    "handler": {
+      "type": "none"
+    },
+    "instructions": "",
+    "status_key": "backlog"
+  },
+  {
+    "handler": {
+      "type": "none"
+    },
+    "instructions": "",
+    "status_key": "todo"
+  },
+  {
+    "handler": {
+      "type": "none"
+    },
+    "instructions": "",
+    "status_key": "research"
+  },
+  {
+    "handler": {
+      "type": "none"
+    },
+    "instructions": "",
+    "status_key": "needs_refinement"
+  },
+  {
+    "handler": {
+      "type": "none"
+    },
+    "instructions": "",
+    "status_key": "ready_for_implementation"
+  },
+  {
+    "handler": {
+      "type": "none"
+    },
+    "instructions": "",
+    "status_key": "implementation"
+  },
+  {
+    "handler": {
+      "type": "none"
+    },
+    "instructions": "",
+    "status_key": "in_progress"
+  },
+  {
+    "back_status_key": "implementation",
+    "handler": {
+      "id": "a76aa289-410c-47ea-ae0f-dbafc432b941",
+      "type": "agent"
+    },
+    "instructions": "Review the PR linked to this issue against the design and the acceptance criteria, as your instructions describe. If the Tech Lead returned the issue to this step after a fix, review the fix against your earlier findings.\n1. Post your verdict as one comment on the issue, starting with the Outcome line.\n2. Approved, or only non-blocking findings: run Step done. The issue moves to Testing and hands off to Tester (Codex).\n3. Blocking findings: run Needs changes, then assign the issue to Dev Squad 1 (multica issue assign <issue> --to \"Dev Squad 1\") so the Tech Lead routes the fix.\n4. Can't review (no PR, no design, PR won't load): comment why, set blocked, then assign the issue to Dev Squad 1.\nDon't @mention other agents. The workflow starts the next step.",
+    "next_status_key": "testing",
+    "status_key": "code_review"
+  },
+  {
+    "back_status_key": "implementation",
+    "handler": {
+      "id": "c0a163bf-92d4-45f3-83a1-cef5b3733754",
+      "type": "agent"
+    },
+    "instructions": "Hunt for defects in the PR linked to this issue, against its acceptance criteria, as your instructions describe. If the Tech Lead returned the issue to this step after a fix, retest the fix and anything it touches.\n1. Post your report as one comment on the issue, starting with the Outcome line.\n2. No blocking defects: run Step done. The issue moves to Security Review and hands off to the Security Analyst. File non-blocking defects in backlog as your instructions say, assign these defects to \"Dev Squad 1\".\n3. Blocking defects: run Needs changes, then assign the issue to Dev Squad 1 (multica issue assign <issue> --to \"Dev Squad 1\").\n4. Can't test: comment why, set blocked, then assign the issue to Dev Squad 1.\nDon't @mention other agents. The workflow starts the next step.",
+    "next_status_key": "security_review",
+    "status_key": "testing"
+  },
+  {
+    "back_status_key": "implementation",
+    "handler": {
+      "id": "da2b3f95-0ba0-4781-b844-d0fbf5f42e4c",
+      "type": "agent"
+    },
+    "instructions": "Review the PR linked to this issue for security, as your instructions describe. If the Tech Lead returned the issue to this step after a fix, review the fix against your earlier findings; re-raise only what still blocks.\n1. Post your verdict as one comment on the issue, starting with the Outcome line.\n2. APPROVED, or only non-blocking findings: run Step done. The issue moves to QA and hands off to QA.\n3. Blocking findings: run Needs changes, then assign the issue to Dev Squad 1 (multica issue assign <issue> --to \"Dev Squad 1\").\n4. Can't review: comment why, set blocked, then assign the issue to Dev Squad 1.\nDon't @mention other agents. The workflow starts the next step.",
+    "next_status_key": "qa",
+    "status_key": "security_review"
+  },
+  {
+    "back_status_key": "implementation",
+    "handler": {
+      "id": "a281e28d-360d-42af-bdee-cb64ee373bfc",
+      "type": "agent"
+    },
+    "instructions": "Verify the PR linked to this issue against each acceptance criterion, check for regressions and update QA.md, as your instructions describe.\n1. Post your report as one comment on the issue, starting with the Outcome line, with a verdict per criterion.\n2. Pass: run Step done (the issue moves to In Review), then assign the issue to Dev Squad 1 (multica issue assign <issue> --to \"Dev Squad 1\"). The Tech Lead tells Nathaniel it is ready to merge.\n3. Fail: run Needs changes, then assign the issue to Dev Squad 1.\n4. Can't verify: comment why, set blocked, then assign the issue to Dev Squad 1.\nDon't @mention other agents.",
+    "next_status_key": "in_review",
+    "status_key": "qa"
+  },
+  {
+    "handler": {
+      "type": "none"
+    },
+    "instructions": "",
+    "status_key": "in_review"
+  },
+  {
+    "handler": {
+      "type": "none"
+    },
+    "instructions": "",
+    "status_key": "documenting"
+  },
+  {
+    "handler": {
+      "type": "none"
+    },
+    "instructions": "",
+    "status_key": "final_checks"
+  },
+  {
+    "handler": {
+      "type": "none"
+    },
+    "instructions": "",
+    "status_key": "blocked"
+  },
+  {
+    "handler": {
+      "type": "none"
+    },
+    "instructions": "",
+    "status_key": "done"
+  },
+  {
+    "handler": {
+      "type": "none"
+    },
+    "instructions": "",
+    "status_key": "cancelled"
+  }
+]

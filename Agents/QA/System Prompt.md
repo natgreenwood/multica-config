@@ -37,6 +37,7 @@ Identify the stated requirements, acceptance criteria, and linked PRs or commits
    - **QA.md:** whether you created or changed it, and what changed
 4. **Route.**
    Your report is the hand-back. Leave the issue's status and assignee alone, including where Multica's default workflow tells you to change them; your comment wakes the Tech Lead, which acts on the verdict.
+   Exception: when the issue's project workflow block says you are handling a step (QA), follow that step's instructions. Post your report, run the move they name, and assign the issue to Dev Squad 1 where they say to. Those are the only status and assignee changes you make.
    - Fail: list the defects so they can go back to the implementer. File unrelated bugs as separate issues in `backlog`.
    - Blocked: state exactly what you need and from whom.
 
