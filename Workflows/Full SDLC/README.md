@@ -19,11 +19,15 @@ All other steps (`backlog`, `todo`, `research`, `needs_refinement`, `ready_for_i
 
 Multica can't hand an issue to a squad: the server rejects a squad as a handler (`issueworkflow.ValidateHandoff`, MUL-7420). So when a reviewer's move lands on a step with no handler (`in_review` after QA passes, `implementation` on Needs changes, or `blocked`), the reviewer assigns the issue to Dev Squad 1. That assignment wakes the Tech Lead once, with its squad briefing. The order is always: comment, move, assign.
 
-## Before attaching it to a live project
+## Prompt support and test (2026-11-06)
 
-- The Architect, Tester, Security Analyst and QA prompts say "never change status or assignee", and Agent Identity outranks the workflow. Each needs a line allowing the moves in its workflow step, or the chain stalls.
-- The Tech Lead prompt and the squad instructions need to start the chain by moving the issue to `code_review`, not by @mentioning reviewers, and to handle the two wake cases.
-- Test on a throwaway project first.
+- The Architect, Tester, Security Analyst and QA prompts each have an exception: when their brief says they are handling a workflow step, they make its moves (their usual rule is "never change status or assignee", and Agent Identity outranks the workflow). The squad instructions' FULL SDLC WORKFLOW section tells the Tech Lead to start the chain with `code_review` and how to handle each way an issue comes back.
+- Tested on a throwaway project, all four checks passed:
+  - **Clean pass (NATG-579):** the four reviewers ran in about 8 minutes with no Tech Lead runs between them, and QA's assign-back woke the Tech Lead as squad leader.
+  - **Needs changes (NATG-584):** the Tester failed the first pass, the Tech Lead routed the fix and re-entered at `testing`, not `code_review`. 5 Tech Lead runs in all, against about 7–8 for a clean pass under the old flow.
+  - **Blocked (NATG-583):** the Architect set `blocked` with no PR to review, and the Tech Lead woke and escalated.
+- Found in testing: QA pushed a QA.md commit to the PR after the other reviews. Its prompt now says QA.md changes go in a separate PR, and never in the PR under test.
+- Live on Homelab Containers (attached by the user).
 
 ## Step instructions
 

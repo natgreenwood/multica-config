@@ -644,3 +644,10 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **Health Check:** a stall check for them.
   - **Known gap:** a failed reviewer run leaves the issue with that reviewer, and nothing wakes the Tech Lead. The Health Check catches it.
 - 2026-11-06: **Full SDLC prompts deployed live** (user-approved, PR #31). The Architect, Tester (both agents), Security Analyst, QA and Tech Lead prompts, the squad instructions and the Health Check runbook were pushed with the CLI and read back byte for byte. Beforehand, the reviewers matched `main` and the Tech Lead, squad and runbook matched the morning's deploy; the Doc Owner needed no change. Rollback: re-push those files from `main` before #31. **Full SDLC is still attached to no project**, so nothing behaves differently yet. Next: a throwaway-project test, then attach it to the squad's projects.
+- 2026-11-06: **Full SDLC tested, all four checks passed** (throwaway project "Full SDLC test", `natgreenwood/containers`):
+  - **NATG-579 (clean pass):** the chain ran without Tech Lead runs between reviewers, and QA's assign-back woke the Tech Lead as squad leader. It cost 4 Tech Lead runs, one of them extra because QA had pushed a QA.md commit to the PR after the reviews; the Tech Lead caught it and had it reverted.
+  - **NATG-584 ("Needs changes"):** the Tester failed the first pass as scripted, and the Tech Lead re-entered at `testing`. 5 Tech Lead runs in all.
+  - **NATG-583 (blocked):** the Architect set `blocked`, and the Tech Lead woke and escalated to the user.
+  - **Fix deployed live:** the QA prompt now puts QA.md changes in a separate PR, never in the PR under test. Read back byte for byte; live matched `main` beforehand. On NATG-584, QA didn't push.
+  - **Cleanup:** PRs #148 and #149 closed unmerged, with their branches deleted. NATG-579, 582, 584 and 585 cancelled (NATG-582 was QA's QA.md change, cancelled by the user). The test project is cancelled.
+  - **Homelab Containers was already on Full SDLC** (attached by the user before the test). The other squad projects are still on Default.

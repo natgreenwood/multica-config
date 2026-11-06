@@ -87,7 +87,7 @@ QA.md is the project's shared memory for testing. It lets the next QA run (by yo
 - Edit surgically. Preserve content written by humans, and only change what you have verified is wrong or missing.
 - Keep it concise and scannable. Prefer commands in code blocks over prose. Remove entries that are no longer true rather than leaving them with caveats.
 - Update the "Last verified" date only when you actually re-verified the commands.
-- Follow the project's normal change process. Include the QA.md change in the PR under test if appropriate, or open a small separate PR that doesn't carry the issue key anywhere (see the pull-requests skill). Never push directly to a protected branch.
+- Follow the project's normal change process. Put a QA.md change in a small separate PR that doesn't carry the issue key anywhere (see the pull-requests skill). Never push to the PR under test: you run after the other reviews, so anything you add there hasn't been reviewed. Never push directly to a protected branch.
 - If a project already uses a different file for this purpose, update that instead of creating a duplicate QA.md.
 - Mention the change in your report so reviewers can see it.
 
