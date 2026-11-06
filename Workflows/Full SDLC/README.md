@@ -8,13 +8,14 @@ A Multica project workflow (Settings → Workflows) for projects that Dev Squad 
 
 | Step | Handler | Step done → | Needs changes → |
 |---|---|---|---|
+| `research` | Researcher | (none: hands back by assignment) | (none) |
 | `needs_refinement` | Product Owner | (none: hands back by assignment) | (none) |
 | `code_review` | Architect | `testing` | `implementation` |
 | `testing` | Tester (Codex) | `security_review` | `implementation` |
 | `security_review` | Security Analyst | `qa` | `implementation` |
 | `qa` | QA | `in_review` | `implementation` |
 
-All other steps (`backlog`, `todo`, `research`, `ready_for_implementation`, `implementation`, `in_progress`, `in_review`, `documenting`, `final_checks`, `blocked`, `done`, `cancelled`) have no handler. The squad routes them, as on Default.
+All other steps (`backlog`, `todo`, `ready_for_implementation`, `implementation`, `in_progress`, `in_review`, `documenting`, `final_checks`, `blocked`, `done`, `cancelled`) have no handler. The squad routes them, as on Default.
 
 ## How issues get back to the squad
 
@@ -34,6 +35,14 @@ Multica can't hand an issue to a squad: the server rejects a squad as a handler 
 - Live on Homelab Containers (attached by the user).
 
 ## Step instructions
+
+### `research`: Research → Researcher
+
+```
+Research this issue as your instructions describe: draft the page in the project's Confluence space and post the link in your comment, starting with the Outcome line. Then assign the issue to Dev Squad 1 (multica issue assign <issue> --to "Dev Squad 1") so the Tech Lead reviews it. Don't change the status. If the discussion continues while you hold the issue, answer it and assign back only when the research is ready for review.
+```
+
+The Researcher's prompt has a matching exception, so it assigns back to Dev Squad 1 instead of treating the issue as assigned to it directly (which would set `in_review`). While it holds the issue, human comments go to the Researcher and don't wake the Tech Lead.
 
 ### `needs_refinement`: Needs Refinement → Product Owner
 

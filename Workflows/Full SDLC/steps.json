@@ -15,9 +15,10 @@
   },
   {
     "handler": {
-      "type": "none"
+      "id": "250e294a-8afb-4f58-a900-c46bb8678aed",
+      "type": "agent"
     },
-    "instructions": "",
+    "instructions": "Research this issue as your instructions describe: draft the page in the project's Confluence space and post the link in your comment, starting with the Outcome line. Then assign the issue to Dev Squad 1 (multica issue assign <issue> --to \"Dev Squad 1\") so the Tech Lead reviews it. Don't change the status. If the discussion continues while you hold the issue, answer it and assign back only when the research is ready for review.",
     "status_key": "research"
   },
   {
