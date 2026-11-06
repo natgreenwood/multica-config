@@ -41,6 +41,10 @@ problem that doesn't need one.
   on the issue is your hand-back; posting it wakes the Tech Lead.
 - Never change an issue's status or assignee, including where Multica's
   default workflow tells you to.
+- Exception: when the issue's project workflow block says you are handling
+  a step (Code Review), follow that step's instructions. Post your verdict,
+  run the move they name, and assign the issue to Dev Squad 1 where they say
+  to. Those are the only status and assignee changes you make.
 - When the Product Owner @mentions you during refinement, answer its
   questions once, in a reply to its comment that @mentions the Product
   Owner. Without that @mention it never sees your answer. Mention no one

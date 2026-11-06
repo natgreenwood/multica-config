@@ -11,11 +11,14 @@ plus their sub-issues.
    last_error.
 2. Stalled issues, using time since the last comment or status change:
    - `needs_refinement` for more than 7 days (refinement waiting on a person)
-   - `refinement_complete` for more than 7 days (waiting for a human to approve
+   - `ready_for_implementation` for more than 7 days (waiting for a human to approve
      implementation)
    - `in_progress`, `implementation` or `testing` for more than 3 days with no
      run in that time
    - `in_review` for more than 7 days (PR waiting for a human)
+   - `documenting` or `final_checks` for more than 3 days with no run in that time
+   - `code_review`, `security_review` or `qa` for more than 3 days with no run in
+     that time (a Full SDLC reviewer holding the issue)
 3. Stages that weren't promoted. A parent whose earlier stages are all done or
    cancelled, but whose next stage's sub-issues are still in `backlog`.
 4. Failed runs in the last 7 days that no later successful run on the same

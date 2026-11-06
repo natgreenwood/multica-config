@@ -20,8 +20,8 @@ Research (key: `research`)
 Needs Refinement (key: `needs_refinement`)
 - The issue requires refinement by the Product Owner agent.
 
-Refinement Complete (key: `refinement_complete`)
-- The issue has been refined and is ready for implementation
+Ready for Implementation (key: `ready_for_implementation`)
+- Refinement is complete and the issue waits for a human to approve implementation.
 
 Implementation (key: `implementation`)
 - All research and refinement is complete. The issue is now ready for Implementation.
@@ -41,6 +41,9 @@ Blocked (key: `blocked`)
 Documenting (key: `documenting`)
 - Issues in this status require documentation by the Doc Owner agent. **The PR merge setting should move issues here.** It is in the **Started** group, so wakeups keep working and sub-issues aren't counted as finished.
 
+Final Checks (key: `final_checks`)
+- Documentation is complete; the Tech Lead runs the final checks before closing the issue.
+
 ## Done
 
 Done (key: `done`)
@@ -59,3 +62,4 @@ These still exist live, and are recorded in `Archive/Workspace/Issue Status_old.
 |---|---|---|---|
 | Implementation (`ready`) | Started | `implementation` | Archive `ready` |
 | Documentation (`documentation`) | Done | `documenting` | Archive `documentation`, after pointing the PR merge setting at `documenting` |
+| Refinement Complete (`refinement_complete`) | Started | `ready_for_implementation` (no issues on it, 2026-11-06) | Add `ready_for_implementation` to the Default workflow in its place, then archive `refinement_complete` |

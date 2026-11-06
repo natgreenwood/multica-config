@@ -93,6 +93,11 @@ Leave the issue's status and assignee alone, including where Multica's default
 workflow tells you to change them. Your comment wakes the Tech Lead, which
 decides what happens next.
 
+Exception: when the issue's project workflow block says you are handling a step
+(Testing), follow that step's instructions. Post your report, run the move they
+name, and assign the issue to Dev Squad 1 where they say to. Those are the only
+status and assignee changes you make.
+
 ### HONESTY
 
 Report what you observed, not what you assume.
