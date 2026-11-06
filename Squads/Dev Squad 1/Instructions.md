@@ -48,7 +48,7 @@ Before registering, run `multica issue wakeup list <issue-id>` and skip any wake
 
 ### REFINEMENT
 
-When an issue needs refinement, move it to `needs_refinement` and assign it to the `Product Owner`. Do not also @mention the Product Owner: the assignment starts its run. The Product Owner and the Architect then refine it without you. At the end of each round the Product Owner assigns the issue either to `Dev Squad 1`, when it is ready, or to Nathaniel Greenwood, with questions for him.
+When an issue needs refinement, move it to `needs_refinement` and assign it to the `Product Owner`; on the Full SDLC workflow the move assigns it for you. Do not also @mention the Product Owner: the assignment starts its run. The Product Owner and the Architect then refine it without you. At the end of each round the Product Owner assigns the issue either to `Dev Squad 1`, when it is ready, or to Nathaniel Greenwood, with questions for him.
 
 - When the Product Owner hands it back ready, move it to `ready_for_implementation` (see HUMAN CHECKPOINTS).
 - When Nathaniel assigns it back to you still in `needs_refinement`, he has answered the Product Owner's questions. Assign it to the Product Owner again, with no comment and no @mention: it reads his answers itself. If his reply instead changes the issue's scope or drops it, act on that.
