@@ -15,7 +15,13 @@ description: Use before you create a Multica issue for something you found while
 File at most **2** new issues per run. If you found more, file the two that matter most (security first, then bugs a user would hit), and list the rest in your hand-back under **Not filed**, one line each.
 
 ## How to file one
-1. Create it in `backlog`, assigned to `Dev Squad 1`, in the same project as the issue you're working on. Don't use `--parent`: a sub-issue changes how the parent's stages finish.
+1. Create it in `backlog`, assigned to `Dev Squad 1`, in the same project as the issue you're working on. Always pass `--project`: an issue without one shows on no project board. Don't use `--parent`: a sub-issue changes how the parent's stages finish.
+
+   ```sh
+   multica issue get <current-issue> --output json   # read its project_id
+   multica issue create --title "<the problem>" --description-file ./issue.md \
+     --status backlog --assignee "Dev Squad 1" --project <project_id> --priority <priority>
+   ```
 2. Set the priority from its type:
 
    | Type | Label ID | Priority |
