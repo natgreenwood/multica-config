@@ -679,3 +679,7 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **Tech Lead:** triages the issues a hand-back lists in the same run (fixes label and priority, cancels duplicates with `--duplicate-of`, assigns `security` to Nathaniel).
   - **Health Check check 5:** now reports the backlog by label and priority, open `security` issues, and unlabelled or question issues.
   - **`Agents/*/Skills.md`:** updated for the six filers.
+- 2026-11-07: **`filing-issues` deployed live** (PR #37).
+  - **Skill:** imported from `https://github.com/natgreenwood/multica-config/tree/main/Skills/filing-issues` (id `51357811-…`; refresh with `multica skill refresh <id>`), and added with `multica agent skills add` (existing skills kept) to the Backend and Frontend Engineers, Tester (Codex), Tester (Claude), QA, the Doc Owner and the Tech Lead.
+  - **Config:** the seven prompts, the squad instructions and the Health Check runbook were pushed and read back byte for byte. All matched pre-#37 `main` beforehand. Rollback: re-push them from `main` before #37 and remove the skill from the agents.
+  - **Still to do:** the one-off cleanup of the existing ~48 agent-filed backlog issues.
