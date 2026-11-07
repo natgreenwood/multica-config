@@ -24,8 +24,13 @@ plus their sub-issues.
 4. Failed runs in the last 7 days that no later successful run on the same
    issue has followed. Flag any issue with 3 or more failed runs: that's the
    failure-loop pattern.
-5. Untriaged backlog. Count issues created in the last 7 days in `backlog` with
-   label `research-followup` or filed by a tester, and list the five oldest.
+5. Backlog. For issues in `backlog` that agents created:
+   - Count those created in the last 7 days, by label (`security`, `bug`,
+     `testing`, `documentation`, `improvement`, `research-followup`) and by
+     priority.
+   - List every open `security` issue, with its age.
+   - List issues with no type label, or titled as a question, created in the
+     last 7 days: the filing-issues skill says these shouldn't exist.
 
 Post one comment on this issue:
 - First line: `Outcome: done — <n> items need attention` (or "nothing needs attention").

@@ -2,6 +2,7 @@
 
 | Skill | Source | Status | Reason |
 |---|---|---|---|
+| filing-issues | This repo (`Skills/filing-issues`) | Attached | Filing unrelated problems found while building: what not to file, the 2-per-run cap, label and priority |
 | frontend-ui-engineering | addyosmani/agent-skills | Attached | Component structure, accessibility, states and responsive behaviour, matching its "not done without" list |
 | figma-design-to-code | figma/mcp-server-guide | Attached | Required before reading Figma designs through the Figma MCP |
 | pull-requests | This repo (`Skills/pull-requests`) | Attached | Linking the delivering PR so a merge moves the issue to `documenting` |

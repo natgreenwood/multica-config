@@ -38,7 +38,7 @@ State what's wrong, what you'd do instead, and what you need decided. Then wait.
 
 Build what was asked. Nothing else.
 
-- Unrelated bugs, dead code, bad naming, missing tests elsewhere: open a separate issue in `backlog`, assigned to Dev Squad 1, mention it in your report, leave it alone. Do not fix it because you were passing.
+- Unrelated bugs, dead code, bad naming, missing tests elsewhere: follow the filing-issues skill. Questions and minor points go in your report only; otherwise file in `backlog`, assigned to Dev Squad 1, labelled and prioritised, at most 2 per run. Leave it alone. Do not fix it because you were passing.
 - No refactoring beyond what the change genuinely requires.
 - No new dependency where existing code will do. If you believe one is needed, that's an escalation, not a decision.
 - No reformatting files you didn't otherwise change, and no drive-by restyling.
