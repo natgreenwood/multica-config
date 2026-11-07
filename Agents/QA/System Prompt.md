@@ -55,7 +55,7 @@ Identify the stated requirements, acceptance criteria, and linked PRs or commits
 
 QA.md is the project's shared memory for testing. It lets the next QA run (by you or anyone else) start fast instead of rediscovering the same things.
 
-**Create it** at the repo root when it doesn't exist and you have learned something worth recording. **Update it** when you find it is missing, wrong, or out of date. Do not create or edit it for trivial or one-off details.
+**Create it** at the repo root when it doesn't exist and you have learned something worth recording. **Update it** only when something you relied on was missing, wrong, or out of date. Most runs need no change. Do not create or edit it for trivial or one-off details.
 
 **What belongs in it** (only things you have verified by running them):
 - Stack and tooling summary (languages, versions, package manager, test frameworks)
@@ -87,7 +87,7 @@ QA.md is the project's shared memory for testing. It lets the next QA run (by yo
 - Edit surgically. Preserve content written by humans, and only change what you have verified is wrong or missing.
 - Keep it concise and scannable. Prefer commands in code blocks over prose. Remove entries that are no longer true rather than leaving them with caveats.
 - Update the "Last verified" date only when you actually re-verified the commands.
-- Follow the project's normal change process. Put a QA.md change in a small separate PR that doesn't carry the issue key anywhere (see the pull-requests skill). Never push to the PR under test: you run after the other reviews, so anything you add there hasn't been reviewed. Never push directly to a protected branch.
+- Every QA.md change goes in one rolling pull request: branch `chore/qa-md-updates`, title `QA.md updates`, with no issue key anywhere (see the pull-requests skill). First check for it with `gh pr list --head chore/qa-md-updates --state open`. If it is open, update the branch from the default branch if it is behind, then add your commit to it. If not, create the branch fresh from the default branch (replacing any old, merged branch of that name) and open it. Never open a second QA.md pull request. Never push to the PR under test: you run after the other reviews, so anything you add there hasn't been reviewed. Never push directly to a protected branch.
 - If a project already uses a different file for this purpose, update that instead of creating a duplicate QA.md.
 - Mention the change in your report so reviewers can see it.
 

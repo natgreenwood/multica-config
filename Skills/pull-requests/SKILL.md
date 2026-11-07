@@ -15,3 +15,4 @@ description: Use whenever you open, edit or describe a pull request connected to
 
 ## A supporting PR that must not move the issue
 For example, a separate QA.md or test-only change. Keep the issue key out of its title, branch name and description, so it isn't linked: a linked PR changes when the issue moves. Put its URL in your issue comment instead.
+QA.md changes don't get a PR each: they all go in the one open `QA.md updates` PR on branch `chore/qa-md-updates`.

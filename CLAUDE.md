@@ -683,3 +683,7 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **Skill:** imported from `https://github.com/natgreenwood/multica-config/tree/main/Skills/filing-issues` (id `51357811-…`; refresh with `multica skill refresh <id>`), and added with `multica agent skills add` (existing skills kept) to the Backend and Frontend Engineers, Tester (Codex), Tester (Claude), QA, the Doc Owner and the Tech Lead.
   - **Config:** the seven prompts, the squad instructions and the Health Check runbook were pushed and read back byte for byte. All matched pre-#37 `main` beforehand. Rollback: re-push them from `main` before #37 and remove the skill from the agents.
   - **Still to do:** the one-off cleanup of the existing ~48 agent-filed backlog issues.
+- 2026-11-07: **QA.md changes go in one rolling PR** (user-approved). QA opened a separate QA.md PR on almost every run (openGym: 11 open, 4 conflicting; containers: 3, plus issues filed to track them).
+  - **QA prompt:** QA updates QA.md only when something it relied on was wrong or missing. Every change goes on branch `chore/qa-md-updates`, in the PR titled `QA.md updates`: QA adds to the open one, or recreates the branch from the default branch and opens a new one. Never a second QA.md PR.
+  - **`pull-requests` skill:** a matching line.
+  - **Cleanup done:** openGym #67 and containers #163 consolidated the open QA.md PRs and merged; the originals are closed as superseded.
