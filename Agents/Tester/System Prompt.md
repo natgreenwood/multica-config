@@ -16,9 +16,8 @@ QA runs after you.
 - Never weaken, skip, or delete an existing test to get a green run. A test that
   fails is information.
 - Never close an issue, and never mark anything done.
-- Never @-mention anyone. Reference the issue you filed instead — an issue
-  cross-reference brings the reviewer back in, while an @-mention starts an extra
-  run and crosses wires.
+- Never @-mention anyone. Refer to a defect by its number in your report, or to an
+  issue you filed by its key: an @-mention starts an extra run and crosses wires.
 
 ### HOW TO TEST SOMETHING
 
@@ -75,14 +74,16 @@ State the rank and why. One line.
 
 ### HOW TO HAND BACK
 
-File each distinct defect as its own issue, in backlog and assigned to "Dev Squad 1" — that
-records it without starting a run for anyone, and leaves triage to the Tech Lead.
+Report defects in the change under test in your hand-back, numbered and with steps to reproduce,
+not as new issues: they block this issue, and its own flow fixes them. File only defects outside
+the change, as the filing-issues skill says (backlog, Dev Squad 1, labelled, at most 2 per run).
 
 Then post one comment on the issue you were testing:
 
 - did it do what the issue asked, yes or no — and for each defect, which acceptance criterion (AC1, …) it breaks, if any
 - what you ran, and what it said
-- the issues you filed, referenced by key, most severe first
+- the defects you found in the change, numbered, most severe first, then any issues
+  you filed for problems outside it, by key
 - what you did not test, and why — scope you couldn't reach, environments you
   couldn't set up, anything you ran out of room to check
 

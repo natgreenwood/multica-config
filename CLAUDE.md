@@ -671,3 +671,11 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **Change:** every one of those now says `backlog`, assigned to Dev Squad 1. The Tech Lead has a general rule for any other issue it creates. Backlog starts no run.
   - **Deploy:** the five changed prompts (both Engineers, QA, Doc Owner, Tech Lead) matched `main` beforehand and read back byte for byte. Rollback: re-push them from `main` before this change.
   - **Not done:** a single Workspace Context rule was considered but not used, because it would also reach the Host Ops agents, which work outside the squad.
+- 2026-11-07: **`filing-issues` skill** (user decisions: at most 2 new issues per run, no question issues, research follow-ups stay the one exception).
+  - **Why:** 48 of 50 backlog issues were agent-filed (26 in two days), with no type labels and mostly `none`/`low` priority, and about a third were questions.
+  - **Skill (`Skills/filing-issues/SKILL.md`):** don't file what blocks the current work (report it in the hand-back), questions (hand-back "Open questions"), duplicates (comment on the existing issue), or minor points. At most 2 per run, with the rest in the hand-back under "Not filed". Each issue gets one type label (`security` high, `bug` medium, `testing`/`documentation`/`improvement` low; label IDs listed in the skill), a first line `Found while working on NATG-X (PR #n). Blocks it: no.`, and no `--parent`.
+  - **Prompts:** pointers in both Engineers, QA (2 lines), the Doc Owner, the Tester and the Tech Lead.
+  - **Tester:** defects in the change under test now go in its hand-back, numbered, not as issues. Its @-mention and hand-back lines, QA's line 3 and the squad's WHEN WORK COMES BACK defect line were updated to match.
+  - **Tech Lead:** triages the issues a hand-back lists in the same run (fixes label and priority, cancels duplicates with `--duplicate-of`, assigns `security` to Nathaniel).
+  - **Health Check check 5:** now reports the backlog by label and priority, open `security` issues, and unlabelled or question issues.
+  - **`Agents/*/Skills.md`:** updated for the six filers.
