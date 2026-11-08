@@ -687,3 +687,4 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **QA prompt:** QA updates QA.md only when something it relied on was wrong or missing. Every change goes on branch `chore/qa-md-updates`, in the PR titled `QA.md updates`: QA adds to the open one, or recreates the branch from the default branch and opens a new one. Never a second QA.md PR.
   - **`pull-requests` skill:** a matching line.
   - **Cleanup done:** openGym #67 and containers #163 consolidated the open QA.md PRs and merged; the originals are closed as superseded.
+- 2026-11-07: **`filing-issues` skill: always pass `--project`**, with a command example. 52 agent-filed issues had no project, because agents left out `--project`. After merge, refresh the skill (`multica skill refresh 51357811-d4a7-4295-ae84-adf62337b342`); GitHub's raw cache can take about 5 minutes.
