@@ -56,7 +56,7 @@ All agents share one Atlassian account, so Confluence drafts are visible to ever
 
 ## Rebuilding a runtime machine
 
-For a full walkthrough on Ubuntu, see [`Setup.md`](Setup.md). In short:
+For a full walkthrough on Ubuntu, see [`Setup.md`](Setup.md). On macOS, [`Brewfile`](Brewfile) installs Claude Code and the CLI tools in one step (`brew bundle --file Runtimes/Brewfile`): `gh`, `infisical`, `git`/`git-lfs`, Node.js, Python with `uv`, the AWS and Kubernetes CLIs, and a few utilities. Codex and the Multica CLI aren't in it. In short:
 
 1. Install the AI coding tool (Claude Code or Codex) and sign in with the subscription above.
 2. Install and configure the MCP servers this machine needs (table above).
