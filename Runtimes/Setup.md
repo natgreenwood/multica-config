@@ -120,6 +120,16 @@ gh auth setup-git    # lets git push over HTTPS using gh's credentials
 gh auth status
 ```
 
+**Git identity** 🛠. Agents commit their work, and git refuses to commit without a name and email. As `multica`, set them once for the user. Use the host name, so a commit shows which runtime made it, and the signed-in GitHub account's no-reply address, so commits link to that account without exposing a real email:
+
+```bash
+git config --global user.name "$(hostname) (Multica)"
+git config --global user.email "$(gh api user --jq '"\(.id)+\(.login)@users.noreply.github.com"')"
+git config --global --get-regexp '^user\.'   # check both are set
+```
+
+Don't add a `url.<ssh>.insteadOf` rewrite for GitHub. Agents and `multica repo checkout` use HTTPS with `gh`'s credentials. On dev-ai-1 that rewrite sent every checkout over SSH on port 22, which the network blocks, so checkouts hung until they timed out (NATG-536).
+
 **Infisical** gives agents their secrets from our self-hosted Infisical, `https://infisical.natg.co.uk`. Agents never sign in to it themselves. Each repository that uses secrets carries `scripts/secret.sh` and an `.infisical.yaml` naming its Infisical project (see `natgreenwood/containers`). The script reads an access token that the **Infisical Agent** keeps renewed on this host, and sends it only to the server pinned on this host. Its paths and checks are fixed, so this host needs exactly the layout below.
 
 | Path | Owner and mode | Holds |
