@@ -1,7 +1,7 @@
 cask "claude-code"
 
 brew "gh"
-brew "infisical"
+#brew "infisical"
 brew "node"
 brew "awscli"
 brew "uv"
