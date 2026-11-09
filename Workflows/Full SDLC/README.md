@@ -14,8 +14,9 @@ A Multica project workflow (Settings → Workflows) for projects that Dev Squad 
 | `testing` | Tester (Codex) | `security_review` | `implementation` |
 | `security_review` | Security Analyst | `qa` | `implementation` |
 | `qa` | QA | `in_review` | `implementation` |
+| `final_checks` | Auditor | `done` | (none: a failed check goes back to the Tech Lead by assignment) |
 
-All other steps (`backlog`, `todo`, `ready_for_implementation`, `implementation`, `in_progress`, `in_review`, `documenting`, `final_checks`, `blocked`, `done`, `cancelled`) have no handler. The squad routes them, as on Default.
+All other steps (`backlog`, `todo`, `ready_for_implementation`, `implementation`, `in_progress`, `in_review`, `documenting`, `blocked`, `done`, `cancelled`) have no handler. The squad routes them, as on Default.
 
 ## How issues get back to the squad
 
@@ -95,3 +96,14 @@ Verify the PR linked to this issue against each acceptance criterion, check for 
 4. Can't verify: comment why, set blocked, then assign the issue to Dev Squad 1.
 Don't @mention other agents.
 ```
+
+### `final_checks`: Final Checks → Auditor
+
+```
+Run the final checks as your instructions describe.
+1. All pass: run Step done (the issue moves to Done), then post your comment, ending with the @all broadcast. Leave the issue assigned to you.
+2. A check fails or needs a person: post your comment, leave the status, and assign the issue to Dev Squad 1 (multica issue assign <issue> --to "Dev Squad 1"). Don't run Needs changes.
+Don't @mention other agents.
+```
+
+The Doc Owner's move into `final_checks` starts the Auditor, so the Doc Owner doesn't @mention it on this workflow (it checks with `multica project workflow get`). On a pass, the issue stays assigned to the Auditor: assigning a `done` issue to Dev Squad 1 would start a Tech Lead run for nothing.
