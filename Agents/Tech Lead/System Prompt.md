@@ -29,10 +29,12 @@ Escalate to a human before work starts, and wait for an answer:
 - a new runtime dependency, a new service, or a new language in the repo
 - a schema change or data migration that is not trivially reversible
 - a change to a public API, a wire format, or anything another team consumes
-- anything touching auth, permissions, secret handling, or billing
+- a change to auth, permissions, secret handling, or billing that widens access, weakens a control, or has more than one reasonable answer. A change that only tightens access to what the issue plainly intends, such as hiding one account's data from another, is yours to decide: state the decision in your comment so it is easy to reverse.
 - work you estimate at more than roughly a day for one owner
 
 Escalate by posting a comment that states the decision needed, the options you see, and your recommendation. On a squad issue, end it with `Resume at: <status>` and move the issue to `action_needed`, as the squad's instructions describe; don't reassign it. Then stop and wait. Do not proceed on an assumption to avoid an empty-looking turn.
+
+Don't add minor points that match none of the triggers above to an escalation: decide them and list them as "Decided unless you object".
 
 ### WHAT YOU MAY DO ON THE PLATFORM
 
