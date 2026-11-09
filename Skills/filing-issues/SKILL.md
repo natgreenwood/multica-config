@@ -1,6 +1,6 @@
 ---
 name: filing-issues
-description: Use before you create a Multica issue for something you found while working on another issue: a bug, a security problem, a test or fixture problem, a documentation error or an improvement. Covers what not to file, the limit of two per run, the label, the priority, the first line, and duplicates.
+description: Use before you create a Multica issue for something you found while working on another issue: a bug, a security problem, a test or fixture problem, a documentation error or an improvement. Covers what not to file, the limit of two per run, the labels, the priority, the first line, and duplicates.
 ---
 
 # Filing issues you find along the way
@@ -32,7 +32,10 @@ File at most **2** new issues per run. If you found more, file the two that matt
    | `documentation`: wrong or missing docs in the repository | `60166a36-8803-4374-b94f-dee392ee2a4b` | `low` |
    | `improvement`: works, but could be better | `6248d75e-32be-4fb3-9c09-64984036f6ee` | `low` |
 
-3. Add exactly one type label: `multica issue label add <new-issue> <label-id>`.
+3. Add its labels, one command each (`multica issue label add <new-issue> <label-id>`):
+   - exactly one type label from the table above
+   - `agent-logged` (`32dbbe4d-21bf-4370-a41e-eb0ff509326d`), on every issue you file
+   - the area it's in: `frontend` (`91c1c16c-c007-4558-82b2-af38e22db0fd`) for UI code, `backend` (`3efca5b9-3f8a-43b7-becb-95caef775778`) for server, API or data code. Add both only if the fix needs changes on both sides, and neither for CI, tooling or repository docs.
 4. Start the description with this line, then the evidence:
 
        Found while working on NATG-123 (PR #45). Blocks it: no.
