@@ -4,38 +4,29 @@ This guide turns a fresh Ubuntu server into a Multica runtime like **dev-ai-1** 
 
 A runtime is two things on one machine: the **Multica daemon**, which connects to Multica and claims runs, and an **AI coding tool**, which the daemon runs for each agent. Everything an agent uses that isn't in its Multica settings also has to be on this machine: MCP servers, `gh`, the Infisical CLI and Agent, and the project's toolchain (see `README.md`).
 
-> **Sources.** Steps marked 📘 follow official documentation: Multica, Claude Code, Codex, GitHub CLI and Infisical. Steps marked 🛠 are this repo's recommendations; Multica's docs don't cover them. Those are the dedicated user, running the daemon and the Infisical Agent as systemd services, and the hardening notes. Check versions and URLs against the linked docs before following them.
+> **Sources.** Steps marked 📘 follow official documentation: Multica, Claude Code, Codex, Homebrew, GitHub CLI and Infisical. Steps marked 🛠 are this repo's recommendations; Multica's docs don't cover them. Those are the dedicated user, installing Homebrew for a user without `sudo`, running the daemon and the Infisical Agent as systemd services, and the hardening notes. Check versions and URLs against the linked docs before following them.
 
 ## 1. Prepare the host 🛠 + 📘
 
 Run the agents under a dedicated, unprivileged user. Agents run shell commands, so this user must **not** have `sudo`, and must **not** be in the `docker` group (step 6 explains why). Run the commands in this step from an admin account.
 
-**System packages.** Install the basics, plus the general tools coding agents use regularly:
+**System packages.** Install what Homebrew needs, plus the general tools coding agents use regularly. Most of the other tools come from the Brewfile later in this step:
 
 ```bash
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y \
-  git curl wget unzip zip ca-certificates gnupg \
-  build-essential make python3 python3-venv python3-pip \
+  git curl unzip zip ca-certificates gnupg \
+  build-essential procps file \
   ripgrep fd-find jq tree \
-  htop less openssh-client
+  less openssh-client
 ```
 
 | Group | Packages | Why |
 |---|---|---|
-| Fetching and archives | `curl`, `wget`, `unzip`, `zip`, `ca-certificates`, `gnupg` | Installers, release downloads, apt signing keys |
-| Build and scripting | `build-essential`, `make`, `python3`, `python3-venv`, `python3-pip` | Common in test, lint and build scripts |
+| Fetching and archives | `curl`, `unzip`, `zip`, `ca-certificates`, `gnupg` | Installers, release downloads, apt signing keys |
+| Homebrew prerequisites | `git`, `curl`, `build-essential`, `procps`, `file` | Required by Homebrew on Linux; `build-essential` is also common in test and build scripts |
 | Code search and data | `ripgrep`, `fd-find`, `jq`, `tree` | Searching code, reading JSON output from `multica` and `gh`, listing folders |
-| Diagnostics | `htop`, `less`, `openssh-client` | Day-to-day use, and `ssh` for git remotes |
-
-**Node.js LTS** 📘 ([NodeSource](https://github.com/nodesource/distributions)). Many repos and tools need it:
-
-```bash
-curl -fsSL https://deb.nodesource.com/setup_lts.x -o nodesource_setup.sh
-sudo -E bash nodesource_setup.sh
-sudo apt install -y nodejs
-node --version
-```
+| Diagnostics | `less`, `openssh-client` | Day-to-day use, and `ssh` for git remotes |
 
 **The runtime user.** Create the user, then enable linger. Linger lets that user's services (the Multica daemon and rootless Docker) start at boot and keep running when nobody is logged in:
 
@@ -54,16 +45,36 @@ echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.profile && source ~/.profile
 ln -s "$(command -v fdfind)" ~/.local/bin/fd
 ```
 
+**Homebrew and the Brewfile** 📘 ([Homebrew on Linux](https://docs.brew.sh/Homebrew-on-Linux)) + 🛠. This repo's [`Brewfile`](Brewfile) installs Claude Code, `gh`, Node.js, Python with `uv`, `git-lfs`, the AWS and Kubernetes CLIs, and a few utilities (`wget`, `nmap`, `fzf`, `htop`). The Infisical CLI is commented out of it on purpose: it comes from apt in step 5, because `scripts/secret.sh` runs only `/usr/bin/infisical`.
+
+Homebrew installs to `/home/linuxbrew/.linuxbrew` and normally uses `sudo` to create that folder. `multica` has no `sudo`, so an admin creates the folder and hands it to `multica`:
+
+```bash
+# admin account
+sudo mkdir -p /home/linuxbrew/.linuxbrew
+sudo chown -R multica:multica /home/linuxbrew
+```
+
+Then, as `multica`, install Homebrew into it and run the Brewfile:
+
+```bash
+NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.profile && source ~/.profile
+curl -fsSL https://raw.githubusercontent.com/natgreenwood/multica-config/main/Runtimes/Brewfile -o ~/Brewfile
+brew bundle --file ~/Brewfile
+git lfs install
+node --version && gh --version && claude --version
+```
+
+To add tools later, change the Brewfile in this repo, download it again and re-run `brew bundle --file ~/Brewfile`.
+
 ## 2. Install the AI coding tool 📘
 
 Install **one** of these per runtime: Claude Code for a machine like dev-ai-1, Codex for one like dev-ai-3. A machine can run both, and the daemon registers one runtime for each tool it finds. Multica's minimum versions are Claude Code 2.0.0 and Codex 0.100.0; below those, the daemon doesn't register the runtime.
 
-**Claude Code** ([setup docs](https://code.claude.com/docs/en/setup)):
+**Claude Code** ([setup docs](https://code.claude.com/docs/en/setup)) is already installed by the Brewfile in step 1 (`cask "claude-code"`). Check it with `claude --version`.
 
-```bash
-curl -fsSL https://claude.ai/install.sh | bash
-claude --version
-```
+The Brewfile installs it on every host, including Codex-only ones like dev-ai-3, and the daemon registers a Claude runtime wherever it finds `claude`. On a Codex-only host, either bind no agents to that runtime or remove it with `brew uninstall --cask claude-code`.
 
 **Codex** ([Codex CLI](https://developers.openai.com/codex/cli/)):
 
@@ -101,17 +112,7 @@ Configure any MCP servers the agents need on the coding agent itself, as the `mu
 
 ## 5. Install `gh` and Infisical 📘 + 🛠
 
-**GitHub CLI** ([install guide](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)):
-
-```bash
-sudo mkdir -p -m 755 /etc/apt/keyrings
-wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
-sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-sudo apt update && sudo apt install -y gh
-```
-
-The `sudo` steps need an admin account, not `multica`. Then, as `multica`, sign in with a GitHub identity that can push branches and open pull requests on the Foodie repo, but can't merge to `main`:
+**GitHub CLI** ([manual](https://cli.github.com/manual/)) is already installed by the Brewfile in step 1. As `multica`, sign in with a GitHub identity that can push branches and open pull requests on the Foodie repo, but can't merge to `main`:
 
 ```bash
 gh auth login        # choose GitHub.com, HTTPS, and the device/browser code flow
@@ -130,7 +131,7 @@ gh auth status
 
 The client secret stays with a separate `infisical-agent` user, so an agent running as `multica` can read the short-lived token but never the credential that creates it.
 
-**Install the CLI** 📘 ([CLI docs](https://infisical.com/docs/cli/overview)), from an admin account:
+**Install the CLI** 📘 ([CLI docs](https://infisical.com/docs/cli/overview)), from an admin account. Use apt, not Homebrew, so it lands at `/usr/bin/infisical`:
 
 ```bash
 curl -1sLf 'https://artifacts-cli.infisical.com/setup.deb.sh' | sudo -E bash
@@ -300,7 +301,7 @@ Wants=network-online.target docker.service
 
 [Service]
 EnvironmentFile=%h/.config/multica/daemon.env
-Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
 Environment=DOCKER_HOST=unix:///run/user/%U/docker.sock
 ExecStart=%h/.local/bin/multica daemon start --foreground
 Restart=on-failure
@@ -351,7 +352,7 @@ In Multica, open **Runtimes**. The machine and its tool should appear and show a
 
 ## Maintenance 🛠
 
-- **Updates:** the Claude Code native install updates itself. For Codex, re-run its installer. For Multica, run `multica update`, then `systemctl --user restart multica-daemon`. For Infisical, an admin runs `sudo apt update && sudo apt install --only-upgrade infisical`, then `sudo systemctl restart infisical-agent-multica`. Restart the daemon after any tool update or sign-in change, so it re-detects the tools.
+- **Updates:** as `multica`, run `brew update && brew upgrade`. That updates Claude Code, `gh`, Node.js and the other Brewfile tools; a Homebrew install of Claude Code doesn't update itself. For Codex, re-run its installer. For Multica, run `multica update`, then `systemctl --user restart multica-daemon`. For Infisical, an admin runs `sudo apt update && sudo apt install --only-upgrade infisical`, then `sudo systemctl restart infisical-agent-multica`. Restart the daemon after any tool update or sign-in change, so it re-detects the tools.
 - **Expired credentials:** a failed sign-in shows up as failed runs. Check `claude` / `codex login status`, `gh auth status`, `multica auth status` and `systemctl status infisical-agent-multica`. A `scripts/secret.sh` failure that names the token file usually means the Agent has stopped or its client secret has expired.
 - **Network:** the daemon only connects outwards to Multica, so no inbound ports need to be open.
 - **Retiring a host:** stop and disable both services (`multica-daemon` and `infisical-agent-multica`). Revoke the host's Multica PAT and GitHub sign-in, and its Infisical machine identity's client secret (or delete the identity), then delete the runtime from **Runtimes**. Multica also removes runtimes that have been offline for more than 7 days with no agents bound.

@@ -56,7 +56,7 @@ All agents share one Atlassian account, so Confluence drafts are visible to ever
 
 ## Rebuilding a runtime machine
 
-For a full walkthrough on Ubuntu, see [`Setup.md`](Setup.md). In short:
+For a full walkthrough on Ubuntu, see [`Setup.md`](Setup.md). Its step 1 installs most tools with Homebrew from [`Brewfile`](Brewfile): Claude Code, `gh`, `git`/`git-lfs`, Node.js, Python with `uv`, the AWS and Kubernetes CLIs, and a few utilities. The Infisical CLI is commented out of the Brewfile because `scripts/secret.sh` runs only `/usr/bin/infisical`, so it comes from apt. Codex and the Multica CLI use their own installers. The Brewfile works on macOS too, but there is no macOS guide for secrets, Docker or the daemon service. In short:
 
 1. Install the AI coding tool (Claude Code or Codex) and sign in with the subscription above.
 2. Install and configure the MCP servers this machine needs (table above).
