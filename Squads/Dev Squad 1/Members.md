@@ -5,7 +5,7 @@
 | Name | Dev Squad 1 |
 | Description | Designing Building and Testing Software |
 | Leader | Tech Lead (agent, Claude (dev-ai-1) · `claude-opus-5-5`) |
-| Members | 13 including the leader: 11 agents besides the leader, and 1 human |
+| Members | 14 including the leader: 12 agents besides the leader, and 1 human |
 | Instructions | `Instructions.md` (new) / `Archive/Squads/Dev Squad 1/Instructions_old.md` (live until the new set is deployed) |
 
 ## Members
@@ -27,6 +27,7 @@ These roles describe the new flow, so apply them in Multica together with the ne
 | Security Analyst | Agent | Codex (dev-ai-3) · `gpt-6.1-sol` | Reviews every code change for security. Verdict: APPROVED, CHANGES REQUESTED or BLOCK. | `Agents/Security Analyst/` |
 | QA | Agent | Codex (dev-ai-3) · `gpt-6.1-sol` | Verifies each acceptance criterion and checks for regressions, after the Tester and Security Analyst. | `Agents/QA/` |
 | Doc Owner | Agent | Codex (dev-ai-3) · `gpt-6.1-sol` | Updates Confluence documentation and release notes once work ships, and finalises the Architect's drafts. | `Agents/Doc Owner/` |
+| Auditor | Agent | Codex (dev-ai-3) · `gpt-6.1-sol` | Runs the final checks on issues in `final_checks` and marks them done when every check passes. Reports failures to the Tech Lead; never sends work back itself. | `Agents/Auditor/` |
 | Nathaniel Greenwood | Human (workspace owner) | — | Workspace owner. Approves refinement, merges PRs and takes escalations. | — |
 
 The leader receives work assigned to the squad and delegates by @mention. Members never receive the squad instructions; they only receive their own prompt and Workspace Context.

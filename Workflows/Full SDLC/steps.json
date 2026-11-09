@@ -113,9 +113,11 @@
   },
   {
     "handler": {
-      "type": "none"
+      "id": "24114443-7e90-4fc3-bb39-22cab1b5d065",
+      "type": "agent"
     },
-    "instructions": "",
+    "instructions": "Run the final checks as your instructions describe.\n1. All pass: run Step done (the issue moves to Done), then post your comment, ending with the @all broadcast. Leave the issue assigned to you.\n2. A check fails or needs a person: post your comment, leave the status, and assign the issue to Dev Squad 1 (multica issue assign <issue> --to \"Dev Squad 1\"). Don't run Needs changes.\nDon't @mention other agents.",
+    "next_status_key": "done",
     "status_key": "final_checks"
   },
   {
