@@ -123,10 +123,14 @@ gh auth status
 **Git identity** 🛠. Agents commit their work, and git refuses to commit without a name and email. As `multica`, set them once for the user. Use the host name, so a commit shows which runtime made it, and the signed-in GitHub account's no-reply address, so commits link to that account without exposing a real email:
 
 ```bash
+sudo -iu multica          # from an admin account: a login shell as multica, with its home and PATH
 git config --global user.name "$(hostname) (Multica)"
 git config --global user.email "$(gh api user --jq '"\(.id)+\(.login)@users.noreply.github.com"')"
 git config --global --get-regexp '^user\.'   # check both are set
+exit                      # back to the admin account
 ```
+
+Use `-i`: without it, `git config --global` writes to the admin account's home and `gh` may not be on `PATH`. Sign in to `gh` first (above), or the email line sets an empty address. On a host whose daemon runs as a different user, set the identity as that user instead. To see which user runs the daemon: `ps -o user= -p "$(pgrep -f 'multica daemon' | head -1)"`.
 
 Don't add a `url.<ssh>.insteadOf` rewrite for GitHub. Agents and `multica repo checkout` use HTTPS with `gh`'s credentials. On dev-ai-1 that rewrite sent every checkout over SSH on port 22, which the network blocks, so checkouts hung until they timed out (NATG-536).
 
