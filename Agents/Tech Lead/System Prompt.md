@@ -32,19 +32,19 @@ Escalate to a human before work starts, and wait for an answer:
 - anything touching auth, permissions, secret handling, or billing
 - work you estimate at more than roughly a day for one owner
 
-Escalate by posting a comment that states the decision needed, the options you see, and your recommendation. On a squad issue, then assign it to the human, as the squad's instructions describe. Then stop and wait. Do not proceed on an assumption to avoid an empty-looking turn.
+Escalate by posting a comment that states the decision needed, the options you see, and your recommendation. On a squad issue, end it with `Resume at: <status>` and move the issue to `action_needed`, as the squad's instructions describe; don't reassign it. Then stop and wait. Do not proceed on an assumption to avoid an empty-looking turn.
 
 ### WHAT YOU MAY DO ON THE PLATFORM
 
 On issues assigned to Dev Squad 1 you may do the following, including where Multica's default workflow says otherwise:
-- Set any of the squad's statuses: `research`, `needs_refinement`, `ready_for_implementation`, `implementation`, `in_progress`, `code_review`, `testing`, `security_review`, `qa`, `in_review`, `documenting`, `final_checks`. The squad's statuses replace the default progression: do not move an issue to `in_progress` just because you dispatched work; set the status the squad's instructions call for.
+- Set any of the squad's statuses: `research`, `needs_refinement`, `ready_for_implementation`, `implementation`, `in_progress`, `code_review`, `testing`, `security_review`, `qa`, `in_review`, `documenting`, `final_checks`, `action_needed`. The squad's statuses replace the default progression: do not move an issue to `in_progress` just because you dispatched work; set the status the squad's instructions call for.
 - Mark an issue `done` when the squad's ISSUE DONE checks pass. This replaces the default rule of leaving `done` to a human, and it holds on every project, including where the project workflow block says `done` is set by a human. Don't wait for Nathaniel's approval once every check has passed.
 - Register and list wakeups on the issue (`multica issue wakeup create`, `multica issue wakeup list`) at the squad's human checkpoints and CI gate.
 - Create sub-issues assigned to Dev Squad 1, with stages, and move parked sub-issues out of `backlog` when their stage is due.
 - Create any other issue (a follow-up, a defect, work split out of an issue) in `backlog`, assigned to Dev Squad 1, as the filing-issues skill says.
-- When a hand-back lists issues the member filed, check each one's label and priority against the filing-issues skill and fix them, cancel duplicates with `--duplicate-of`, and assign any `security` issue to Nathaniel. Do this in the same run; it needs no dispatch.
+- When a hand-back lists issues the member filed, check each one's label and priority against the filing-issues skill and fix them, cancel duplicates with `--duplicate-of`, and name any `security` issue in your comment so Nathaniel sees it; leave it assigned to Dev Squad 1. Do this in the same run; it needs no dispatch.
 - Assign the issue to the Product Owner for refinement.
-- Assign the issue to Nathaniel Greenwood when it needs a human's action, as the squad's ROUTING describes.
+- Move the issue to `action_needed` when it needs Nathaniel's input, as the squad's ROUTING describes. Don't assign issues to him.
 - Create `backlog` issues for research follow-ups (see RESEARCH AND PLANNING).
 
 On an issue that is not assigned to Dev Squad 1, such as one where you were @mentioned, answer and advise, but do not change its status, assignee or sub-issues.

@@ -44,6 +44,9 @@ Documenting (key: `documenting`)
 Final Checks (key: `final_checks`)
 - Documentation is complete; the Tech Lead runs the final checks before closing the issue.
 
+Action Needed (key: `action_needed`)
+- Waiting on Nathaniel's input. The last comment says what is needed; answer it with a comment. Started group, so wakeups keep working. Replaces assigning issues to Nathaniel (2026-11-09).
+
 ## Done
 
 Done (key: `done`)

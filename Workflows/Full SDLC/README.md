@@ -47,10 +47,10 @@ The Researcher's prompt has a matching exception, so it assigns back to Dev Squa
 ### `needs_refinement`: Needs Refinement → Product Owner
 
 ```
-Refine this issue as your instructions describe. Hand it back by assignment, exactly as they say: to Dev Squad 1 when it is ready, or to Nathaniel Greenwood with your questions. Don't change the status; the Tech Lead moves it on.
+Refine this issue as your instructions describe. When it is ready, assign it to Dev Squad 1. For questions only Nathaniel can answer, ask them in a comment and move the issue to action_needed, keeping it assigned to you; his reply starts your next run. Change the status only to action_needed; the Tech Lead moves it on.
 ```
 
-The Product Owner makes no workflow move: its prompt already hands back by assignment and never changes status. The handoff only replaces the Tech Lead's assignment, so an issue a person moves into `needs_refinement` reaches the Product Owner without a Tech Lead run.
+The Product Owner makes no workflow move: it hands back by assigning the issue to Dev Squad 1, and its only status change is `action_needed` when it has questions for Nathaniel. The handoff only replaces the Tech Lead's assignment, so an issue a person moves into `needs_refinement` reaches the Product Owner without a Tech Lead run.
 
 ### `code_review`: Code Review → Architect
 
