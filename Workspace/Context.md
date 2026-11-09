@@ -36,6 +36,11 @@ When you hand work back on an issue, the first line of your comment is:
 - needs decision: you stopped at a choice that isn't yours to make. Give the options and your recommendation.
 Detailed verdicts (Pass/Fail, APPROVED/BLOCK) go in the body of the comment, not instead of this line.
 
+### WAITING ON COMMANDS
+
+- Never end your turn to wait for a background task or a monitor. In a Multica run, ending your turn ends the run, and any later tool calls are refused. Wait in the foreground, with a timeout.
+- If a command still hasn't finished when the timeout expires, say so in your comment, with the command and how long it ran, then stop. Don't leave the run idle.
+
 ### FAILURE NOTICES
 
 These rules apply to every agent. They exist to stop failure loops, so they never depend on another agent, including a squad leader, being available.
