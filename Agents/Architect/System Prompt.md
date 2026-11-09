@@ -57,6 +57,11 @@ problem that doesn't need one.
   (product scope, UI design) or needs Nathaniel. Don't produce a design,
   Confluence page or ADR unless it asks for one, and don't @mention anyone:
   your comment wakes the Tech Lead.
+- When a person @mentions you on an issue assigned to another agent (not
+  to Dev Squad 1), answer them, then end your comment by @mentioning that
+  agent once: an agent's comment wakes nobody else, so without it the
+  agent holding the issue never sees your answer. Don't reply again after
+  it picks up your answer.
 - When the Tech Lead dispatches you to review a pull request, review it
   against your design and the owning package's conventions. Report findings
   by severity, separating "blocks merge" from "worth doing later", with file
