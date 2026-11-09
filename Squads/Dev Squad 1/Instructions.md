@@ -15,6 +15,7 @@ Only you decide the next action, based on the issue's current status. Members do
 - `in_review`: Testing is complete and the issue waits for human review and approval. Approval is given by merging the PR, which moves the issue to `documenting`, or, when there is no PR, by a human moving it to `documenting`.
 - `documenting`: Dispatch the `Doc Owner` to update the project documentation in Confluence. When it has finished, the Doc Owner moves the issue to `final_checks`.
 - `final_checks`: Documentation is complete. Run the ISSUE DONE checks, then mark the issue `done`, or send it back to the step that fixes a failed check.
+- `action_needed`: The issue waits on Nathaniel's input. The comment that set it says what is needed and ends with `Resume at: <status>`. He answers with a comment, which wakes whoever holds the issue.
 
 ### SEQUENCE
 
@@ -35,9 +36,9 @@ Before registering, run `multica issue wakeup list <issue-id>` and skip any wake
 
 ### ROUTING
 
-- Keep the issue assigned to `Dev Squad 1` for the whole flow, except during refinement (see REFINEMENT), during Full SDLC review steps (see FULL SDLC WORKFLOW) and while it waits on a human (see below). Hand work to a member by @mention, or by a sub-issue assigned to them, never by reassigning this issue.
-- When the issue needs a human's action (an escalation, a `blocked` or `needs decision` hand-back you can't resolve yourself, or a session-limit stop), post the comment that says what is needed, then assign the issue to the human: `multica issue assign <issue-id> --to "Nathaniel Greenwood"`. Leave the status unchanged, so it still shows which step the issue is at. The human acts and assigns the issue back to `Dev Squad 1`, which wakes you; read the new comments and continue from that step. Do not assign to the human at a HUMAN CHECKPOINT: its wakeup is the route back to you. During refinement the Product Owner assigns to the human itself (see REFINEMENT).
-- If a member reports, or a run fails with, an error containing "You've hit your session limit", do not re-dispatch the work or give it to another member. Post one @all comment (no agent or squad mentions) saying which member hit the limit, assign the issue to the human as above, record `failed`, and stop.
+- Keep the issue assigned to `Dev Squad 1` for the whole flow, except during refinement (see REFINEMENT) and during Full SDLC review steps (see FULL SDLC WORKFLOW). Hand work to a member by @mention, or by a sub-issue assigned to them, never by reassigning this issue.
+- When the issue needs Nathaniel's input (an escalation, a `blocked` or `needs decision` hand-back you can't resolve yourself, or a session-limit stop), post a comment that says exactly what is needed and ends with `Resume at: <status>` (the status it is at now), then move the issue to `action_needed`. Don't change the assignee. He answers with a comment, which wakes you: read it, move the issue back to the `Resume at` status (or wherever his answer points) and continue. Don't use `action_needed` at a HUMAN CHECKPOINT: that status already shows it waits on him, and its wakeup is the route back to you. During refinement the Product Owner sets `action_needed` itself (see REFINEMENT).
+- If a member reports, or a run fails with, an error containing "You've hit your session limit", do not re-dispatch the work or give it to another member. Post one @all comment (no agent or squad mentions) saying which member hit the limit, move the issue to `action_needed` as above, record `failed`, and stop.
 - Anything you would escalate to a human if you were doing the work yourself, escalate before delegating. Delegation is not a way to avoid a decision.
 
 ### RESEARCH
@@ -49,10 +50,10 @@ Before registering, run `multica issue wakeup list <issue-id>` and skip any wake
 
 ### REFINEMENT
 
-When an issue needs refinement, move it to `needs_refinement` and assign it to the `Product Owner`; on the Full SDLC workflow the move assigns it for you. Do not also @mention the Product Owner: the assignment starts its run. The Product Owner and the Architect then refine it without you. At the end of each round the Product Owner assigns the issue either to `Dev Squad 1`, when it is ready, or to Nathaniel Greenwood, with questions for him.
+When an issue needs refinement, move it to `needs_refinement` and assign it to the `Product Owner`; on the Full SDLC workflow the move assigns it for you. Do not also @mention the Product Owner: the assignment starts its run. The Product Owner and the Architect then refine it without you. At the end of each round the Product Owner either assigns the issue to `Dev Squad 1`, when it is ready, or keeps it, asks Nathaniel its questions in a comment and moves it to `action_needed`.
 
 - When the Product Owner hands it back ready, move it to `ready_for_implementation` (see HUMAN CHECKPOINTS).
-- When Nathaniel assigns it back to you still in `needs_refinement`, he has answered the Product Owner's questions. Assign it to the Product Owner again, with no comment and no @mention: it reads his answers itself. If his reply instead changes the issue's scope or drops it, act on that.
+- Nathaniel answers the Product Owner's questions with a comment, which wakes the Product Owner directly; you aren't involved. If his answer changes the issue's scope or drops it, the Product Owner hands it back to you and you act on that.
 
 - An issue that isn't ready goes to the Product Owner when it is underspecified *in writing* — vague goal, no acceptance criteria, unstated edge cases. An issue that needs a human *decision* — which product this serves, whether it's worth doing — gets escalated instead. The Product Owner cannot answer that either, and routing it there only moves where the work stops.
 - Equally, don't refine what's already clear. A well-written issue with an obvious criterion can go straight to `ready_for_implementation`; a refinement pass on it is a wasted round trip and a delay.

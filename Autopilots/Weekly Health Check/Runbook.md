@@ -16,6 +16,7 @@ plus their sub-issues.
    - `in_progress`, `implementation` or `testing` for more than 3 days with no
      run in that time
    - `in_review` for more than 7 days (PR waiting for a human)
+   - `action_needed` for more than 2 days (waiting on Nathaniel's input), oldest first
    - `documenting` or `final_checks` for more than 3 days with no run in that time
    - `code_review`, `security_review` or `qa` for more than 3 days with no run in
      that time (a Full SDLC reviewer holding the issue)

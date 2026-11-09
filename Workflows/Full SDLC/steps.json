@@ -15,6 +15,13 @@
   },
   {
     "handler": {
+      "type": "none"
+    },
+    "instructions": "",
+    "status_key": "action_needed"
+  },
+  {
+    "handler": {
       "id": "250e294a-8afb-4f58-a900-c46bb8678aed",
       "type": "agent"
     },
@@ -26,7 +33,7 @@
       "id": "5dbd5e9d-f0f6-439e-ab4a-77f7c2afbde4",
       "type": "agent"
     },
-    "instructions": "Refine this issue as your instructions describe. Hand it back by assignment, exactly as they say: to Dev Squad 1 when it is ready, or to Nathaniel Greenwood with your questions. Don't change the status; the Tech Lead moves it on.",
+    "instructions": "Refine this issue as your instructions describe. When it is ready, assign it to Dev Squad 1. For questions only Nathaniel can answer, ask them in a comment and move the issue to action_needed, keeping it assigned to you; his reply starts your next run. Change the status only to action_needed; the Tech Lead moves it on.",
     "status_key": "needs_refinement"
   },
   {
