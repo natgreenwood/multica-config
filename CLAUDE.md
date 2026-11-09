@@ -688,3 +688,11 @@ When Claude ran out of usage allowance, an agent on Codex kept re-triggering the
   - **`pull-requests` skill:** a matching line.
   - **Cleanup done:** openGym #67 and containers #163 consolidated the open QA.md PRs and merged; the originals are closed as superseded.
 - 2026-11-07: **`filing-issues` skill: always pass `--project`**, with a command example. 52 agent-filed issues had no project, because agents left out `--project`. After merge, refresh the skill (`multica skill refresh 51357811-d4a7-4295-ae84-adf62337b342`); GitHub's raw cache can take about 5 minutes.
+- 2026-11-08: **Parked (user): a `new-secret-infisical` skill for Multica agents** (create a secret, restart `infisical-agent-1`, check the rendered `.env`). The user's choices: agents run it, restart by SSH to docker-1, and values are generated or typed. Agents can't receive typed values, so third-party values stay a manual step in the Infisical UI.
+  - **Conflicts with the containers repo today:** `AGENTS.md` ("Only Nathaniel adds or changes secrets", "Never list or browse"), and `docker-1/HOST.md` (Nathaniel copies secrets and restarts `infisical-agent-1`; the rendered-file check is the operator's). The agents' Infisical identity is read-only, and they have no shell on docker-1.
+  - **Proposed narrow design (not built):**
+    1. A create-only machine identity `multica-secret-writer`, scoped to "Docker-1 Container Secrets"/`prod`, with its own token file on the runtime host.
+    2. `scripts/secret-new.sh <app> <NAME>`, built like `secret.sh`: it generates the value, never prints it, and refuses to overwrite.
+    3. An SSH key on docker-1 with a forced command (`restrict`) running a wrapper that only does `restart` and `check <app>` (file exists, key names only). Anything that can run docker there is root-equivalent, hence the forced command.
+    4. A Multica skill with the order of steps, plus exceptions in `AGENTS.md` and `HOST.md`.
+  - **Open:** confirm the design, and which agents get the skill.
