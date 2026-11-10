@@ -125,6 +125,24 @@ brew autoremove                # removes rust, which was only needed to compile 
 brew cleanup --prune=all
 ```
 
+Limit what agents can do with it. As `multica`, give agent-browser a domain allowlist and an action policy. It applies them to every command:
+
+```bash
+cat > ~/.agent-browser/policy.json <<'EOF'
+{ "default": "allow", "deny": ["upload", "download"] }
+EOF
+cat > ~/.agent-browser/config.json <<EOF
+{
+  "allowedDomains": ["*.natg.co.uk", "localhost", "127.0.0.1"],
+  "actionPolicy": "$HOME/.agent-browser/policy.json"
+}
+EOF
+agent-browser open https://example.com    # must fail: example.com isn't allowed
+agent-browser close --all
+```
+
+`*.natg.co.uk` also covers `natg.co.uk`. Pages that load fonts or scripts from other domains render without them, and agents report what was blocked. Add a domain only when a real check needs it. This catches mistakes, not deliberate misuse: the file is in `multica`'s home, so an agent could change it. The `browser-checks` skill tells agents not to.
+
 To add tools later, change the Brewfile in this repo, download it again and re-run `brew bundle --file ~/Brewfile`.
 
 ## 2. Install the AI coding tool 📘

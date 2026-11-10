@@ -2,6 +2,7 @@
 
 | Skill | Source | Status | Reason |
 |---|---|---|---|
+| browser-checks | This repo (`Skills/browser-checks`) | Attached | Exercising web changes with `agent-browser`: key flows, breakpoints, console errors, screenshot evidence |
 | filing-issues | This repo (`Skills/filing-issues`) | Attached | Filing unrelated bugs and out-of-scope findings with a label and priority |
 | pull-requests | This repo (`Skills/pull-requests`) | Attached | Keeping a separate QA.md PR unlinked so it doesn't hold up the issue |
 
