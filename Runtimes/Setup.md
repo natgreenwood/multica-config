@@ -92,18 +92,38 @@ python3 -c 'import yaml; print("PyYAML", yaml.__version__)'
 
 **A browser for agents** 📘 ([agent-browser](https://agent-browser.dev/installation)). The Brewfile installs `agent-browser`, a CLI that lets agents drive a headless Chrome one command at a time: open a page, read it as an accessibility tree, click, fill, take screenshots. Testers, QA and the Frontend Designer use it to check pages a person would otherwise have to open. Homebrew has no prebuilt Linux build of it, so `brew bundle` compiles it from source with Rust: expect that step, and each upgrade of it, to take several minutes. Chrome needs system libraries that only root can install, and `multica` has no `sudo`, so an admin installs those once. `multica` then downloads its own Chrome for Testing into its home folder:
 
+Chrome for Testing needs about 500 MB in `multica`'s home folder; `agent-browser doctor` warns when space is low.
+
+From an admin account, install the system libraries, then let Chrome's sandbox work. Ubuntu 23.10 and later block the unprivileged user namespaces Chrome's sandbox needs, and Chrome fails with "No usable sandbox!". This AppArmor profile allows them for the Chrome for Testing binaries agent-browser downloads, and nothing else ([Chromium's guidance](https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md)). Don't use `--no-sandbox`, and don't turn the restriction off for the whole system:
+
 ```bash
-# admin account: system libraries (it also downloads a copy of Chrome for root, which agents don't use)
+# admin account
 sudo /home/linuxbrew/.linuxbrew/bin/agent-browser install --with-deps
+sudo rm -rf /root/.agent-browser     # --with-deps also downloads a Chrome for root, which agents don't use
+
+sudo tee /etc/apparmor.d/agent-browser-chrome >/dev/null <<'EOF'
+abi <abi/4.0>,
+include <tunables/global>
+
+profile agent-browser-chrome /home/*/.agent-browser/browsers/chrome-*/chrome flags=(unconfined) {
+  userns,
+
+  include if exists <local/agent-browser-chrome>
+}
+EOF
+sudo apparmor_parser -r /etc/apparmor.d/agent-browser-chrome
 ```
+
+The path wildcards keep the profile working when Chrome updates. Its one weakness: the user could put another program at that path and get user namespaces too, which is the usual cost of a browser installed per user. It's still far narrower than turning the restriction off.
+
+Then, as `multica`, download Chrome, check it launches, and clear the Rust toolchain and caches the Homebrew build left behind:
 
 ```bash
-# as multica
 agent-browser install          # Chrome for Testing, into ~/.agent-browser
-agent-browser doctor           # its launch test opens headless Chrome and closes it
+agent-browser doctor           # "Launch test: pass"; the ffmpeg warning only matters for `record`
+brew autoremove                # removes rust, which was only needed to compile agent-browser
+brew cleanup --prune=all
 ```
-
-If the launch test fails with a sandbox error, Ubuntu's AppArmor is blocking Chrome's sandbox for this user. Fix that by following agent-browser's docs; don't turn Chrome's sandbox off.
 
 To add tools later, change the Brewfile in this repo, download it again and re-run `brew bundle --file ~/Brewfile`.
 
