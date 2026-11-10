@@ -17,6 +17,7 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install -y \
   git curl unzip zip ca-certificates gnupg \
   build-essential procps file \
+  python3 python3-venv python3-pip python3-yaml \
   ripgrep fd-find jq tree \
   less openssh-client
 ```
@@ -25,6 +26,7 @@ sudo apt install -y \
 |---|---|---|
 | Fetching and archives | `curl`, `unzip`, `zip`, `ca-certificates`, `gnupg` | Installers, release downloads, apt signing keys |
 | Homebrew prerequisites | `git`, `curl`, `build-essential`, `procps`, `file` | Required by Homebrew on Linux; `build-essential` is also common in test and build scripts |
+| Python | `python3`, `python3-venv`, `python3-pip`, `python3-yaml` | The system Python is the one agents use (`/usr/bin/python3`). Repo scripts rely on PyYAML, for example the containers repo's compose-policy check |
 | Code search and data | `ripgrep`, `fd-find`, `jq`, `tree` | Searching code, reading JSON output from `multica` and `gh`, listing folders |
 | Diagnostics | `less`, `openssh-client` | Day-to-day use, and `ssh` for git remotes |
 
@@ -58,7 +60,7 @@ systemctl --user status --no-pager | head -2   # must show "State: running", not
 
 If `/run/user/<uid>` doesn't exist, start the user manager from an admin account (`sudo systemctl start user@$(id -u multica).service`) and try again.
 
-**Homebrew and the Brewfile** 📘 ([Homebrew on Linux](https://docs.brew.sh/Homebrew-on-Linux)) + 🛠. This repo's [`Brewfile`](Brewfile) installs Claude Code, `gh`, Node.js, Python with `uv`, `git-lfs`, the AWS and Kubernetes CLIs, and a few utilities (`wget`, `nmap`, `fzf`, `htop`). The Infisical CLI is commented out of it on purpose: it comes from apt in step 5, because `scripts/secret.sh` runs only `/usr/bin/infisical`.
+**Homebrew and the Brewfile** 📘 ([Homebrew on Linux](https://docs.brew.sh/Homebrew-on-Linux)) + 🛠. This repo's [`Brewfile`](Brewfile) installs Claude Code, `gh`, Node.js, `uv`, `git-lfs`, the AWS and Kubernetes CLIs, and a few utilities (`wget`, `nmap`, `fzf`, `htop`). The Infisical CLI is commented out of it on purpose: it comes from apt in step 5, because `scripts/secret.sh` runs only `/usr/bin/infisical`.
 
 Homebrew installs to `/home/linuxbrew/.linuxbrew` and normally uses `sudo` to create that folder. `multica` has no `sudo`, so an admin creates the folder and hands it to `multica`:
 
@@ -77,6 +79,15 @@ curl -fsSL https://raw.githubusercontent.com/natgreenwood/multica-config/main/Ru
 brew bundle --file ~/Brewfile
 git lfs install
 node --version && gh --version && claude --version
+```
+
+Agents must use the system Python, not Homebrew's. The Brewfile doesn't install Python, but some formulae (for example `awscli`) pull one in, and Homebrew's folder comes first on `PATH`, so its `python3` would shadow `/usr/bin/python3` and its packages. On multica-worker-1 that broke the containers repo's compose-policy check, because Homebrew's Python had no PyYAML (NATG-633). Unlink every Homebrew Python. They stay installed for the formulae that need them, but stop providing `python3`:
+
+```bash
+for f in $(brew list --formula | grep -E '^python@'); do brew unlink "$f"; done
+hash -r
+command -v python3                         # must print /usr/bin/python3
+python3 -c 'import yaml; print("PyYAML", yaml.__version__)'
 ```
 
 To add tools later, change the Brewfile in this repo, download it again and re-run `brew bundle --file ~/Brewfile`.
@@ -396,7 +407,7 @@ In Multica, open **Runtimes**. The machine and its tool should appear and show a
 
 ## Maintenance 🛠
 
-- **Updates:** as `multica`, run `brew update && brew upgrade`. That updates Claude Code, `gh`, Node.js and the other Brewfile tools; a Homebrew install of Claude Code doesn't update itself. For Codex, re-run its installer. For Multica: if `command -v multica` shows a path under `/home/linuxbrew`, `brew upgrade` already updated it; otherwise run `multica update`. Then `systemctl --user restart multica-daemon`. For Infisical, an admin runs `sudo apt update && sudo apt install --only-upgrade infisical`, then `sudo systemctl restart infisical-agent-multica`. Restart the daemon after any tool update or sign-in change, so it re-detects the tools.
+- **Updates:** as `multica`, run `brew update && brew upgrade`, then check `command -v python3` still prints `/usr/bin/python3`; if an upgrade relinked a Homebrew Python, unlink it again (step 1). That updates Claude Code, `gh`, Node.js and the other Brewfile tools; a Homebrew install of Claude Code doesn't update itself. For Codex, re-run its installer. For Multica: if `command -v multica` shows a path under `/home/linuxbrew`, `brew upgrade` already updated it; otherwise run `multica update`. Then `systemctl --user restart multica-daemon`. For Infisical, an admin runs `sudo apt update && sudo apt install --only-upgrade infisical`, then `sudo systemctl restart infisical-agent-multica`. Restart the daemon after any tool update or sign-in change, so it re-detects the tools.
 - **Expired credentials:** a failed sign-in shows up as failed runs. Check `claude` / `codex login status`, `gh auth status`, `multica auth status` and `systemctl status infisical-agent-multica`. A `scripts/secret.sh` failure that names the token file usually means the Agent has stopped or its client secret has expired.
 - **Network:** the daemon only connects outwards to Multica, so no inbound ports need to be open.
 - **Retiring a host:** stop and disable both services (`multica-daemon` and `infisical-agent-multica`). Revoke the host's Multica PAT and GitHub sign-in, and its Infisical machine identity's client secret (or delete the identity), then delete the runtime from **Runtimes**. Multica also removes runtimes that have been offline for more than 7 days with no agents bound.
