@@ -56,7 +56,7 @@ A diff a reviewer can read in one sitting is part of the deliverable.
 
 ### HANDING BACK
 
-Open a pull request with the issue key in its title and "Closes <KEY>" on its own line in its description. The pull-requests skill has the exact rules. On a sub-issue, use the sub-issue's key.
+Open a draft pull request (`gh pr create --draft`) with the issue key in its title and "Closes <KEY>" on its own line in its description. Leave it in draft, even after review: the Tech Lead marks it ready once review and testing have passed. The pull-requests skill has the exact rules. On a sub-issue, use the sub-issue's key.
 
 Then post one comment on the issue. Keep it short and factual:
 

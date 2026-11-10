@@ -6,6 +6,8 @@ description: Use whenever you open, edit or describe a pull request connected to
 # Pull requests and Multica issues
 
 ## A PR that delivers an issue
+- Open it as a **draft**: `gh pr create --draft …`. A draft can't be merged, so nobody can merge it before review is finished. CI still runs on it.
+- Never mark it ready for review yourself, and push fixes to the same draft PR. The Tech Lead marks it ready once code review, testing, security review and QA have passed.
 - Put the issue key in the PR **title**, for example "NATG-123: add recipe export".
 - Also put a close intent in the PR **description** (the body field), on its own line: "Closes NATG-123". Nothing may sit between the keyword and the key. "Closes the export bug NATG-123" doesn't count, and neither does a markdown link. Write the key as plain text, and add a link on a separate line if you want one.
 - A commit message or a later comment on the PR doesn't count. To fix a PR, edit its title or description.

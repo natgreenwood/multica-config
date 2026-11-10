@@ -29,7 +29,7 @@ Three steps belong to a human. A status change does not wake you by itself, so b
 - `backlog` → `todo`: no wakeup needed. Leaving `backlog` starts your run automatically.
 - `ready_for_implementation` → `implementation`: when you move an issue to `ready_for_implementation`, run
   `multica issue wakeup create <issue-id> --until-status implementation --instruction "A human has approved this issue for implementation. Plan and dispatch the work."`
-- PR approval while `in_review`: when you move an issue to `in_review`, run
+- PR approval while `in_review`: when you move an issue to `in_review`, first mark each linked pull request ready for review (`gh pr ready <number> --repo <owner>/<repo>`; engineers open them as drafts, so they can't be merged before this). Then run
   `multica issue wakeup create <issue-id> --until-status documenting --instruction "The PR has merged. Dispatch the Doc Owner."`
 
 Before registering, run `multica issue wakeup list <issue-id>` and skip any wakeup that already exists for the same status. Only say a wakeup is arranged after the create command succeeds. If it fails, post a comment asking the human to @mention you once they have moved the issue.
@@ -104,7 +104,7 @@ A project on the Full SDLC workflow (its name is in the issue's project workflow
 - While a reviewer holds the issue, leave it alone: no dispatch, comment or status change.
 - `final_checks` is handed to the Auditor in the same way: the Doc Owner's move starts its run.
 - You are woken when a reviewer assigns the issue back to `Dev Squad 1`:
-  - In `in_review`: QA passed. Confirm the four verdicts in the comments, tell Nathaniel the PR is ready to merge, and register the `documenting` wakeup (HUMAN CHECKPOINTS).
+  - In `in_review`: QA passed. Confirm the four verdicts in the comments, mark the PR ready for review, tell Nathaniel it is ready to merge, and register the `documenting` wakeup (HUMAN CHECKPOINTS).
   - In `implementation`: a reviewer asked for changes. Send the fix to the engineer as usual. After the fix passes the CI GATE, move the issue straight to the step that asked for the changes; earlier approvals stand unless the fix changed what they reviewed.
   - In `blocked`: a reviewer couldn't proceed. Fix the cause, then move the issue back to that step. If Tester (Codex) can't run, dispatch Tester (Claude) by @mention instead, and when it passes, move the issue to `security_review`.
   - In `final_checks`: the Auditor found a check that failed or needs a person. Act on its report as the `final_checks` status describes.

@@ -41,6 +41,7 @@ Don't add minor points that match none of the triggers above to an escalation: d
 On issues assigned to Dev Squad 1 you may do the following, including where Multica's default workflow says otherwise:
 - Set any of the squad's statuses: `research`, `needs_refinement`, `ready_for_implementation`, `implementation`, `in_progress`, `code_review`, `testing`, `security_review`, `qa`, `in_review`, `documenting`, `final_checks`, `action_needed`. The squad's statuses replace the default progression: do not move an issue to `in_progress` just because you dispatched work; set the status the squad's instructions call for.
 - Mark an issue `done` when the squad's ISSUE DONE checks pass. This replaces the default rule of leaving `done` to a human, and it holds on every project, including where the project workflow block says `done` is set by a human. Don't wait for Nathaniel's approval once every check has passed.
+- Mark a linked pull request ready for review (`gh pr ready`) once the squad's checks before `in_review` have passed. Engineers open pull requests as drafts; this is your only change to a pull request.
 - Register and list wakeups on the issue (`multica issue wakeup create`, `multica issue wakeup list`) at the squad's human checkpoints and CI gate.
 - Create sub-issues assigned to Dev Squad 1, with stages, and move parked sub-issues out of `backlog` when their stage is due.
 - Create any other issue (a follow-up, a defect, work split out of an issue) in `backlog`, assigned to Dev Squad 1, as the filing-issues skill says.
