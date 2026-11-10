@@ -37,6 +37,8 @@ sudo loginctl enable-linger multica
 
 Do everything after this point **as the `multica` user**, except where a step says to use an admin account. Switch with `sudo -iu multica`. Each tool keeps its sign-in in that user's home directory, and the daemon has to find them there.
 
+> **Never set up the runtime from your own account.** Running `multica setup`, `multica login`, `multica daemon start` or a coding tool's sign-in as yourself makes the runtime run as you, with all your groups. If you are in `sudo`, `lxd`, `docker` or `adm`, agents can get root (`lxd` and `docker` are root-equivalent). Agents also can't read the Infisical token, because only the `multica` group can (step 5). That is how multica-worker-1 broke on 2026-11-09 (NATG-633). Step 9 checks for it.
+
 Make sure `~/.local/bin` is on `PATH`, because several installers below put their binaries there. On Ubuntu, `fd-find` installs its command as `fdfind`, so add the usual `fd` name too:
 
 ```bash
@@ -223,6 +225,8 @@ sudo systemctl status infisical-agent-multica
 sudo -u multica test -s /var/lib/infisical-agent/multica/token && echo "token readable by multica"
 ```
 
+Only members of the `multica` group can read the token, so the user that runs the Multica daemon must be `multica`. A check as `multica` passes even when the daemon runs as someone else; step 9 checks the daemon's real user. Don't fix a failure by adding your own account to the `multica` group: run the daemon as `multica` instead (step 8).
+
 ❓ This layout is derived from `scripts/secret.sh` in `natgreenwood/containers`. How dev-ai-1 and dev-ai-3 actually run the Agent (service name, user, unit options) is not yet confirmed. Step 9 checks a real fetch.
 
 ## 6. Install Docker (rootless) 📘
@@ -336,14 +340,25 @@ multica daemon status
 
 Everything in the daemon's environment is passed to agent runs. That's why no Infisical credential goes in this file: agents get secrets only through `scripts/secret.sh`, which reads the Agent's token file (step 5). The token can still read whatever the machine identity can, which is why the identity is read-only and scoped to the agents' projects.
 
-## 9. Verify the runtime 📘
+## 9. Verify the runtime 📘 + 🛠
+
+First check that the daemon runs as `multica`, and that `multica` has no admin groups. From any account:
+
+```bash
+ps -o user= -p "$(pgrep -f 'multica daemon' | head -1)"   # must print: multica
+id multica                                                 # groups: multica only; never sudo, lxd, docker or adm
+```
+
+If the first command prints any other user, the runtime was set up from the wrong account (see the warning in step 1). Stop that daemon, redo steps 2 to 5 and step 8 as `multica` (tool installs, sign-ins, MCP servers, `gh`, the git identity and the daemon service), and remove the old runtime from **Runtimes** in Multica.
+
+Then, as `multica`:
 
 ```bash
 multica runtime list      # the new machine's tool should show "online"
 journalctl --user -u multica-daemon -f   # or: multica daemon logs -f
 ```
 
-To check secrets end to end, as `multica`, in a checkout of a repository that has `scripts/secret.sh`, fetch one secret the repository's instructions name, without printing it:
+To check secrets end to end, as `multica`, in a checkout of a repository that has `scripts/secret.sh`, fetch one secret the repository's instructions name, without printing it. Because the daemon runs as `multica`, this is the same access agents get:
 
 ```bash
 scripts/secret.sh <NAME> > /dev/null && echo "secret fetch OK"
