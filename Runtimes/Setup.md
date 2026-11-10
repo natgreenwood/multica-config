@@ -60,7 +60,7 @@ systemctl --user status --no-pager | head -2   # must show "State: running", not
 
 If `/run/user/<uid>` doesn't exist, start the user manager from an admin account (`sudo systemctl start user@$(id -u multica).service`) and try again.
 
-**Homebrew and the Brewfile** 📘 ([Homebrew on Linux](https://docs.brew.sh/Homebrew-on-Linux)) + 🛠. This repo's [`Brewfile`](Brewfile) installs Claude Code, `gh`, Node.js, `uv`, `git-lfs`, the AWS and Kubernetes CLIs, and a few utilities (`wget`, `nmap`, `fzf`, `htop`). The Infisical CLI is commented out of it on purpose: it comes from apt in step 5, because `scripts/secret.sh` runs only `/usr/bin/infisical`.
+**Homebrew and the Brewfile** 📘 ([Homebrew on Linux](https://docs.brew.sh/Homebrew-on-Linux)) + 🛠. This repo's [`Brewfile`](Brewfile) installs Claude Code, `gh`, Node.js, `uv`, `git-lfs`, the AWS and Kubernetes CLIs, `agent-browser`, and a few utilities (`wget`, `nmap`, `fzf`, `htop`). The Infisical CLI is commented out of it on purpose: it comes from apt in step 5, because `scripts/secret.sh` runs only `/usr/bin/infisical`.
 
 Homebrew installs to `/home/linuxbrew/.linuxbrew` and normally uses `sudo` to create that folder. `multica` has no `sudo`, so an admin creates the folder and hands it to `multica`:
 
@@ -89,6 +89,21 @@ hash -r
 command -v python3                         # must print /usr/bin/python3
 python3 -c 'import yaml; print("PyYAML", yaml.__version__)'
 ```
+
+**A browser for agents** 📘 ([agent-browser](https://agent-browser.dev/installation)). The Brewfile installs `agent-browser`, a CLI that lets agents drive a headless Chrome one command at a time: open a page, read it as an accessibility tree, click, fill, take screenshots. Testers, QA and the Frontend Designer use it to check pages a person would otherwise have to open. Homebrew has no prebuilt Linux build of it, so `brew bundle` compiles it from source with Rust: expect that step, and each upgrade of it, to take several minutes. Chrome needs system libraries that only root can install, and `multica` has no `sudo`, so an admin installs those once. `multica` then downloads its own Chrome for Testing into its home folder:
+
+```bash
+# admin account: system libraries (it also downloads a copy of Chrome for root, which agents don't use)
+sudo /home/linuxbrew/.linuxbrew/bin/agent-browser install --with-deps
+```
+
+```bash
+# as multica
+agent-browser install          # Chrome for Testing, into ~/.agent-browser
+agent-browser doctor           # its launch test opens headless Chrome and closes it
+```
+
+If the launch test fails with a sandbox error, Ubuntu's AppArmor is blocking Chrome's sandbox for this user. Fix that by following agent-browser's docs; don't turn Chrome's sandbox off.
 
 To add tools later, change the Brewfile in this repo, download it again and re-run `brew bundle --file ~/Brewfile`.
 
@@ -395,6 +410,7 @@ In Multica, open **Runtimes**. The machine and its tool should appear and show a
 - that the tool works on its own (step 3)
 - `docker info` as `multica`, if agents need containers (step 6)
 - `systemctl status infisical-agent-multica`, if agents need secrets (step 5)
+- `agent-browser doctor` as `multica`, if agents need a browser (step 1)
 - the daemon logs
 - `systemctl --user restart multica-daemon`
 
