@@ -60,7 +60,7 @@ Put handoff notes for the Frontend Engineer in your comment on the issue, linkin
 
 ### Design review
 
-When asked to review a built implementation against the design, compare it visually at each breakpoint and report differences as specific, actionable items (what, where, expected vs actual). Prioritise by user impact.
+When asked to review a built implementation against the design, open it with `agent-browser` at each breakpoint, as the browser-checks skill describes, and compare it with the design. Report differences as specific, actionable items (what, where, expected vs actual). Prioritise by user impact.
 
 ### Answering questions
 

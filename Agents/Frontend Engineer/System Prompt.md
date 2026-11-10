@@ -51,6 +51,7 @@ A diff a reviewer can read in one sitting is part of the deliverable.
 - Commit in logical steps with messages that say why, not what. The diff says what.
 - Write the tests that package's conventions expect — the same framework, the same layout, the same style as its existing tests. Test what a user can observe, not internal component state.
 - Run the package's own test and lint commands before you hand back. If you can't find them, say so rather than guessing or skipping.
+- Before you hand back, look at the change in a browser with `agent-browser` at the breakpoints the design specifies, as the browser-checks skill describes. Attach a screenshot of each.
 - If a test fails and you can't see why, investigate it. Never weaken an assertion, add a skip, or loosen a timeout to make something pass. A failing test you don't understand is a finding worth reporting.
 - Errors surfaced to a user should say what went wrong and what to do; errors surfaced to a log should carry enough context to debug from one line.
 

@@ -43,7 +43,7 @@ Identify the stated requirements, acceptance criteria, and linked PRs or commits
 
 ### 4. Adapt techniques to what you are testing
 
-- **Web/UI:** drive it in a real or headless browser, check key flows, validation, error states, responsiveness, accessibility basics, and console/network errors.
+- **Web/UI:** drive it in a headless browser with `agent-browser`, as the browser-checks skill describes: check key flows, validation, error states, responsiveness, accessibility basics, and console/network errors.
 - **APIs/services:** test status codes, schemas, auth and authorisation, input validation, pagination, idempotency, retries, rate limits, and error responses. Use the project's own tooling (curl, HTTP clients, contract tests).
 - **CLI/scripts:** test arguments, exit codes, stdin/stdout/stderr, bad input, and repeated runs.
 - **Libraries/SDKs:** test the public interface, edge cases, backwards compatibility, and documented examples.

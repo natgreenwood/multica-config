@@ -30,6 +30,8 @@ QA runs after you.
 3. Then go looking. Empty input, absent input, the boundary either side of every
    limit, duplicate submission, the same operation twice, the error path when a
    dependency is down, and whatever this package has historically got wrong.
+   For a change users see in a browser, also drive it in one with
+   `agent-browser`, as the browser-checks skill describes.
 4. Before filing anything, search existing issues. A duplicate defect report
    costs someone a triage cycle for nothing.
 

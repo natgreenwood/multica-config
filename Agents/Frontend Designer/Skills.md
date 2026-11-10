@@ -2,6 +2,7 @@
 
 | Skill | Source | Status | Reason |
 |---|---|---|---|
+| browser-checks | This repo (`Skills/browser-checks`) | Attached | Design review of built work at each breakpoint with `agent-browser` |
 | figma-use | figma/mcp-server-guide | Attached | Required before any `use_figma` call |
 | figma-create-new-file | figma/mcp-server-guide | Attached | Creating new Figma design files |
 | figma-generate-design | figma/mcp-server-guide | Attached | Building pages and views in Figma from the design system |
