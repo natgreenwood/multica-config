@@ -47,6 +47,17 @@ echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.profile && source ~/.profile
 ln -s "$(command -v fdfind)" ~/.local/bin/fd
 ```
 
+`sudo -iu multica` opens a login shell but not a systemd user session, so `systemctl --user` fails with "Failed to connect to user scope bus", and rootless Docker (step 6) and the daemon service (step 8) both need it. The user manager is already running because of linger, so point the shell at it, and save that in `~/.profile` so every later `sudo -iu multica` shell gets it:
+
+```bash
+echo 'export XDG_RUNTIME_DIR=/run/user/$(id -u)' >> ~/.profile
+echo 'export DBUS_SESSION_BUS_ADDRESS=unix:path=$XDG_RUNTIME_DIR/bus' >> ~/.profile
+source ~/.profile
+systemctl --user status --no-pager | head -2   # must show "State: running", not a bus error
+```
+
+If `/run/user/<uid>` doesn't exist, start the user manager from an admin account (`sudo systemctl start user@$(id -u multica).service`) and try again.
+
 **Homebrew and the Brewfile** 📘 ([Homebrew on Linux](https://docs.brew.sh/Homebrew-on-Linux)) + 🛠. This repo's [`Brewfile`](Brewfile) installs Claude Code, `gh`, Node.js, Python with `uv`, `git-lfs`, the AWS and Kubernetes CLIs, and a few utilities (`wget`, `nmap`, `fzf`, `htop`). The Infisical CLI is commented out of it on purpose: it comes from apt in step 5, because `scripts/secret.sh` runs only `/usr/bin/infisical`.
 
 Homebrew installs to `/home/linuxbrew/.linuxbrew` and normally uses `sudo` to create that folder. `multica` has no `sudo`, so an admin creates the folder and hands it to `multica`:
@@ -262,7 +273,7 @@ grep multica /etc/subuid /etc/subgid      # each should show a range of at least
 
 Installing `docker-ce-rootless-extras` from apt also provides the AppArmor profile that Ubuntu 24.04 needs for rootless containers. No manual AppArmor step is required.
 
-**As `multica`**, set up and enable the rootless daemon. It starts at boot because linger was enabled in step 1:
+**As `multica`**, set up and enable the rootless daemon. It starts at boot because linger was enabled in step 1. First run `echo "$XDG_RUNTIME_DIR"`: it must print `/run/user/<uid>` (step 1). If the setup tool then prints `systemd not detected`, stop: that shell has no user session, and the tool falls back to a manual daemon under `~/.docker/run` that doesn't start at boot. Undo it with `docker context use default`, `docker context rm rootless` and `rm -rf ~/.docker/run`, fix the shell as in step 1, and run it again:
 
 ```bash
 dockerd-rootless-setuptool.sh install
@@ -310,8 +321,10 @@ mkdir -p ~/.config/multica && touch ~/.config/multica/daemon.env && chmod 600 ~/
 # CLAUDE_CODE_OAUTH_TOKEN=...
 ```
 
-```ini
-# ~/.config/systemd/user/multica-daemon.service
+```bash
+mkdir -p ~/.config/systemd/user
+MULTICA_BIN="$(command -v multica)" && echo "$MULTICA_BIN"   # must print a path; if empty, install the CLI first
+cat > ~/.config/systemd/user/multica-daemon.service <<EOF
 [Unit]
 Description=Multica daemon
 After=network-online.target docker.service
@@ -321,15 +334,17 @@ Wants=network-online.target docker.service
 EnvironmentFile=%h/.config/multica/daemon.env
 Environment=PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
 Environment=DOCKER_HOST=unix:///run/user/%U/docker.sock
-ExecStart=%h/.local/bin/multica daemon start --foreground
+ExecStart=$MULTICA_BIN daemon start --foreground
 Restart=on-failure
 RestartSec=10
 
 [Install]
 WantedBy=default.target
+EOF
+grep ExecStart ~/.config/systemd/user/multica-daemon.service   # check the path was filled in
 ```
 
-Check the `multica` path in `ExecStart` with `command -v multica`. If the installer put it somewhere else, fix the path, and add that directory to `PATH`. The daemon finds AI coding tools through `PATH`. If it can't find one, set `MULTICA_CLAUDE_PATH` or `MULTICA_CODEX_PATH` to an absolute path in the environment file.
+The unit is written with the path `command -v multica` finds, so it works whether the CLI came from the installer (`~/.local/bin`) or Homebrew (`/home/linuxbrew/.linuxbrew/bin`). Without that, systemd fails with `203/EXEC` and restarts every 10 seconds, as it did on multica-worker-1. If `multica` lives in a folder that isn't on the unit's `PATH` line, add that folder too. The daemon finds AI coding tools through `PATH`. If it can't find one, set `MULTICA_CLAUDE_PATH` or `MULTICA_CODEX_PATH` to an absolute path in the environment file.
 
 ```bash
 systemctl --user daemon-reload
@@ -381,7 +396,7 @@ In Multica, open **Runtimes**. The machine and its tool should appear and show a
 
 ## Maintenance 🛠
 
-- **Updates:** as `multica`, run `brew update && brew upgrade`. That updates Claude Code, `gh`, Node.js and the other Brewfile tools; a Homebrew install of Claude Code doesn't update itself. For Codex, re-run its installer. For Multica, run `multica update`, then `systemctl --user restart multica-daemon`. For Infisical, an admin runs `sudo apt update && sudo apt install --only-upgrade infisical`, then `sudo systemctl restart infisical-agent-multica`. Restart the daemon after any tool update or sign-in change, so it re-detects the tools.
+- **Updates:** as `multica`, run `brew update && brew upgrade`. That updates Claude Code, `gh`, Node.js and the other Brewfile tools; a Homebrew install of Claude Code doesn't update itself. For Codex, re-run its installer. For Multica: if `command -v multica` shows a path under `/home/linuxbrew`, `brew upgrade` already updated it; otherwise run `multica update`. Then `systemctl --user restart multica-daemon`. For Infisical, an admin runs `sudo apt update && sudo apt install --only-upgrade infisical`, then `sudo systemctl restart infisical-agent-multica`. Restart the daemon after any tool update or sign-in change, so it re-detects the tools.
 - **Expired credentials:** a failed sign-in shows up as failed runs. Check `claude` / `codex login status`, `gh auth status`, `multica auth status` and `systemctl status infisical-agent-multica`. A `scripts/secret.sh` failure that names the token file usually means the Agent has stopped or its client secret has expired.
 - **Network:** the daemon only connects outwards to Multica, so no inbound ports need to be open.
 - **Retiring a host:** stop and disable both services (`multica-daemon` and `infisical-agent-multica`). Revoke the host's Multica PAT and GitHub sign-in, and its Infisical machine identity's client secret (or delete the identity), then delete the runtime from **Runtimes**. Multica also removes runtimes that have been offline for more than 7 days with no agents bound.
